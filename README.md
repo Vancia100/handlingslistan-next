@@ -15,5 +15,5 @@ A free to self host list
 - [ ] Docs
 - [ ] Hosting options with open-source API
 
-** Long-long term: **
-  Tauri app based on the Webb app
+  **Long-long term:**
+  * Tauri app based on the Webb app
