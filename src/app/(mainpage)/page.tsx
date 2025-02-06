@@ -1,7 +1,7 @@
 import Link from "next/link";
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+    <main className="flex min-h-screen flex-col items-center justify-center text-white">
       <div className="h-screen flex flex-col items-center justify-center">
       <h1 className=" text-8xl">Handlingslistan</h1>
       <p className="mt-4 text-3xl">
