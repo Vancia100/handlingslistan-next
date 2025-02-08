@@ -7,9 +7,9 @@ export default function HeaderFooterLayout({
   return (
     <>
     <Navbar/>
-    <div className="min-h-full w-screen mb-4">
+    <main className="min-h-screen w-screen h-min mb-4 text-white flex flex-col items-center pt-15 text-center p-10">
     {children}
-    </div>
+    </main>
     <Footer/>
     </>
   )
