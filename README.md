@@ -2,9 +2,9 @@
 A free to self host list
 ## TODO
 
-- [ ] Responsive navbar with hamburger menue. CSS only.
-- [ ] Cool mainpage with descriptions
+- [x] Responsive navbar with hamburger menu. CSS only.
 - [ ] Setup database
+- [ ] Cool mainpage with descriptions
 - [ ] Implement auth
 - [ ] Profile page
 - [ ] Start Webb app:
