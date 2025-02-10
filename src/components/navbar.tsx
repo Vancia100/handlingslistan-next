@@ -3,11 +3,10 @@ import Image from "next/image"
 
 export default function Navbar() {
   return (
-    <nav id="nav-bar" className="text-white md:sticky fixed md:bg-none bg-primary-black m-0 w-max md:text-2xl text-4xl flex-col md:text-center md:backdrop-blur-xl min-h-full left-[-100%] ">
+    <nav id="nav-bar" className="text-white md:sticky top-0 md:bg-none fixed bg-primary-black m-0 min-h-full md:h-min w-max text-2xl flex-col md:text-center md:backdrop-blur-xl left-[-100%]">
       <input type="checkbox" id="menu-toggle" className="hidden"/>
       <label htmlFor="menu-toggle" className="cursor-pointer md:hidden block p-4 fixed top-0 left-0">
-        <Image src={"/menu.svg"} alt="menue icon" width={40} height={40}/>
-
+        <Image src={"/menu.svg"} alt="menu icon" width={40} height={40}/>
       </label>
       <span className="md:w-screen mt-18 border-b-primary-white flex md:border-b-2 p-4 md:flex md:items-start md:gap-x-12 md:flex-row flex-wrap md:justify-center gap-6 align-middle  w-min md:mt-0">
       <Link href="/" className="flex md:flex-row md:w-max">
@@ -35,4 +34,4 @@ export default function Navbar() {
       </style>
     </nav>
   )
-} 
+}

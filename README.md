@@ -4,6 +4,7 @@ A free to self host list
 
 - [x] Responsive navbar with hamburger menu. CSS only.
 - [ ] Setup database
+- [ ] Test deploy
 - [ ] Cool mainpage with descriptions
 - [ ] Implement auth
 - [ ] Profile page
