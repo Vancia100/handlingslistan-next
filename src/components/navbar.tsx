@@ -3,7 +3,7 @@ import Image from "next/image"
 
 export default function Navbar() {
   return (
-    <nav id="nav-bar" className="text-white md:sticky top-0 md:bg-none fixed bg-primary-black m-0 min-h-full md:h-min w-max text-2xl flex-col md:text-center md:backdrop-blur-xl left-[-100%]">
+    <nav id="nav-bar" className="text-white md:sticky top-0 md:bg-[#ffffff00] fixed bg-primary-black m-0 min-h-full md:h-min w-max text-2xl flex-col md:text-center md:backdrop-blur-xl left-[-100%]">
       <input type="checkbox" id="menu-toggle" className="hidden"/>
       <label htmlFor="menu-toggle" className="cursor-pointer md:hidden block p-4 fixed top-0 left-0">
         <Image src={"/menu.svg"} alt="menu icon" width={40} height={40}/>
