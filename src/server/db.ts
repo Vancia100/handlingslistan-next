@@ -4,12 +4,7 @@ import { env } from "@/env";
 import { PrismaPg } from "@prisma/adapter-pg"
 
 const createPrismaClient = () => {
-  const pool = new Pool({
-    connectionString: process.env.DATABASE_URL
-  })
-  const adapter = new PrismaPg(pool)
   return new PrismaClient({
-    adapter,
     log:
       env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
   });
