@@ -1,17 +1,19 @@
 import Link from "next/link"
 
-export default function Card(props:{
-  title: string,
-  description:string,
+export default function Card(props: {
+  title: string
+  description: string
   url: string
   picUrl?: string
 }) {
-  return(
-      <Link className="rounded-lg bg-primary-black-75 p-4 realtive overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-600" href={props.url}>
+  return (
+    <Link
+      className="bg-primary-black-75 realtive overflow-hidden rounded-lg p-4 shadow-lg transition-shadow duration-600 hover:shadow-xl"
+      href={props.url}>
       <div className="relative p-4">
-        <h3 className="text-lg font-bold mb-2">{props.title}</h3>
-        <p className="text-gray-600 line-clamp-3">{props.description}</p>
+        <h3 className="mb-2 text-lg font-bold">{props.title}</h3>
+        <p className="line-clamp-3 text-gray-600">{props.description}</p>
       </div>
-      </Link>
+    </Link>
   )
 }

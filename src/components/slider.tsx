@@ -1,8 +1,6 @@
-export default function Slider(props: {
-  children: React.ReactNode
-}) {
+export default function Slider(props: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-row overflow-x-scroll gap-4 align-middle justify-center max-w-screen w-full">
+    <div className="flex w-full max-w-screen flex-row justify-center gap-4 overflow-x-scroll align-middle">
       {props.children}
     </div>
   )
