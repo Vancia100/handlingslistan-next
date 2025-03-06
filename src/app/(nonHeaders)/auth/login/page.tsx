@@ -1,10 +1,13 @@
 import SignIn from "@/components/sign-in"
 
-export default function Login() {
+export default async function Login(props: {
+  searchParams: Promise<Record<string, string>>
+}) {
+  const redir = await props.searchParams
   return (
-    <div className="flex flex-col items-center justify-center p-9 bg-primary-black-50 rounded-2xl" >
-      <h1 className="text-4xl pb-8">Sign in</h1>
-      <SignIn />
+    <div className="bg-primary-black-50 flex flex-col items-center justify-center rounded-2xl p-9">
+      <h1 className="pb-8 text-4xl">Sign in</h1>
+      <SignIn redirect={redir.redirect} />
     </div>
   )
 }

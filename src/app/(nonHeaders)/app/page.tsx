@@ -7,36 +7,35 @@ import Card from "@/components/card"
 
 export default function WebbApp() {
   return (
-    <div className="flex align-middle flex-col text-center">
-      <h1 className="text-6xl w-full m-5">WebbApp</h1>
+    <div className="flex flex-col text-center align-middle">
+      <h1 className="m-5 w-full text-6xl">WebbApp</h1>
       <p>This page does not have the headers or footers of the main page!</p>
 
-        <div className="flex flex-col">
-          <h1>WebbApp</h1>
-          <button onClick={async () => {
+      <div className="flex flex-col">
+        <h1>WebbApp</h1>
+        <button
+          onClick={async () => {
             "use server"
-            db.user.create({
+            await db.user.create({
               data: {
                 email: "test@test.com",
-              }
+              },
             })
           }}>
-            Create User button
-          </button>
-        </div>
-        <Slider>
-          <Card url="app" title="Title" description="description"></Card>
-          <Card url="app" title="Title" description="description"></Card>
-          <Card url="app" title="Title" description="description"></Card>
-          <Card url="app" title="Title" description="description"></Card>
-          <Card url="app" title="Title" description="description"></Card>
-          <Card url="app" title="Title" description="description"></Card>
-          <Card url="app" title="Title" description="description"></Card>
-          <Card url="app" title="Title" description="description"></Card>
-        </Slider>
-        <Link href="/app/create">
-          Create post
-        </Link>
+          Create User button
+        </button>
+      </div>
+      <Slider>
+        <Card url="app" title="Title" description="description"></Card>
+        <Card url="app" title="Title" description="description"></Card>
+        <Card url="app" title="Title" description="description"></Card>
+        <Card url="app" title="Title" description="description"></Card>
+        <Card url="app" title="Title" description="description"></Card>
+        <Card url="app" title="Title" description="description"></Card>
+        <Card url="app" title="Title" description="description"></Card>
+        <Card url="app" title="Title" description="description"></Card>
+      </Slider>
+      <Link href="/app/create">Create post</Link>
     </div>
   )
 }
@@ -44,9 +43,5 @@ export default function WebbApp() {
 const UserList = async () => {
   "use server"
   const user = await auth()
-  return (
-    <div>
-      {user?.user.email ?? "no user"}
-    </div>
-  )
+  return <div>{user?.user.email ?? "no user"}</div>
 }
