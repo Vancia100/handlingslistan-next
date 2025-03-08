@@ -6,7 +6,7 @@ import { type Metadata } from "next"
 export const metadata: Metadata = {
   title: "Listan",
   description:
-    "The all in one grocery list, home economics, reciept and recepie manager",
+    "The all in one grocery list, home economics, reciept and recipe manager",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 }
 

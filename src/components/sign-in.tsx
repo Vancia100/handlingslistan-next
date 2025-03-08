@@ -5,7 +5,7 @@ export default async function SignIn(props: { redirect?: string }) {
     <form
       action={async () => {
         "use server"
-        await signIn("discord", { redirectTo: props.redirect })
+        await signIn("discord", { redirectTo: props.redirect ?? "/" })
       }}>
       <button
         type="submit"

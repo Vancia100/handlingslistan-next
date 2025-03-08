@@ -15,6 +15,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model recipe {
+  id Int @id @default(autoincrement())
+  title String
+  description String
+  ingredients Json //For now
+  instructions String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdById String
+  createdBy User @relation(fields: [createdById], references: [id])
+
+  @@index([title])
+}
 model Post {
   id        Int      @id @default(autoincrement())
   name      String
@@ -64,6 +78,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   posts         Post[]
+  recipes      recipe[]
 }
 
 model VerificationToken {
