@@ -1,4 +1,5 @@
 import { auth, signOut } from "@/server/auth"
+import Image from "next/image"
 import { redirect } from "next/navigation"
 export default async function Profile() {
   const authenticated = await auth()
@@ -11,13 +12,15 @@ export default async function Profile() {
       <h1 className="m-5 text-3xl">Profile</h1>
       <span className="flex flex-row items-center justify-center pb-4 text-3xl">
         <h1 className="pr-5">{user.name}</h1>
-        <img
-          className="rounded-full"
-          alt="The users profile icon"
-          height={"50px"}
-          width={"50px"}
-          src={user.image ?? undefined}
-        />
+        {user.image && (
+          <Image
+            className="rounded-full"
+            alt="The users profile icon"
+            height={50}
+            width={50}
+            src={user.image}
+          />
+        )}
       </span>
       <div className="bg-primary-black-50 border-primary-black flex flex-col gap-3 rounded-xl border-2 p-4">
         <SettingsPart

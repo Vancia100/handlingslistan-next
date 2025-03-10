@@ -5,21 +5,17 @@ import { db } from "@/server/db"
 import { redirect } from "next/navigation"
 
 export default async function sendRecipe(
-  prevState: any,
-  formData: FormData,
-): Promise<{ message: string } | void> {
+  prevState: { message: string },
+  formData: (typeof recipeSchema)["_input"],
+): Promise<{ message: string }> {
   const sesstion = await auth()
   if (!sesstion) redirect("/auth/login?redirectTo=/app")
   const user = sesstion.user
-
-  const isValid = recipeSchema.safeParse({
-    title: formData.get("title"),
-    description: formData.get("description"),
-    ingredients: JSON.parse(formData.get("ingredients") as string),
-  })
+  console.log(formData)
+  const isValid = recipeSchema.safeParse(formData)
   if (!isValid.success) {
     console.error(isValid.error.issues)
-    return { message: isValid.error.issues[0]?.message as string }
+    return { message: isValid.error.issues[0]!.message }
   }
 
   const recipesFromDB = await db.recipe.findFirst({
