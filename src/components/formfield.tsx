@@ -1,6 +1,13 @@
 "use client"
 
-import { useRef, useActionState, useState, useEffect } from "react"
+import {
+  useRef,
+  useActionState,
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from "react"
 import { z } from "zod"
 
 import { allowedUnits, recipeSchema } from "@/schemas/recipeSchema"
@@ -13,6 +20,7 @@ export default function FormField() {
   })
 
   const [status, setStatus] = useState("")
+  const [instructions, setInstructions] = useState<string[]>([])
 
   useEffect(() => {
     if (submitStatus) {
@@ -21,18 +29,12 @@ export default function FormField() {
   }, [submitStatus])
 
   const clientAction = async (formData: FormData) => {
-    const instructionsArray = Array.from(formData.entries())
-      .filter(([key, value]) => key.startsWith("instruction") && value !== "")
-      .map(([_, value]) => value) as string[]
-
-    console.log(instructionsArray)
-
     const parsedForm = recipeSchema.safeParse({
       title: formData.get("title"),
       metadata: null,
       description: formData.get("description"),
       ingredients: null,
-      instructions: instructionsArray,
+      instructions,
     })
 
     if (!parsedForm.success) {
@@ -72,7 +74,10 @@ export default function FormField() {
       </label>
       <StylesTextArea name="description" title="Description:" />
       <IngredientsTable />
-      <InstructionsList />
+      <InstructionsList
+        instructions={instructions}
+        setInstructions={setInstructions}
+      />
       {status && <div>{status}</div>}
       {(pending && <div>loading...</div>) || null}
       <button
@@ -109,64 +114,72 @@ function IngredientsTable() {
   const [ingredients, setIngredients] = useState<number>()
   return (
     <table className="bg-primary-black-75 w-full">
-      <tr>
-        <td className="border-primary-black border-2">Ingrediets</td>
-        <td className="border-primary-black border-2">Amount</td>
-        <td className="border-primary-black border-2">Unit</td>
-      </tr>
-      {
+      <tbody>
         <tr>
-          <td className="border-primary-black border-2">
-            <input name={"ingredient"} className="w-full text-center" />
-          </td>
-          <td className="border-primary-black border-2">
-            <input
-              name={"Amount"}
-              className="w-full text-center"
-              type="number"
-            />
-          </td>
-          <td className="border-primary-black focus-within:border-primary-purple border-2">
-            <select
-              name="unit"
-              className="bg-primary-black-75 w-full px-2 text-center">
-              {allowedUnits.map((unit) => (
-                <option key={unit} value={unit} className="">
-                  {unit}
-                </option>
-              ))}
-            </select>
-          </td>
+          <td className="border-primary-black border-2">Ingrediets</td>
+          <td className="border-primary-black border-2">Amount</td>
+          <td className="border-primary-black border-2">Unit</td>
         </tr>
-      }
+        {
+          <tr>
+            <td className="border-primary-black border-2">
+              <input name={"ingredient"} className="w-full text-center" />
+            </td>
+            <td className="border-primary-black border-2">
+              <input
+                name={"Amount"}
+                className="w-full text-center"
+                type="number"
+              />
+            </td>
+            <td className="border-primary-black focus-within:border-primary-purple border-2">
+              <select
+                name="unit"
+                className="bg-primary-black-75 w-full px-2 text-center">
+                {allowedUnits.map((unit) => (
+                  <option key={unit} value={unit} className="">
+                    {unit}
+                  </option>
+                ))}
+              </select>
+            </td>
+          </tr>
+        }
+      </tbody>
     </table>
   )
 }
 
-function InstructionsList() {
-  const [instructions, setInstructions] = useState(1)
+function InstructionsList(props: {
+  instructions: string[]
+  setInstructions: Dispatch<SetStateAction<string[]>>
+}) {
+  const { instructions, setInstructions } = props
   return (
     <div>
       <h3 className="text-start">Instructions:</h3>
       <div className="border-primary-purple bg-primary-black-75 rounded-lg border-2">
         <ol className="mx-5 list-decimal">
-          {Array(instructions)
-            .fill(null)
-            .map((_, index) => {
-              return (
-                <li key={index}>
-                  <input
-                    type="text"
-                    name={`instruction-${index}`}
-                    className="w-full"
-                    onChange={(e) => {
-                      if (e.target.value !== "" && index === instructions - 1) {
-                        setInstructions((v) => v + 1)
-                      }
-                    }}></input>
-                </li>
-              )
-            })}
+          {[...instructions, ""].map((_, index) => {
+            return (
+              <li key={index}>
+                <input
+                  value={instructions[index] ?? ""}
+                  type="text"
+                  className="w-full"
+                  onChange={(e) => {
+                    const newInstructions = [...instructions]
+                    newInstructions[index] = e.target.value
+                    if (index != instructions.length && e.target.value === "") {
+                      console.log(newInstructions)
+                      newInstructions.splice(index, 1)
+                      console.log(newInstructions)
+                    }
+                    setInstructions(newInstructions)
+                  }}></input>
+              </li>
+            )
+          })}
         </ol>
       </div>
     </div>

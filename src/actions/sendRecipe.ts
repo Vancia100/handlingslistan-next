@@ -35,7 +35,7 @@ export default async function sendRecipe(
       ingredients: {
         create: isValid.data.ingredients,
       },
-      instructions: "Do something?",
+      instructions: isValid.data.instructions,
       createdBy: {
         connect: {
           id: user.id,

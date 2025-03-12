@@ -20,7 +20,7 @@ model recipe {
   title String
   description String
   ingredients Json //For now
-  instructions String
+  instructions Json // Might stay? Like have an many-to-one relation with steps seems ... better?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

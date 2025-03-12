@@ -58,6 +58,5 @@ export const recipeSchema = z.object({
         .min(1, "Must have a instruction")
         .max(3000, "Max length of instruction is 3000 characters"),
     )
-    .min(1, "Must have at least one instruction")
-    .nullable(), // nullable while this isn't implemented in the UI
+    .min(1, "Must have at least one instruction"),
 })
