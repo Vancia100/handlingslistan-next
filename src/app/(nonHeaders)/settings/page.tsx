@@ -1,6 +1,7 @@
 import { auth, signOut } from "@/server/auth"
 import Image from "next/image"
 import { redirect } from "next/navigation"
+
 export default async function Profile() {
   const authenticated = await auth()
   if (!authenticated) {
@@ -28,7 +29,7 @@ export default async function Profile() {
           info={user.name ?? ""}
           change={async () => {
             "use server"
-            console.log("change email")
+            console.log("change username")
           }}
         />
         <SettingsPart

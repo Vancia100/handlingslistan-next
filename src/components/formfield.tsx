@@ -7,11 +7,14 @@ import {
   useEffect,
   Dispatch,
   SetStateAction,
+  startTransition,
+  ChangeEvent,
 } from "react"
-import { z } from "zod"
 
 import { allowedUnits, recipeSchema } from "@/schemas/recipeSchema"
 import sendRecipe from "@/actions/sendRecipe"
+import { string } from "zod"
+import { start } from "repl"
 
 export default function FormField() {
   const titelRef = useRef<HTMLSpanElement>(null)
@@ -28,7 +31,9 @@ export default function FormField() {
     }
   }, [submitStatus])
 
-  const clientAction = async (formData: FormData) => {
+  const clientAction = (e: ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.target)
     const parsedForm = recipeSchema.safeParse({
       title: formData.get("title"),
       metadata: null,
@@ -42,11 +47,11 @@ export default function FormField() {
       setStatus(parsedForm.error.issues[0]!.message)
       return
     }
-    await formAction(parsedForm.data!)
+    startTransition(() => formAction(parsedForm.data!))
   }
 
   return (
-    <form className="flex flex-col gap-4" action={clientAction}>
+    <form className="flex flex-col gap-4" onSubmit={clientAction}>
       <label className="min-w-2/3">
         <span ref={titelRef} className="p-4 text-2xl font-bold">
           {"Title:"}
