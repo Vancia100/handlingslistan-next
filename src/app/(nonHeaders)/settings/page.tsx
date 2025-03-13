@@ -1,5 +1,4 @@
 import { auth, signOut } from "@/server/auth"
-import Image from "next/image"
 import { redirect } from "next/navigation"
 
 export default async function Profile() {
@@ -14,7 +13,7 @@ export default async function Profile() {
       <span className="flex flex-row items-center justify-center pb-4 text-3xl">
         <h1 className="pr-5">{user.name}</h1>
         {user.image && (
-          <Image
+          <img
             className="rounded-full"
             alt="The users profile icon"
             height={50}

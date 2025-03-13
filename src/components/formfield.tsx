@@ -5,16 +5,12 @@ import {
   useActionState,
   useState,
   useEffect,
-  Dispatch,
-  SetStateAction,
   startTransition,
-  ChangeEvent,
 } from "react"
+import type { Dispatch, SetStateAction, ChangeEvent } from "react"
 
 import { allowedUnits, recipeSchema } from "@/schemas/recipeSchema"
 import sendRecipe from "@/actions/sendRecipe"
-import { string } from "zod"
-import { start } from "repl"
 
 export default function FormField() {
   const titelRef = useRef<HTMLSpanElement>(null)
@@ -47,7 +43,7 @@ export default function FormField() {
       setStatus(parsedForm.error.issues[0]!.message)
       return
     }
-    startTransition(() => formAction(parsedForm.data!))
+    startTransition(() => formAction(parsedForm.data))
   }
 
   return (
@@ -103,7 +99,7 @@ function StylesTextArea(props: { name: string; title: string }) {
         ref={descriptionRef}
         name={props.name}
         className="bg-primary-black border-primary-purple w-full rounded-2xl border-4 p-2"
-        onFocus={(e) => {
+        onFocus={() => {
           descriptionRef.current?.classList.remove("border-4")
         }}
         onBlur={(e) => {

@@ -16,19 +16,20 @@ datasource db {
 }
 
 model recipe {
-  id Int @id @default(autoincrement())
-  title String
-  description String
-  ingredients Json //For now
+  id           Int      @id @default(autoincrement())
+  title        String
+  description  String
+  ingredients  Json //For now
   instructions Json // Might stay? Like have an many-to-one relation with steps seems ... better?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   createdById String
-  createdBy User @relation(fields: [createdById], references: [id])
+  createdBy   User   @relation(fields: [createdById], references: [id])
 
   @@index([title])
 }
+
 model Post {
   id        Int      @id @default(autoincrement())
   name      String
@@ -78,7 +79,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   posts         Post[]
-  recipes      recipe[]
+  recipes       recipe[]
 }
 
 model VerificationToken {
