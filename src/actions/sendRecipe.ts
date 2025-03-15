@@ -32,9 +32,7 @@ export default async function sendRecipe(
     data: {
       title: isValid.data.title,
       description: isValid.data.description,
-      ingredients: {
-        create: isValid.data.ingredients,
-      },
+      ingredients: isValid.data.ingredients,
       instructions: isValid.data.instructions,
       createdBy: {
         connect: {

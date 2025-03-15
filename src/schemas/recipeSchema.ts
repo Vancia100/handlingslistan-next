@@ -38,19 +38,17 @@ export const recipeSchema = z.object({
     .string()
     .min(1, "Must have a description")
     .max(3000, "Max length of description is 3000 characters"),
-  ingredients: z
-    .array(
-      z.object({
-        name: z.string().max(30, "can't be longer then 30 characters").min(3),
-        amount: z.number(),
-        unit: z.enum(allowedUnits, {
-          message:
-            "Not a valid unit, plase use one of the following: " +
-            allowedUnits.join(", "),
-        }),
+  ingredients: z.array(
+    z.object({
+      name: z.string().max(30, "can't be longer then 30 characters").min(3),
+      amount: z.number(),
+      unit: z.enum(allowedUnits, {
+        message:
+          "Not a valid unit, plase use one of the following: " +
+          allowedUnits.join(", "),
       }),
-    )
-    .nullable(), // nullable while this isn't implemented in the UI
+    }),
+  ),
   instructions: z
     .array(
       z

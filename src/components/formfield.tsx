@@ -9,8 +9,11 @@ import {
 } from "react"
 import type { Dispatch, SetStateAction, ChangeEvent } from "react"
 
+import { z } from "zod"
 import { allowedUnits, recipeSchema } from "@/schemas/recipeSchema"
 import sendRecipe from "@/actions/sendRecipe"
+
+type IngredientsType = z.infer<typeof recipeSchema>["ingredients"]
 
 export default function FormField() {
   const titelRef = useRef<HTMLSpanElement>(null)
@@ -20,6 +23,7 @@ export default function FormField() {
 
   const [status, setStatus] = useState("")
   const [instructions, setInstructions] = useState<string[]>([])
+  const [ingredients, setIngredients] = useState<IngredientsType>([])
 
   useEffect(() => {
     if (submitStatus) {
@@ -34,7 +38,7 @@ export default function FormField() {
       title: formData.get("title"),
       metadata: null,
       description: formData.get("description"),
-      ingredients: null,
+      ingredients,
       instructions,
     })
 
@@ -74,7 +78,10 @@ export default function FormField() {
         />
       </label>
       <StylesTextArea name="description" title="Description:" />
-      <IngredientsTable />
+      <IngredientsTable
+        ingredients={ingredients}
+        setIngredients={setIngredients}
+      />
       <InstructionsList
         instructions={instructions}
         setInstructions={setInstructions}
@@ -111,8 +118,11 @@ function StylesTextArea(props: { name: string; title: string }) {
   )
 }
 
-function IngredientsTable() {
-  const [ingredients, setIngredients] = useState<number>()
+function IngredientsTable(props: {
+  ingredients: (typeof recipeSchema)["_input"]["ingredients"]
+  setIngredients: Dispatch<SetStateAction<IngredientsType>>
+}) {
+  const UnitRef = useRef<(typeof allowedUnits)[number] | null>(null)
   return (
     <table className="bg-primary-black-75 w-full">
       <tbody>
@@ -121,31 +131,90 @@ function IngredientsTable() {
           <td className="border-primary-black border-2">Amount</td>
           <td className="border-primary-black border-2">Unit</td>
         </tr>
-        {
-          <tr>
-            <td className="border-primary-black border-2">
-              <input name={"ingredient"} className="w-full text-center" />
-            </td>
-            <td className="border-primary-black border-2">
-              <input
-                name={"Amount"}
-                className="w-full text-center"
-                type="number"
-              />
-            </td>
-            <td className="border-primary-black focus-within:border-primary-purple border-2">
-              <select
-                name="unit"
-                className="bg-primary-black-75 w-full px-2 text-center">
-                {allowedUnits.map((unit) => (
-                  <option key={unit} value={unit} className="">
-                    {unit}
-                  </option>
-                ))}
-              </select>
-            </td>
-          </tr>
-        }
+        {[...props.ingredients, { name: "", amount: 0, unit: "g" }].map(
+          (ingredient, index) => (
+            <tr key={index}>
+              <td className="border-primary-black border-2">
+                <input
+                  className="w-full text-center"
+                  value={ingredient.name}
+                  onChange={(e) => {
+                    const newIngredients = [...props.ingredients]
+                    if (!newIngredients[index]) {
+                      const optionalUnit = UnitRef.current
+                      newIngredients[index] = {
+                        name: "",
+                        amount: 0,
+                        unit: optionalUnit ?? "g",
+                      }
+                      if (optionalUnit) {
+                        UnitRef.current = null
+                      }
+                    }
+                    newIngredients[index].name = e.target.value
+                    if (
+                      e.target.value === "" &&
+                      newIngredients[index].amount === 0
+                    ) {
+                      newIngredients.splice(index, 1)
+                    }
+                    props.setIngredients(newIngredients)
+                  }}
+                />
+              </td>
+              <td className="border-primary-black border-2">
+                <input
+                  className="w-full text-center"
+                  type="number"
+                  value={ingredient.amount}
+                  onChange={(e) => {
+                    const newIngredients = [...props.ingredients]
+                    if (!newIngredients[index]) {
+                      const optionalUnit = UnitRef.current
+                      newIngredients[index] = {
+                        name: "",
+                        amount: 0,
+                        unit: optionalUnit ?? "g",
+                      }
+                      if (optionalUnit) {
+                        UnitRef.current = null
+                      }
+                    }
+                    newIngredients[index].amount = Number(e.target.value)
+                    if (
+                      e.target.value === "" &&
+                      newIngredients[index]!.name === ""
+                    ) {
+                      newIngredients.splice(index, 1)
+                    }
+                    props.setIngredients(newIngredients)
+                  }}
+                />
+              </td>
+              <td className="border-primary-black focus-within:border-primary-purple border-2">
+                <select
+                  className="bg-primary-black-75 w-full px-2 text-center"
+                  onChange={(e) => {
+                    const newIngredients = [...props.ingredients]
+                    const value = e.target
+                      .value as (typeof allowedUnits)[number]
+                    if (!newIngredients[index]) {
+                      UnitRef.current = value
+                    } else {
+                      newIngredients[index].unit = value
+                      props.setIngredients(newIngredients)
+                    }
+                  }}>
+                  {allowedUnits.map((unit) => (
+                    <option key={unit} value={unit} className="">
+                      {unit}
+                    </option>
+                  ))}
+                </select>
+              </td>
+            </tr>
+          ),
+        )}
       </tbody>
     </table>
   )
