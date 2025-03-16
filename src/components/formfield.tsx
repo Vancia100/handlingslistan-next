@@ -6,12 +6,15 @@ import {
   useState,
   useEffect,
   startTransition,
+  type ChangeEvent,
 } from "react"
-import type { Dispatch, SetStateAction, ChangeEvent } from "react"
 
-import { z } from "zod"
-import { allowedUnits, recipeSchema } from "@/schemas/recipeSchema"
+import { type z } from "zod"
+import { recipeSchema } from "@/schemas/recipeSchema"
 import sendRecipe from "@/actions/sendRecipe"
+
+import IngredientsTable from "@/components/ingredientsTable"
+import InstructionsList from "@/components/instructionsList"
 
 type IngredientsType = z.infer<typeof recipeSchema>["ingredients"]
 
@@ -115,143 +118,5 @@ function StylesTextArea(props: { name: string; title: string }) {
           }
         }}></textarea>
     </label>
-  )
-}
-
-function IngredientsTable(props: {
-  ingredients: (typeof recipeSchema)["_input"]["ingredients"]
-  setIngredients: Dispatch<SetStateAction<IngredientsType>>
-}) {
-  const UnitRef = useRef<(typeof allowedUnits)[number] | null>(null)
-  return (
-    <table className="bg-primary-black-75 w-full">
-      <tbody>
-        <tr>
-          <td className="border-primary-black border-2">Ingrediets</td>
-          <td className="border-primary-black border-2">Amount</td>
-          <td className="border-primary-black border-2">Unit</td>
-        </tr>
-        {[...props.ingredients, { name: "", amount: 0, unit: "g" }].map(
-          (ingredient, index) => (
-            <tr key={index}>
-              <td className="border-primary-black border-2">
-                <input
-                  className="w-full text-center"
-                  value={ingredient.name}
-                  onChange={(e) => {
-                    const newIngredients = [...props.ingredients]
-                    if (!newIngredients[index]) {
-                      const optionalUnit = UnitRef.current
-                      newIngredients[index] = {
-                        name: "",
-                        amount: 0,
-                        unit: optionalUnit ?? "g",
-                      }
-                      if (optionalUnit) {
-                        UnitRef.current = null
-                      }
-                    }
-                    newIngredients[index].name = e.target.value
-                    if (
-                      e.target.value === "" &&
-                      newIngredients[index].amount === 0
-                    ) {
-                      newIngredients.splice(index, 1)
-                    }
-                    props.setIngredients(newIngredients)
-                  }}
-                />
-              </td>
-              <td className="border-primary-black border-2">
-                <input
-                  className="w-full text-center"
-                  type="number"
-                  value={ingredient.amount}
-                  onChange={(e) => {
-                    const newIngredients = [...props.ingredients]
-                    if (!newIngredients[index]) {
-                      const optionalUnit = UnitRef.current
-                      newIngredients[index] = {
-                        name: "",
-                        amount: 0,
-                        unit: optionalUnit ?? "g",
-                      }
-                      if (optionalUnit) {
-                        UnitRef.current = null
-                      }
-                    }
-                    newIngredients[index].amount = Number(e.target.value)
-                    if (
-                      e.target.value === "" &&
-                      newIngredients[index]!.name === ""
-                    ) {
-                      newIngredients.splice(index, 1)
-                    }
-                    props.setIngredients(newIngredients)
-                  }}
-                />
-              </td>
-              <td className="border-primary-black focus-within:border-primary-purple border-2">
-                <select
-                  className="bg-primary-black-75 w-full px-2 text-center"
-                  onChange={(e) => {
-                    const newIngredients = [...props.ingredients]
-                    const value = e.target
-                      .value as (typeof allowedUnits)[number]
-                    if (!newIngredients[index]) {
-                      UnitRef.current = value
-                    } else {
-                      newIngredients[index].unit = value
-                      props.setIngredients(newIngredients)
-                    }
-                  }}>
-                  {allowedUnits.map((unit) => (
-                    <option key={unit} value={unit} className="">
-                      {unit}
-                    </option>
-                  ))}
-                </select>
-              </td>
-            </tr>
-          ),
-        )}
-      </tbody>
-    </table>
-  )
-}
-
-function InstructionsList(props: {
-  instructions: string[]
-  setInstructions: Dispatch<SetStateAction<string[]>>
-}) {
-  const { instructions, setInstructions } = props
-  return (
-    <div>
-      <h3 className="text-start">Instructions:</h3>
-      <div className="border-primary-purple bg-primary-black-75 rounded-lg border-2">
-        <ol className="mx-5 list-decimal">
-          {[...instructions, ""].map((_, index) => {
-            return (
-              <li key={index}>
-                <input
-                  value={instructions[index] ?? ""}
-                  type="text"
-                  className="w-full"
-                  onChange={(e) => {
-                    const newInstructions = [...instructions]
-                    newInstructions[index] = e.target.value
-                    if (index != instructions.length && e.target.value === "") {
-                      console.log(newInstructions)
-                      newInstructions.splice(index, 1)
-                      console.log(newInstructions)
-                    }
-                    setInstructions(newInstructions)
-                  }}></input>
-              </li>
-            )
-          })}
-        </ol>
-      </div>
-    </div>
   )
 }
