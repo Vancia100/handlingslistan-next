@@ -15,19 +15,59 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model recipe {
-  id           Int      @id @default(autoincrement())
+enum Units {
+  g
+  hg
+  kg
+  ml
+  cl
+  dl
+  l
+  tsp
+  msk
+  krm
+  st
+}
+
+model Recipe {
+  id           Int                @id @default(autoincrement())
   title        String
   description  String
-  ingredients  Json //For now
-  instructions Json // Might stay? Like have an many-to-one relation with steps seems ... better?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  ingredients  RecipeIngredient[]
+  instructions String[]
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  public     Boolean @default(false)
+  viewableBy User[]  @relation("ViewableRecipes")
 
   createdById String
   createdBy   User   @relation(fields: [createdById], references: [id])
 
   @@index([title])
+}
+
+model RecipeIngredient {
+  id     Int   @id @default(autoincrement())
+  amount Float
+  unit   Units
+
+  recipeId Int
+  recipe   Recipe @relation(fields: [recipeId], references: [id])
+
+  ingredientId Int
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+
+  @@unique([recipeId, ingredientId])
+}
+
+model Ingredient {
+  id          Int                @id @default(autoincrement())
+  name        String             @unique
+  defaultUnit Units?
+  recepies    RecipeIngredient[]
+
+  @@index([name])
 }
 
 model Post {
@@ -76,10 +116,12 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  accounts      Account[]
-  sessions      Session[]
-  posts         Post[]
-  recipes       recipe[]
+
+  accounts        Account[]
+  sessions        Session[]
+  posts           Post[]
+  recipesCreated  Recipe[]
+  viewableRecipes Recipe[]  @relation("ViewableRecipes")
 }
 
 model VerificationToken {

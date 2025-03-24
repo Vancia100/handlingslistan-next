@@ -1,27 +1,7 @@
 import { z } from "zod"
+import { Units } from "@prisma/client"
 
-export const allowedUnits = [
-  "g",
-  "hg",
-  "kg",
-  "ml",
-  "cl",
-  "dl",
-  "l",
-  "tsp",
-  "msk",
-  "krm",
-  "st",
-  "pkt",
-  "lb",
-  "oz",
-  "gal",
-  "qt",
-  "pt",
-  "cup",
-  "fl oz",
-  "tbsp",
-] as const
+export const allowedUnits = Object.values(Units)
 
 export const recipeSchema = z.object({
   title: z
@@ -38,11 +18,16 @@ export const recipeSchema = z.object({
     .string()
     .min(1, "Must have a description")
     .max(3000, "Max length of description is 3000 characters"),
+  public: z.boolean(),
   ingredients: z.array(
     z.object({
-      name: z.string().max(30, "can't be longer then 30 characters").min(3),
+      name: z
+        .string()
+        .toLowerCase()
+        .max(30, "can't be longer then 30 characters")
+        .min(3),
       amount: z.number(),
-      unit: z.enum(allowedUnits, {
+      unit: z.enum(Object.values(Units) as [Units, ...Units[]], {
         message:
           "Not a valid unit, plase use one of the following: " +
           allowedUnits.join(", "),

@@ -43,6 +43,7 @@ export default function FormField() {
       description: formData.get("description"),
       ingredients,
       instructions,
+      public: formData.get("public") === "on",
     })
 
     if (!parsedForm.success) {
@@ -89,6 +90,9 @@ export default function FormField() {
         instructions={instructions}
         setInstructions={setInstructions}
       />
+      <label>
+        <span>Public</span> <input type="checkbox" name="public" />
+      </label>
       {status && <div>{status}</div>}
       {(pending && <div>loading...</div>) || null}
       <button
