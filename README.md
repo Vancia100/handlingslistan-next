@@ -18,8 +18,10 @@ A free to self host list
 - [ ] Start Webb app:
   - [x] Recipes started
   - [ ] Save form state localy in indexDB or localstorage
-  - [ ] My Recipes on main page
-  - [ ] Public and private recipes
+  - [x] My Recipes on main page
+  - [x] Public and private recipes
+  - [ ] Search for recipes
+  - [ ] Make the webapp not look like ass on phones
   - [ ] Create a list and save it to database
   - [ ] Recipe to list interaction
   - [ ] Go shoping, things left in list gets put inte new list, data saved ...
