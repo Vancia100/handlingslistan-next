@@ -29,6 +29,11 @@ enum Units {
   st
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model Recipe {
   id           Int                @id @default(autoincrement())
   title        String
@@ -117,6 +122,7 @@ model User {
   emailVerified DateTime?
   image         String?
 
+  role            Role      @default(USER)
   accounts        Account[]
   sessions        Session[]
   posts           Post[]

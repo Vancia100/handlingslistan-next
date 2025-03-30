@@ -60,6 +60,7 @@ export default function IngredientsTable(props: {
                 <input
                   className="w-full text-center"
                   type="number"
+                  step={0.1}
                   value={ingredient.amount}
                   onChange={(e) => {
                     const newIngredients = [...props.ingredients]

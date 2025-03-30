@@ -10,7 +10,7 @@ const createPrismaClient = () => {
   const adapter = new PrismaPg(pool) //Does not work with schemas apparently.
   // Seems to be no workaround in postgres, so you have to use the public schema to use a adapter.
   return new PrismaClient({
-    // adapter,
+    adapter,
     log:
       env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
   })
