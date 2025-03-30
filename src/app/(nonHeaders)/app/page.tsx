@@ -5,20 +5,25 @@ import Link from "next/link"
 
 import Slider from "@/components/slider"
 import Card from "@/components/card"
+import { Suspense } from "react"
 
-export default async function WebbApp() {
+export default function WebbApp() {
+  return (
+    <div className="flex w-full flex-col text-center align-middle">
+      <h1 className="m-5 w-full text-6xl">WebbApp</h1>
+      <Suspense fallback={<div>Loading...</div>}>
+        <RecomendedRecepies />
+      </Suspense>
+      <Suspense>
+        <MyRecepies />
+      </Suspense>
+      <Link href="/app/create">Create post</Link>
+    </div>
+  )
+}
+async function RecomendedRecepies() {
   const user = (await auth())?.user
-  const myRecepiesAsync = user
-    ? db.recipe.findMany({
-        take: 5,
-        orderBy: {
-          updatedAt: "desc",
-        },
-        where: { createdById: user.id },
-      })
-    : null
-
-  const recomendedRecepiesAsync = db.recipe.findMany({
+  const recomendedRecepies = await db.recipe.findMany({
     take: 10,
     include: {
       viewableBy: {
@@ -54,14 +59,40 @@ export default async function WebbApp() {
       ],
     },
   })
-
-  const [myRecepies, recomendedRecepies] = await Promise.all([
-    myRecepiesAsync,
-    recomendedRecepiesAsync,
-  ])
+  if (recomendedRecepies.length === 0) {
+    return null
+  }
   return (
-    <div className="flex w-full flex-col text-center align-middle">
-      <h1 className="m-5 w-full text-6xl">WebbApp</h1>
+    <div className="m-5">
+      <h2 className="mb-1 text-start text-4xl">Recmended recipes:</h2>
+      <Slider>
+        {recomendedRecepies.map((recipe, index) => (
+          <Card
+            key={index}
+            url={`/app/recipe/${recipe.id}`}
+            title={recipe.title}
+            description={recipe.description}
+          />
+        ))}
+      </Slider>
+    </div>
+  )
+}
+
+async function MyRecepies() {
+  const user = (await auth())?.user
+  const myRecepies = user
+    ? await db.recipe.findMany({
+        take: 5,
+        orderBy: {
+          updatedAt: "desc",
+        },
+        where: { createdById: user.id },
+      })
+    : null
+
+  return (
+    <>
       {myRecepies && myRecepies.length > 0 && (
         <div className="m-5">
           <h2 className="mb-1 text-start text-4xl">Your recipes:</h2>
@@ -77,23 +108,6 @@ export default async function WebbApp() {
           </Slider>
         </div>
       )}
-
-      {recomendedRecepies && recomendedRecepies.length > 0 && (
-        <div className="m-5">
-          <h2 className="mb-1 text-start text-4xl">Recmended recipes:</h2>
-          <Slider>
-            {recomendedRecepies.map((recipe, index) => (
-              <Card
-                key={index}
-                url={`/app/recipe/${recipe.id}`}
-                title={recipe.title}
-                description={recipe.description}
-              />
-            ))}
-          </Slider>
-        </div>
-      )}
-      <Link href="/app/create">Create post</Link>
-    </div>
+    </>
   )
 }

@@ -9,9 +9,19 @@ export default async function Recipe(props: {
 }) {
   const postId = Number((await props.params).id)
   if (!postId) return <NotFount />
+  const user = (await auth())?.user
+
+  return <GetRecipe postId={postId} userId={user?.id} />
+}
+
+async function GetRecipe(props: {
+  postId: number
+  userId: string | undefined
+}) {
+  "use cache"
   const recipe = await db.recipe.findFirst({
     where: {
-      id: postId,
+      id: props.postId,
     },
     include: {
       viewableBy: {
@@ -34,10 +44,9 @@ export default async function Recipe(props: {
   })
   if (!recipe) return <NotFount />
   if (!recipe.public) {
-    const user = (await auth())?.user
     if (
-      !user ||
-      recipe.viewableBy.find((usr) => usr.id === user.id) === undefined
+      !props.userId ||
+      recipe.viewableBy.find((usr) => usr.id === props.userId) === undefined
     ) {
       return <NotAuthed />
     }
