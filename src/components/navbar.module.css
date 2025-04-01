@@ -1,0 +1,6 @@
+.navBar {
+  transition: left 0.3s ease-in-out;
+}
+.navBar:has(input:checked) {
+  left: 0;
+}

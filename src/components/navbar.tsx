@@ -1,11 +1,16 @@
 import Link from "next/link"
 import Image from "next/image"
 
+import styles from "./navbar.module.css"
+
 export default function Navbar() {
   return (
     <nav
-      id="nav-bar"
-      className="bg-primary-black fixed top-0 left-[-100%] m-0 min-h-full w-max flex-col text-2xl text-white md:sticky md:h-min md:bg-[#ffffff00] md:text-center md:backdrop-blur-xl">
+      className={
+        styles.navBar +
+        " " +
+        "bg-primary-black fixed top-0 left-[-100%] m-0 min-h-full w-max flex-col text-2xl text-white md:sticky md:h-min md:bg-[#ffffff00] md:text-center md:backdrop-blur-xl"
+      }>
       <input type="checkbox" id="menu-toggle" className="hidden" />
       <label
         htmlFor="menu-toggle"
@@ -34,16 +39,6 @@ export default function Navbar() {
           Account
         </Link>
       </span>
-      <style>
-        {`
-          #nav-bar {
-            transition: left 0.3s ease-in-out;
-          }
-          #nav-bar:has(input:checked) {
-            left: 0;
-          }
-          `}
-      </style>
     </nav>
   )
 }
