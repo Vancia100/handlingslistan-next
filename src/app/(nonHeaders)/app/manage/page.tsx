@@ -18,7 +18,7 @@ export default async function ManagePage() {
     <div>
       <h2 className="text-2xl">{"Admin panel"}</h2>
       <p>{"Manage Ingredients"}</p>
-      <IngredietsManager ingredients={ingredeints} />
+      <IngredietsManager ingredeints={ingredeints} />
     </div>
   )
 }

@@ -1,0 +1,21 @@
+.clickedOn {
+  display: none !important;
+}
+.isHighlight > li:has(.clickedOn) {
+  background-color: var(--color-primary-black-50) !important;
+}
+
+.listItem:hover > :first-child {
+  display: inline;
+}
+
+.isHighlight > li > :first-child {
+  display: inline;
+}
+
+.isHighlight > li:hover {
+  background: none;
+}
+.isHighlight > li {
+  background-color: var(--color-primary-black-50);
+}

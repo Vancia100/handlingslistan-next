@@ -62,6 +62,14 @@ export default async function WebbApp() {
   return (
     <div className="flex w-full flex-col text-center align-middle">
       <h1 className="m-5 w-full text-6xl">WebbApp</h1>
+      {user?.role === "ADMIN" && (
+        <div className="m-5 flex flex-col items-start">
+          <h2 className="mb-1 text-start text-4xl">Admin panel:</h2>
+          <Link className="text-start text-2xl underline" href="/app/manage">
+            Manage
+          </Link>
+        </div>
+      )}
       {myRecepies && myRecepies.length > 0 && (
         <div className="m-5">
           <h2 className="mb-1 text-start text-4xl">Your recipes:</h2>

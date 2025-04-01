@@ -7,5 +7,6 @@ export const ingredeintSchema = z.array(
     id: z.number().int().positive(),
     defaultUnit: z.enum(allowedUnits as [Units, ...Units[]]),
     name: z.string().min(1).max(50),
+    aliases: z.array(z.string().max(30).min(2)),
   }),
 )

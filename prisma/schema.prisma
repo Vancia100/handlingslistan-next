@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  previewFeatures = ["driverAdapters", "relationJoins"]
 }
 
 datasource db {
@@ -71,6 +71,7 @@ model Ingredient {
   name        String             @unique
   defaultUnit Units?
   recepies    RecipeIngredient[]
+  aliases     String[]
 
   @@index([name])
 }
