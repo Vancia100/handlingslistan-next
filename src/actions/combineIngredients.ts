@@ -21,10 +21,9 @@ export default async function combineIngredeints({
 
   const val = await tryCatch(
     (async () => {
-      //Not to weck db while testing
-      return
-
       // Get all recipes which conflict with constraints
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      return
       const constraints = await db.recipeIngredient.findMany({
         relationLoadStrategy: "join",
         select: {

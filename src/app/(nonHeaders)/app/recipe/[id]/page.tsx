@@ -1,9 +1,6 @@
 import { db } from "@/server/db"
 import { auth } from "@/server/auth"
 
-import type { z } from "zod"
-import type { recipeSchema } from "@/schemas/recipeSchema"
-
 export default async function Recipe(props: {
   params: Promise<{ id: string }>
 }) {
@@ -37,6 +34,7 @@ export default async function Recipe(props: {
     const user = (await auth())?.user
     if (
       !user ||
+      user.role !== "ADMIN" ||
       recipe.viewableBy.find((usr) => usr.id === user.id) === undefined
     ) {
       return <NotAuthed />

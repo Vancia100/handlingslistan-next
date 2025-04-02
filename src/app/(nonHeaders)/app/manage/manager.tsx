@@ -19,7 +19,7 @@ import manager from "./manager.module.css"
 import combineIngredeints from "@/actions/combineIngredients"
 
 type InternalIngredient = (Ingredient & {
-  errormesage?: string
+  blured?: boolean
 })[]
 
 export default function IngredietsManager({
@@ -44,7 +44,7 @@ export default function IngredietsManager({
     startTransition(() => {
       addOptimisticMessage(
         ingredients.map((val) =>
-          val.id === id ? { ...val, errorMessage: "test" } : val,
+          val.id === id ? { ...val, blured: true } : val,
         ),
       )
     })
@@ -103,7 +103,7 @@ export default function IngredietsManager({
 
   const [optimisticIngredients, addOptimisticMessage] = useOptimistic(
     ingredients,
-    (_state, newRecipes: InternalIngredient) => newRecipes,
+    (state, newRecipes: InternalIngredient) => newRecipes,
   )
   //Call to send Server action to change units
   const clinetAction = useCallback(
@@ -154,21 +154,25 @@ export default function IngredietsManager({
               className={
                 manager.listItem +
                 " " +
+                (ingredient.blured
+                  ? "bg-primary-balck opacity-60 blur-xs" + " "
+                  : "") +
                 "border-primary-black-75 m-1 w-max rounded-2xl border-2 p-1"
               }>
               <span
                 className="bg-primary-blue hidden cursor-pointer rounded-2xl p-1 px-2"
-                onClick={(e) => {
+                onClick={async (e) => {
                   if (!combinator) {
                     setCombinator(ingredient.id)
                     e.currentTarget.classList.add(manager.clickedOn!)
                   } else {
-                    combine(ingredient.id)
+                    const combineAsync = combine(ingredient.id)
                     document
                       .querySelectorAll("." + manager.clickedOn!)
                       .forEach((item) => {
                         item.classList.remove(manager.clickedOn!)
                       })
+                    await combineAsync
                   }
                   listRef.current!.classList.toggle(manager.isHighlight!)
                 }}>
