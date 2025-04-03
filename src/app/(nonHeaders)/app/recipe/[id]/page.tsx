@@ -1,8 +1,6 @@
 import { db } from "@/server/db"
 import { auth } from "@/server/auth"
-
-import type { z } from "zod"
-import type { recipeSchema } from "@/schemas/recipeSchema"
+import type { Role } from "@prisma/client"
 
 export default async function Recipe(props: {
   params: Promise<{ id: string }>
@@ -11,12 +9,13 @@ export default async function Recipe(props: {
   if (!postId) return <NotFount />
   const user = (await auth())?.user
 
-  return <GetRecipe postId={postId} userId={user?.id} />
+  return <GetRecipe postId={postId} userId={user?.id} userRole={user?.role} />
 }
 
 async function GetRecipe(props: {
   postId: number
   userId: string | undefined
+  userRole: Role | undefined
 }) {
   "use cache"
   const recipe = await db.recipe.findFirst({
@@ -43,9 +42,10 @@ async function GetRecipe(props: {
     },
   })
   if (!recipe) return <NotFount />
+
   if (!recipe.public) {
     if (
-      !props.userId ||
+      props.userRole !== "ADMIN" ||
       recipe.viewableBy.find((usr) => usr.id === props.userId) === undefined
     ) {
       return <NotAuthed />

@@ -93,6 +93,14 @@ async function MyRecepies() {
 
   return (
     <>
+      {user?.role === "ADMIN" && (
+        <div className="m-5 flex flex-col items-start">
+          <h2 className="mb-1 text-start text-4xl">Admin panel:</h2>
+          <Link className="text-start text-2xl underline" href="/app/manage">
+            Manage
+          </Link>
+        </div>
+      )}
       {myRecepies && myRecepies.length > 0 && (
         <div className="m-5">
           <h2 className="mb-1 text-start text-4xl">Your recipes:</h2>

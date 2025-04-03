@@ -20,7 +20,9 @@ A free to self host list
   - [ ] Save form state localy in indexDB or localstorage
   - [x] My Recipes on main page
   - [x] Public and private recipes
-  - [ ] Search for recipes
+  - [x] Search for recipes
+  - [ ] Improve looks of "card" component
+  - [ ] Better search options?
   - [ ] Make the webapp not look like ass on phones
   - [ ] Create a list and save it to database
   - [ ] Recipe to list interaction
