@@ -7,6 +7,9 @@ export default function Footer() {
       <Link href="/download">Download</Link>
       <Link href="/webap">Web version</Link>
       <Link href="/docs">Docs</Link>
+      <Link href="https://github.com/Vancia100/handlingslistan-next">
+        Source code
+      </Link>
       <Link href="/profile" className="grow text-right">
         Account
       </Link>

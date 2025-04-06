@@ -101,6 +101,7 @@ export default async function WebbApp() {
           </Slider>
         </div>
       )}
+      <Link href={"/app/recipe"}>Search for post</Link>
       <Link href="/app/create">Create post</Link>
     </div>
   )

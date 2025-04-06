@@ -1,6 +1,5 @@
 "use server"
 
-import { auth } from "@/server/auth"
 import { db } from "@/server/db"
 import { z } from "zod"
 import type { Recipe } from "@prisma/client"

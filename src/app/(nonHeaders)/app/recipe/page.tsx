@@ -44,7 +44,7 @@ export default function RecipePage() {
                 key={recipe.id}
                 title={recipe.title}
                 description={recipe.description}
-                url={`/recipe/${recipe.id}`}
+                url={`/app/recipe/${recipe.id}`}
               />
             ))}
           </div>

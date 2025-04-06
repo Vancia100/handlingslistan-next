@@ -21,7 +21,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^2.7.2",
+    "@auth/prisma-adapter": "2.7.2",
     "@prisma/adapter-pg": "^6.5.0",
     "@prisma/client": "^6.5.0",
     "@t3-oss/env-nextjs": "^0.12.0",
@@ -29,21 +29,20 @@
     "next": "^15.2.4",
     "next-auth": "5.0.0-beta.25",
     "pg": "^8.14.1",
-    "prisma-adapter@2.7.0": "link:@/auth/prisma-adapter@2.7.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.23.0",
-    "@tailwindcss/postcss": "^4.0.17",
+    "@tailwindcss/postcss": "^4.1.1",
     "@types/eslint": "^9.6.1",
-    "@types/node": "^22.13.14",
+    "@types/node": "^22.14.0",
     "@types/pg": "^8.11.11",
-    "@types/react": "^19.0.12",
-    "@types/react-dom": "^19.0.4",
-    "@typescript-eslint/eslint-plugin": "^8.28.0",
-    "@typescript-eslint/parser": "^8.28.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.1",
+    "@typescript-eslint/eslint-plugin": "^8.29.0",
+    "@typescript-eslint/parser": "^8.29.0",
     "eslint": "^9.23.0",
     "eslint-config-next": "^15.2.4",
     "eslint-plugin-next": "^0.0.0",
@@ -53,9 +52,9 @@
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "prisma": "^6.5.0",
-    "tailwindcss": "^4.0.17",
+    "tailwindcss": "^4.1.1",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.28.0"
+    "typescript-eslint": "^8.29.0"
   },
   "ct3aMetadata": {
     "initVersion": "7.38.1"

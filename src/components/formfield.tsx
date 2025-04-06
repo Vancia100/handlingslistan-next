@@ -10,7 +10,9 @@ import {
 } from "react"
 
 import { type z } from "zod"
+import { type Ingredient } from "@prisma/client"
 import { recipeSchema } from "@/schemas/recipeSchema"
+
 import sendRecipe from "@/actions/sendRecipe"
 
 import IngredientsTable from "@/components/ingredientsTable"
@@ -18,7 +20,7 @@ import InstructionsList from "@/components/instructionsList"
 
 type IngredientsType = z.infer<typeof recipeSchema>["ingredients"]
 
-export default function FormField() {
+export default function FormField(props: { ingredeints: Ingredient[] }) {
   const titelRef = useRef<HTMLSpanElement>(null)
   const [submitStatus, formAction, pending] = useActionState(sendRecipe, {
     message: "",
@@ -83,6 +85,7 @@ export default function FormField() {
       </label>
       <StylesTextArea name="description" title="Description:" />
       <IngredientsTable
+        allIngredients={props.ingredeints}
         ingredients={ingredients}
         setIngredients={setIngredients}
       />
