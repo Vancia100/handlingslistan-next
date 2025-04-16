@@ -26,7 +26,7 @@ export const recipeSchema = z.object({
         .toLowerCase()
         .max(30, "can't be longer then 30 characters")
         .min(3),
-      amount: z.number().nonnegative().multipleOf(0.1, "Maximum 1 decimal"),
+      amount: z.number().positive().multipleOf(0.1, "Maximum 1 decimal"),
       unit: z.enum(Object.values(Units) as [Units, ...Units[]], {
         message:
           "Not a valid unit, plase use one of the following: " +

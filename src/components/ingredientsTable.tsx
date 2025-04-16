@@ -4,7 +4,7 @@ import {
   type Dispatch,
   type SetStateAction,
   useState,
-  useTransition,
+  startTransition,
 } from "react"
 
 import { allowedUnits, type recipeSchema } from "@/schemas/recipeSchema"
@@ -24,7 +24,6 @@ export default function IngredientsTable(props: {
     (typeof allowedUnits)[number] | null
   >(null)
 
-  const [isPending, startTransition] = useTransition()
   const [alternatives, setAlternatives] = useState<{
     forIndex: number
     alternatives: Ingredient[]
@@ -82,22 +81,25 @@ export default function IngredientsTable(props: {
                       }
 
                       startTransition(() => {
-                        const dictionary = props.allIngredients.map(
-                          (ingredient) => ingredient.name,
+                        const dictionary = Object.fromEntries(
+                          props.allIngredients.map(
+                            (ingredient) =>
+                              [ingredient.name, ingredient] as const,
+                          ),
                         )
                         const suggestions = spellCheck(
                           e.target.value,
-                          dictionary,
+                          Object.keys(dictionary),
                         )
                         setAlternatives({
                           forIndex: index,
                           alternatives: suggestions.map(
-                            (ing) =>
-                              props.allIngredients.find(
-                                (ingredient) => ingredient.name === ing,
-                              )!,
+                            (ing) => dictionary[ing]!,
                           ),
                         })
+
+                        // Not working, commented out. Supposed to look for aliases
+                        // things like multiple names and common misspellings
 
                         // const deepSearch = props.allIngredients.flatMap(
                         //   (ing) => ing.aliases,
@@ -154,13 +156,6 @@ export default function IngredientsTable(props: {
                         ))}
                       </div>
                     )}
-                  {isPending && (
-                    <div className="bg-primary-black-75 border-primary-black absolute z-10 border-x-2 border-t-2">
-                      <div className="border-primary-black cursor-pointer border-b-2 p-1">
-                        Loading...
-                      </div>
-                    </div>
-                  )}
                 </label>
               </td>
               <td className="border-primary-black border-2">
