@@ -6,6 +6,7 @@ import {
   useState,
   useEffect,
   startTransition,
+  memo,
   type ChangeEvent,
 } from "react"
 
@@ -17,6 +18,9 @@ import sendRecipe from "@/actions/sendRecipe"
 
 import IngredientsTable from "@/components/ingredientsTable"
 import InstructionsList from "@/components/instructionsList"
+
+const MemoIngredients = memo(IngredientsTable)
+const MemoInstructionsList = memo(InstructionsList)
 
 type IngredientsType = z.infer<typeof recipeSchema>["ingredients"]
 
@@ -84,12 +88,12 @@ export default function FormField(props: { ingredeints: Ingredient[] }) {
         />
       </label>
       <StylesTextArea name="description" title="Description:" />
-      <IngredientsTable
+      <MemoIngredients
         allIngredients={props.ingredeints}
         ingredients={ingredients}
         setIngredients={setIngredients}
       />
-      <InstructionsList
+      <MemoInstructionsList
         instructions={instructions}
         setInstructions={setInstructions}
       />

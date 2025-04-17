@@ -4,7 +4,7 @@ import DiscordProvider from "next-auth/providers/discord"
 
 import type { Role } from "@prisma/client"
 import { db } from "@/server/db"
-
+import { PrismaClient } from "@prisma/client"
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
@@ -44,7 +44,10 @@ export const authConfig = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
-  adapter: PrismaAdapter(db),
+  //Temporary solution, database update not typed the same as prisma adapter exprects.
+  // still works
+  // eslint-disable-next-line
+  adapter: PrismaAdapter(db as unknown as PrismaClient),
   callbacks: {
     session: ({ session, user }) => ({
       ...session,

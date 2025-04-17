@@ -13,6 +13,7 @@ export default async function Profile() {
       <span className="flex flex-row items-center justify-center pb-4 text-3xl">
         <h1 className="pr-5">{user.name}</h1>
         {user.image && (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             className="rounded-full"
             alt="The users profile icon"

@@ -6,8 +6,8 @@ import {
   useState,
   startTransition,
   useMemo,
-  useCallback,
   type ChangeEvent,
+  useCallback,
 } from "react"
 
 import { allowedUnits, type recipeSchema } from "@/schemas/recipeSchema"
@@ -32,9 +32,9 @@ export default function IngredientsTable(props: {
     (typeof allowedUnits)[number] | null
   >(null)
 
-  console.log("rerendered!")
-  // Dictionaty for spellcheck
-
+  const { ingredients, setIngredients } = props
+  // const [ingredients, setIngredients] = useState<IngredientsType>([])
+  console.log("rerendered ingredeints!")
   return (
     <table className="bg-primary-black-75 w-full">
       <tbody>
@@ -43,16 +43,15 @@ export default function IngredientsTable(props: {
           <td className="border-primary-black border-2">Amount</td>
           <td className="border-primary-black border-2">Unit</td>
         </tr>
-        {[...props.ingredients, { name: "", amount: 0, unit: null }].map(
+        {[...ingredients, { name: "", amount: 0, unit: null }].map(
           (ingredient, index) => (
             <tr key={index}>
               <td className="border-primary-black border-2">
-                {/* Input goes here */}
                 <DropDownMenu
                   ingredientName={ingredient.name}
                   index={index}
-                  setIngredients={props.setIngredients}
-                  ingredients={props.ingredients}
+                  setIngredients={setIngredients}
+                  ingredients={ingredients}
                   allIngredients={props.allIngredients}
                   looseUnit={looseUnit}
                   setLooseUnit={setLooseUnit}
@@ -65,7 +64,7 @@ export default function IngredientsTable(props: {
                   step={0.1}
                   value={ingredient.amount}
                   onChange={(e) => {
-                    const newIngredients = [...props.ingredients]
+                    const newIngredients = [...ingredients]
                     if (!newIngredients[index]) {
                       const optionalUnit = looseUnit
                       newIngredients[index] = {
@@ -87,7 +86,7 @@ export default function IngredientsTable(props: {
                       }
                       newIngredients.splice(index, 1)
                     }
-                    props.setIngredients(newIngredients)
+                    setIngredients(newIngredients)
                   }}
                 />
               </td>
@@ -96,14 +95,14 @@ export default function IngredientsTable(props: {
                   value={ingredient.unit ?? looseUnit ?? ""}
                   className="bg-primary-black-75 w-full px-2 text-center"
                   onChange={(e) => {
-                    const newIngredients = [...props.ingredients]
+                    const newIngredients = [...ingredients]
                     const value = e.target
                       .value as (typeof allowedUnits)[number]
                     if (!newIngredients[index]) {
                       setLooseUnit(value)
                     } else {
                       newIngredients[index].unit = value
-                      props.setIngredients(newIngredients)
+                      setIngredients(newIngredients)
                     }
                   }}>
                   {allowedUnits.map((unit) => (
@@ -152,6 +151,51 @@ function DropDownMenu({
     )
   }, [allIngredients])
 
+  const localSpellCheck = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      startTransition(() => {
+        const suggestions = spellCheck(e.target.value, Object.keys(dictionary))
+        setAlternatives({
+          forIndex: index,
+          alternatives: suggestions.map((ing) => dictionary[ing]!),
+        })
+
+        // Not working, commented out. Supposed to look for aliases
+        // things like multiple names and common misspellings
+
+        // const deepSearch = props.allIngredients.flatMap(
+        //   (ing) => ing.aliases,
+        // )
+        // const newSuggestions = spellCheck(
+        //   e.target.value,
+        //   deepSearch,
+        // )
+
+        // const filteredSug = [
+        //   ...new Set([
+        //     ...newSuggestions.map((ing) => {
+        //       props.allIngredients.find((ingredient) =>
+        //         ingredient.aliases.includes(ing),
+        //       )!.name
+        //     }),
+        //     ...suggestions,
+        //   ]),
+        // ]
+
+        // setAlternatives({
+        //   forIndex: index,
+        //   alternatives: filteredSug.map(
+        //     (ing) =>
+        //       props.allIngredients.find(
+        //         (ingredient) => ingredient.name === ing,
+        //       ) as Ingredient,
+        //   ),
+        // })
+      })
+    },
+    [dictionary, index],
+  )
+
   // change event on the input field
   const handleChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
     const newIngredients = [...ingredients]
@@ -179,45 +223,7 @@ function DropDownMenu({
       return
     }
 
-    startTransition(() => {
-      const suggestions = spellCheck(e.target.value, Object.keys(dictionary))
-      setAlternatives({
-        forIndex: index,
-        alternatives: suggestions.map((ing) => dictionary[ing]!),
-      })
-
-      // Not working, commented out. Supposed to look for aliases
-      // things like multiple names and common misspellings
-
-      // const deepSearch = props.allIngredients.flatMap(
-      //   (ing) => ing.aliases,
-      // )
-      // const newSuggestions = spellCheck(
-      //   e.target.value,
-      //   deepSearch,
-      // )
-
-      // const filteredSug = [
-      //   ...new Set([
-      //     ...newSuggestions.map((ing) => {
-      //       props.allIngredients.find((ingredient) =>
-      //         ingredient.aliases.includes(ing),
-      //       )!.name
-      //     }),
-      //     ...suggestions,
-      //   ]),
-      // ]
-
-      // setAlternatives({
-      //   forIndex: index,
-      //   alternatives: filteredSug.map(
-      //     (ing) =>
-      //       props.allIngredients.find(
-      //         (ingredient) => ingredient.name === ing,
-      //       ) as Ingredient,
-      //   ),
-      // })
-    })
+    localSpellCheck(e)
   }
 
   return (
