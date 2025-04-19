@@ -16,8 +16,14 @@ A free to self host list
   - [ ] Edit options saved on account basis
   - [ ] Changeable name and pfp etc
 - [ ] Start Webb app:
+
   - [x] Recipes started
-  - [ ] Save form state localy in indexDB or localstorage
+  - [x] Save form state localy in indexDB or localstorage
+
+    _There is currently a system in place that indexes all draft recipes. Could implement a promp for wich one the user would like to load instad of just loading the one previously used._
+
+    - [ ] _Choice of local drafts_
+
   - [x] My Recipes on main page
   - [x] Public and private recipes
   - [x] Search for recipes
@@ -28,6 +34,7 @@ A free to self host list
   - [ ] Recipe to list interaction
   - [ ] Go shoping, things left in list gets put inte new list, data saved ...
   - [ ] Have shoping lists sync with multiple users
+
 - [ ] Docs
 - [ ] Hosting options with open-source API
 
