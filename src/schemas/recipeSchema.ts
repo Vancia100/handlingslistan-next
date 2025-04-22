@@ -4,6 +4,7 @@ import { Units } from "@prisma/client"
 export const allowedUnits = Object.values(Units)
 
 export const recipeSchema = z.object({
+  id: z.number().nonnegative().optional(),
   title: z
     .string()
     .max(30, "A title should not be longer than 30 characters")

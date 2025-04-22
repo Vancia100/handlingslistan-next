@@ -13,9 +13,10 @@ import {
 } from "react"
 import { useDebounce } from "use-debounce"
 
-import { type z } from "zod"
 import { type Ingredient } from "@prisma/client"
 import { recipeSchema } from "@/schemas/recipeSchema"
+
+import { useMessageContext } from "@/context/messageContext"
 
 import { functionalDebounce } from "@/utils/simpleDebounce"
 import sendRecipe from "@/actions/sendRecipe"
@@ -24,13 +25,7 @@ import IngredientsTable from "@/components/ingredientsTable"
 import InstructionsList from "@/components/instructionsList"
 
 // Types
-type IngredientsType = z.infer<typeof recipeSchema>["ingredients"]
-type RecipeType = {
-  ingredients: IngredientsType
-  instructions: string[]
-  title: string
-  description: string
-}
+import type { RecipeType, IngredientsType } from "@/types/recipeTypes"
 
 // Constatnts
 const DEBOUNCETIME = 3000
@@ -39,11 +34,14 @@ const DEBOUNCETIME = 3000
 const MemoIngredients = memo(IngredientsTable)
 const MemoInstructionsList = memo(InstructionsList)
 
-export default function FormField(props: { ingredeints: Ingredient[] }) {
+export default function FormField(props: {
+  ingredeints: Ingredient[]
+  presetRecipe?: RecipeType & { id: number }
+}) {
   // Refs for the title and description
   // No complex logic, no need to rerender
   const titelRef = useRef<HTMLSpanElement>(null)
-  const titleInpref = useRef<HTMLInputElement>(null)
+  const titleInpRef = useRef<HTMLInputElement>(null)
   const descriptionRef = useRef<HTMLTextAreaElement>(null)
 
   // State for ingredeints and instructions
@@ -74,6 +72,7 @@ export default function FormField(props: { ingredeints: Ingredient[] }) {
       ingredients,
       instructions,
       public: formData.get("public") === "on",
+      id: props.presetRecipe?.id,
     })
 
     if (!parsedForm.success) {
@@ -88,43 +87,51 @@ export default function FormField(props: { ingredeints: Ingredient[] }) {
   const [debouncedIngredients] = useDebounce(ingredients, DEBOUNCETIME)
   const [debouncedInstructions] = useDebounce(instructions, DEBOUNCETIME)
 
-  const currentActiveRecipe = useRef<string>(null)
-  useEffect(() => {
-    updateLocalStorage(
-      debouncedIngredients,
-      debouncedInstructions,
-      titleInpref.current?.value ?? "",
-      descriptionRef.current?.value ?? "",
-      currentActiveRecipe,
-    )
-  }, [debouncedIngredients, debouncedInstructions])
+  // Add some sory of message
+  const addMessage = useMessageContext()
 
-  const chageStorage = useMemo(() => {
-    return functionalDebounce((_arg: string) => {
+  const updateLocalFunction = useMemo(() => {
+    return () => {
       updateLocalStorage(
         debouncedIngredients,
         debouncedInstructions,
-        titleInpref.current?.value ?? "",
+        titleInpRef.current?.value ?? "",
         descriptionRef.current?.value ?? "",
         currentActiveRecipe,
+        addMessage,
       )
-    }, DEBOUNCETIME)
-  }, [debouncedIngredients, debouncedInstructions])
-
-  // If local storage has a recipe, load it
-  useEffect(() => {
-    const localStorageRecipe = Object.keys(getLocalStorage() ?? {})
-    const localStorageRecipeId = getLocalStorageItem(
-      localStorageRecipe[0] ?? "",
-    )
-    if (localStorageRecipeId) {
-      setIngredients(localStorageRecipeId.ingredients)
-      setInstructions(localStorageRecipeId.instructions)
-      titleInpref.current!.value = localStorageRecipeId.title
-      descriptionRef.current!.value = localStorageRecipeId.description
-      currentActiveRecipe.current = localStorageRecipeId.title
     }
-    currentActiveRecipe.current = localStorageRecipe[0] ?? null
+  }, [debouncedIngredients, debouncedInstructions])
+  const currentActiveRecipe = useRef<string>(null)
+  useEffect(updateLocalFunction, [updateLocalFunction])
+
+  const chageStorage = useMemo(() => {
+    return functionalDebounce(updateLocalFunction, DEBOUNCETIME)
+  }, [updateLocalFunction])
+
+  // If local storage has a recipe, load it.
+  useEffect(() => {
+    if (!props.presetRecipe) {
+      const localStorageRecipe = Object.keys(getLocalStorage() ?? {})
+      const localStorageRecipeId = getLocalStorageItem(
+        localStorageRecipe[0] ?? "",
+      )
+      if (localStorageRecipeId) {
+        setIngredients(localStorageRecipeId.ingredients)
+        setInstructions(localStorageRecipeId.instructions)
+        titleInpRef.current!.value = localStorageRecipeId.title
+        descriptionRef.current!.value = localStorageRecipeId.description
+        currentActiveRecipe.current = localStorageRecipeId.title
+      }
+      currentActiveRecipe.current = localStorageRecipe[0] ?? null
+    } else {
+      const recipe = props.presetRecipe
+      setIngredients(recipe.ingredients)
+      setInstructions(recipe.instructions)
+      titleInpRef.current!.value = recipe.title
+      descriptionRef.current!.value = recipe.description
+      currentActiveRecipe.current = recipe.title
+    }
   }, [])
   return (
     <form className="flex flex-col gap-4" onSubmit={clientAction}>
@@ -134,7 +141,7 @@ export default function FormField(props: { ingredeints: Ingredient[] }) {
         </span>
         <input
           name={"title"}
-          ref={titleInpref}
+          ref={titleInpRef}
           onFocus={(e) => {
             if (titelRef.current?.hidden === undefined) return
 
@@ -151,7 +158,7 @@ export default function FormField(props: { ingredeints: Ingredient[] }) {
             }
           }}
           onChange={(e) => {
-            chageStorage(e.target.value)
+            chageStorage()
           }}
           type={"text"}
           className="border-primary-purple bg-primary-black rounded-lg border-4 p-2 text-center text-2xl font-bold"
@@ -172,7 +179,7 @@ export default function FormField(props: { ingredeints: Ingredient[] }) {
             }
           }}
           onChange={(e) => {
-            chageStorage(e.target.value)
+            chageStorage()
           }}></textarea>
       </label>
       <MemoIngredients
@@ -197,7 +204,7 @@ export default function FormField(props: { ingredeints: Ingredient[] }) {
       <button
         className="bg-primary-black border-primary-black hover:border-primary-white w-max cursor-pointer self-center rounded-xl border-2 p-2"
         type="submit">
-        {"Publish Recipe"}
+        {!props.presetRecipe ? "Publish recipe" : "Save changes"}
       </button>
     </form>
   )
@@ -232,6 +239,7 @@ function updateLocalStorage(
   title: string,
   description: string,
   currentRecipeId: RefObject<string | null>,
+  message?: (message: string) => void,
 ) {
   // Return if new recipe
   if (!currentRecipeId.current) {
@@ -264,6 +272,7 @@ function updateLocalStorage(
     localStorage.setItem("recipeLookup", JSON.stringify({ [id]: title }))
   }
   localStorage.setItem(id, JSON.stringify(recipe))
+  message?.("Saved a draft localy")
 }
 
 function generateRandomName() {

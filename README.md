@@ -27,6 +27,7 @@ A free to self host list
   - [x] My Recipes on main page
   - [x] Public and private recipes
   - [x] Search for recipes
+  - [ ] Add people that can view a recipe
   - [ ] Improve looks of "card" component
   - [ ] Better search options?
   - [ ] Make the webapp not look like ass on phones

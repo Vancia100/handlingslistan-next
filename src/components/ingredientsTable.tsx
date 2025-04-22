@@ -11,12 +11,11 @@ import {
 } from "react"
 
 import { allowedUnits, type recipeSchema } from "@/schemas/recipeSchema"
-import type { z } from "zod"
 import type { Ingredient } from "@prisma/client"
 
 import spellCheck from "@/utils/spellcheck"
 
-type IngredientsType = z.infer<typeof recipeSchema>["ingredients"]
+import { IngredientsType } from "@/types/recipeTypes"
 
 type AlternativesType = {
   forIndex: number
