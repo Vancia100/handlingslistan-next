@@ -11,11 +11,11 @@ import {
 } from "react"
 
 import { allowedUnits, type recipeSchema } from "@/schemas/recipeSchema"
-import type { Ingredient } from "@prisma/client"
+import type { Ingredient } from "@/generated/prisma/client"
 
 import spellCheck from "@/utils/spellcheck"
 
-import { IngredientsType } from "@/types/recipeTypes"
+import type { IngredientsType } from "@/types/recipeTypes"
 
 type AlternativesType = {
   forIndex: number
@@ -23,7 +23,7 @@ type AlternativesType = {
 }
 
 export default function IngredientsTable(props: {
-  ingredients: (typeof recipeSchema)["_input"]["ingredients"]
+  ingredients: IngredientsType
   setIngredients: Dispatch<SetStateAction<IngredientsType>>
   allIngredients: Ingredient[]
 }) {

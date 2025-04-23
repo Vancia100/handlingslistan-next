@@ -6,7 +6,7 @@ import { tryCatch } from "@/utils/trycatch"
 
 import { ingredeintSchema } from "@/schemas/ingredientSchema"
 
-import type { Ingredient } from "@prisma/client"
+import type { Ingredient } from "@/generated/prisma/client"
 export default async function changeDefaultUnits(
   prevState: { message: string },
   unitsArray: Ingredient[],

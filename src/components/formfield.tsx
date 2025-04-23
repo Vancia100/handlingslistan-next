@@ -11,9 +11,10 @@ import {
   type ChangeEvent,
   type RefObject,
 } from "react"
+
 import { useDebounce } from "use-debounce"
 
-import { type Ingredient } from "@prisma/client"
+import { type Ingredient } from "@/generated/prisma/client"
 import { recipeSchema } from "@/schemas/recipeSchema"
 
 import { useMessageContext } from "@/context/messageContext"
@@ -101,7 +102,7 @@ export default function FormField(props: {
         addMessage,
       )
     }
-  }, [debouncedIngredients, debouncedInstructions])
+  }, [debouncedIngredients, debouncedInstructions, addMessage])
   const currentActiveRecipe = useRef<string>(null)
   useEffect(updateLocalFunction, [updateLocalFunction])
 
@@ -132,7 +133,7 @@ export default function FormField(props: {
       descriptionRef.current!.value = recipe.description
       currentActiveRecipe.current = recipe.title
     }
-  }, [])
+  }, [props.presetRecipe])
   return (
     <form className="flex flex-col gap-4" onSubmit={clientAction}>
       <label className="min-w-2/3">
@@ -157,7 +158,7 @@ export default function FormField(props: {
               e.target.classList.remove("border-4")
             }
           }}
-          onChange={(e) => {
+          onChange={() => {
             chageStorage()
           }}
           type={"text"}
@@ -178,7 +179,7 @@ export default function FormField(props: {
               descriptionRef.current?.classList.add("border-4")
             }
           }}
-          onChange={(e) => {
+          onChange={() => {
             chageStorage()
           }}></textarea>
       </label>

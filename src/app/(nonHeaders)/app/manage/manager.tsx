@@ -1,5 +1,5 @@
 "use client"
-import type { Ingredient } from "@prisma/client"
+import type { Ingredient } from "@/generated/prisma/client"
 import {
   useRef,
   useActionState,

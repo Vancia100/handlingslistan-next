@@ -2,7 +2,7 @@
 
 import { db } from "@/server/db"
 import { z } from "zod"
-import type { Recipe } from "@prisma/client"
+import type { Recipe } from "@/generated/prisma/client"
 
 export default async function searchRecipe(
   prevState: { message: string; recipes?: Recipe[] },

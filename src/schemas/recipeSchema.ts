@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { Units } from "@prisma/client"
+import { Units } from "@/generated/prisma/client"
 
 export const allowedUnits = Object.values(Units)
 

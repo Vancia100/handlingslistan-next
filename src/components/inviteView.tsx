@@ -5,9 +5,9 @@ import { functionalDebounce as Debounce } from "@/utils/simpleDebounce"
 import searchPeople from "@/actions/searchPeople"
 
 export default function InviteView({
-  addFunction,
+  addFunctionAction,
 }: {
-  addFunction: (id: string) => void
+  addFunctionAction: (id: string) => void
 }) {
   const [open, setOpen] = useState(false)
   const [shownPeople, setShownPeople] = useState<
@@ -15,12 +15,14 @@ export default function InviteView({
   >([])
 
   const debouncedSearchPeople = useCallback(
-    Debounce(async (name: string) => {
-      startTransition(async () => {
-        const users = await searchPeople(name)
-        setShownPeople(users)
-      })
-    }, 2000),
+    (name: string) => {
+      Debounce(async (name: string) => {
+        startTransition(async () => {
+          const users = await searchPeople(name)
+          setShownPeople(users)
+        })
+      }, 2000)(name)
+    },
     [setShownPeople],
   )
   return (
@@ -55,7 +57,7 @@ export default function InviteView({
                 <div
                   key={user.id}
                   onClick={() => {
-                    addFunction(user.id)
+                    addFunctionAction(user.id)
                   }}>
                   <p>{user.name ?? user.email}</p>
                 </div>
