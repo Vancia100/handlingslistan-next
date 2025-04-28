@@ -14,7 +14,7 @@ import {
 
 import { useDebounce } from "use-debounce"
 
-import { type Ingredient } from "@/generated/prisma/client"
+import type { Ingredient } from "@/generated/prisma/client"
 import { recipeSchema } from "@/schemas/recipeSchema"
 
 import { useMessageContext } from "@/context/messageContext"

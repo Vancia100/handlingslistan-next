@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useCallback } from "react"
 
 import { MessageContextProvider } from "@/context/messageContext"
 
@@ -15,16 +15,19 @@ export default function ContextProvider({
     [],
   )
 
-  const addMessage = (message: string) => {
-    setMessages((prev) => [
-      ...prev,
-      { message, id: Math.random().toString(36).substring(2, 15) },
-    ])
+  const addMessage = useCallback(
+    (message: string) => {
+      setMessages((prev) => [
+        ...prev,
+        { message, id: Math.random().toString(36).substring(2, 15) },
+      ])
 
-    setTimeout(() => {
-      setMessages((prev) => prev.slice(1))
-    }, MESSAGEVIEWTIME)
-  }
+      setTimeout(() => {
+        setMessages((prev) => prev.slice(1))
+      }, MESSAGEVIEWTIME)
+    },
+    [setMessages],
+  )
 
   return (
     <MessageContextProvider value={addMessage}>

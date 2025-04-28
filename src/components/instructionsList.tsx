@@ -1,3 +1,4 @@
+"use client"
 import type { Dispatch, SetStateAction } from "react"
 
 export default function InstructionsList(props: {

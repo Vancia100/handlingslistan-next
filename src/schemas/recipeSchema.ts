@@ -1,7 +1,20 @@
 import { z } from "zod"
-import { Units } from "@/generated/prisma/client"
+import type { Units } from "@/generated/prisma/client"
 
-export const allowedUnits = Object.values(Units)
+export const allowedUnits = [
+  "g",
+  "hg",
+  "kg",
+  "ml",
+  "cl",
+  "dl",
+  "l",
+  "tsp",
+  "msk",
+  "krm",
+  "st",
+  "pkt",
+] as const
 
 export const recipeSchema = z.object({
   id: z.number().nonnegative().optional(),
@@ -32,7 +45,7 @@ export const recipeSchema = z.object({
           .number()
           .positive("Cant have a amount of 0 or less")
           .multipleOf(0.1, "Maximum 1 decimal"),
-        unit: z.enum(Object.values(Units) as [Units, ...Units[]], {
+        unit: z.enum(allowedUnits as unknown as [Units, ...Units[]], {
           message:
             "Not a valid unit, plase use one of the following: " +
             allowedUnits.join(", "),

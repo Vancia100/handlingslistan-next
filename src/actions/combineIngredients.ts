@@ -53,11 +53,10 @@ export default async function combineIngredeints({
         ],
       },
     })
-    console.log(constraints, "constraints")
     // Update all recipes which conflict with constraints
     await Promise.all(
       constraints.map((constraint) =>
-        db.recipeIngredient.updateMany({
+        tx.recipeIngredient.updateMany({
           data: {
             amount: {
               increment: constraint.recipe.ingredients.find(

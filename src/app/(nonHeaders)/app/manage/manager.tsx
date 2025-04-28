@@ -10,10 +10,12 @@ import {
   useCallback,
 } from "react"
 
-import { allowedUnits } from "@/schemas/recipeSchema"
+// import { allowedUnits } from "@/schemas/recipeSchema"
+const allowedUnits = ["g"]
 import changeDefaultUnits from "@/actions/changeDefaultUnits"
 
 import { ingredeintSchema } from "@/schemas/ingredientSchema"
+// Broken import, does not work on the client
 
 import manager from "./manager.module.css"
 import combineIngredeints from "@/actions/combineIngredients"

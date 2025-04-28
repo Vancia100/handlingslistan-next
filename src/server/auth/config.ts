@@ -4,7 +4,7 @@ import DiscordProvider from "next-auth/providers/discord"
 
 import type { Role } from "@/generated/prisma/client"
 import { db } from "@/server/db"
-import type { PrismaClient } from "@prisma/client"
+import type { PrismaClient } from "@/generated/prisma/client"
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
