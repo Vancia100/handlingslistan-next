@@ -1,20 +1,14 @@
 import { z } from "zod"
-import type { Units } from "@/generated/prisma/client"
+import { Units } from "@/generated/prisma/enums"
 
-export const allowedUnits = [
-  "g",
-  "hg",
-  "kg",
-  "ml",
-  "cl",
-  "dl",
-  "l",
-  "tsp",
-  "msk",
-  "krm",
-  "st",
-  "pkt",
-] as const
+/* There is currently an issue with prisma generate with prisma-client and output dir
+  New prisma generates imports inproperly, with a .js extension for a ts file,
+  wich does not compile with turbopack/webpack.
+
+  Current workaround is to MANUALLY go into the generated file and remove the .js extension.
+  This breaks every time you run prisma generate, and you are not supposed to change generated files.
+*/
+export const allowedUnits = Object.values(Units)
 
 export const recipeSchema = z.object({
   id: z.number().nonnegative().optional(),
