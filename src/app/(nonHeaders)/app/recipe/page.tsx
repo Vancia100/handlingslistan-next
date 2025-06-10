@@ -15,11 +15,11 @@ export default function RecipePage() {
       typeof searchTerm !== "string" ||
       searchTerm.length < 1
     ) {
-      action("nah uh")
       return
     }
     action(searchTerm)
   }
+
   return (
     <div className="flex w-screen flex-col items-center justify-center text-2xl text-white">
       <form action={clientAction}>

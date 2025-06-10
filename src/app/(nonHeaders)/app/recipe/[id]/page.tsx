@@ -1,6 +1,8 @@
 import { db } from "@/server/db"
 import { auth } from "@/server/auth"
 
+import Link from "next/link"
+
 export default async function Recipe(props: {
   params: Promise<{ id: string }>
 }) {
@@ -30,21 +32,35 @@ export default async function Recipe(props: {
     },
   })
   if (!recipe) return <NotFount />
+  const user = (await auth())?.user
   if (!recipe.public) {
-    const user = (await auth())?.user
     if (
       !user ||
       user.role !== "ADMIN" ||
       recipe.viewableBy.find((usr) => usr.id === user.id) === undefined
     ) {
-      return <NotAuthed />
+      console.log("Not authed", user, recipe.viewableBy)
+      return <NotAuthed user={user} num={postId} />
     }
   }
+  const userCanEdit = user?.id === recipe.createdById || user?.role === "ADMIN"
 
   const instructions = recipe.instructions
   const ingredients = recipe.ingredients
   return (
     <>
+      {userCanEdit && (
+        <div className="absolute right-0 flex justify-end gap-2">
+          <button className="border-primary-black-50 hover:border-primary-purple rounded-2xl border-2 p-2 px-3 text-xl">
+            Invite Viewer
+          </button>
+          <Link
+            href={`/app/create/${recipe.id}`}
+            className="border-primary-black-50 hover:border-primary-purple rounded-2xl border-2 p-2 px-3 text-xl">
+            Edit
+          </Link>
+        </div>
+      )}
       <h1 className="text-3xl font-bold">{recipe.title}</h1>
       <div> {recipe.description}</div>
       <div className="border-primary-black-50 rounded-3xl border-2">
@@ -86,6 +102,22 @@ function NotFount() {
   return <div>Recipe Not Found</div>
 }
 
-function NotAuthed() {
-  return <div>{"You unfortinatly can't view this content"}</div>
+function NotAuthed({
+  user,
+  num,
+}: {
+  user?: { id: string; role: string }
+  num?: number
+}) {
+  const redir = num ? `/auth/login?redirect=/app/recipe/${num}` : "/auth/login"
+  return user ? (
+    <div>
+      <p>{"You unfortinatly can't view this content"}</p>
+    </div>
+  ) : (
+    <div>
+      <p>{"You need to be logged in to view this content"}</p>
+      <Link href={redir}>Login</Link>
+    </div>
+  )
 }

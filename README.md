@@ -20,7 +20,7 @@ A free to self host list
   - [x] Recipes started
   - [x] Save form state localy in indexDB or localstorage
 
-    _There is currently a system in place that indexes all draft recipes. Could implement a promp for wich one the user would like to load instad of just loading the one previously used._
+    _There is currently a system in place that indexes all draft recipes. Could implement a promt for wich one the user would like to load instad of just loading the one previously used._
 
     - [ ] _Choice of local drafts_
 
