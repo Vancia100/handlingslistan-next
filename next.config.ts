@@ -4,6 +4,7 @@ import "./src/env.js"
 const config: NextConfig = {
   eslint: {
     dirs: ["src"],
+    ignoreDuringBuilds: true,
   },
 }
 

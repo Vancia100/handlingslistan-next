@@ -3,6 +3,7 @@ import { auth } from "@/server/auth"
 
 import Link from "next/link"
 
+import InviteView from "@/components/inviteView"
 export default async function Recipe(props: {
   params: Promise<{ id: string }>
 }) {
@@ -15,6 +16,8 @@ export default async function Recipe(props: {
     include: {
       viewableBy: {
         select: {
+          email: true,
+          name: true,
           id: true,
         },
       },
@@ -35,9 +38,11 @@ export default async function Recipe(props: {
   const user = (await auth())?.user
   if (!recipe.public) {
     if (
-      !user ||
-      user.role !== "ADMIN" ||
-      recipe.viewableBy.find((usr) => usr.id === user.id) === undefined
+      !(
+        user &&
+        user.role !== "ADMIN" &&
+        recipe.viewableBy.find((usr) => usr.id === user.id) !== undefined
+      )
     ) {
       console.log("Not authed", user, recipe.viewableBy)
       return <NotAuthed user={user} num={postId} />
@@ -47,13 +52,33 @@ export default async function Recipe(props: {
 
   const instructions = recipe.instructions
   const ingredients = recipe.ingredients
+
+  const excluded = recipe.viewableBy.map((viewer) => viewer.id)
+
   return (
     <>
       {userCanEdit && (
         <div className="absolute right-0 flex justify-end gap-2">
-          <button className="border-primary-black-50 hover:border-primary-purple rounded-2xl border-2 p-2 px-3 text-xl">
-            Invite Viewer
-          </button>
+          <InviteView
+            excludedPeople={excluded}
+            addFunctionAction={async (id) => {
+              "use server"
+              if (userCanEdit) {
+                await db.recipe.update({
+                  where: {
+                    id: postId,
+                  },
+                  data: {
+                    viewableBy: {
+                      connect: {
+                        id,
+                      },
+                    },
+                  },
+                })
+              }
+            }}
+          />
           <Link
             href={`/app/create/${recipe.id}`}
             className="border-primary-black-50 hover:border-primary-purple rounded-2xl border-2 p-2 px-3 text-xl">

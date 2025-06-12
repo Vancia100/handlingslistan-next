@@ -30,6 +30,7 @@ export default async function CreatePage(props: {
             title: true,
             description: true,
             instructions: true,
+            public: true,
             ingredients: {
               select: {
                 ingredient: {
@@ -60,7 +61,8 @@ export default async function CreatePage(props: {
           amount: ingredient.amount,
           unit: ingredient.unit,
         })),
-      } satisfies RecipeType & { id: number })
+        public: preLoadRecipe.public,
+      } satisfies RecipeType)
     : undefined
 
   return (

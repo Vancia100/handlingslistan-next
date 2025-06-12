@@ -24,7 +24,6 @@ import sendRecipe from "@/actions/sendRecipe"
 
 import IngredientsTable from "@/components/ingredientsTable"
 import InstructionsList from "@/components/instructionsList"
-
 // Types
 import type { RecipeType, IngredientsType } from "@/types/recipeTypes"
 
@@ -44,6 +43,10 @@ export default function FormField(props: {
   const titelRef = useRef<HTMLSpanElement>(null)
   const titleInpRef = useRef<HTMLInputElement>(null)
   const descriptionRef = useRef<HTMLTextAreaElement>(null)
+
+  // Ref to have a consistant value for the checked attribute. Sad that so many refs are used :(
+  // Do not know how to use less as all of the values need to be accessed.
+  const isPublicRef = useRef<HTMLInputElement>(null)
 
   // State for ingredeints and instructions
   const [instructions, setInstructions] = useState<string[]>([])
@@ -99,6 +102,7 @@ export default function FormField(props: {
         titleInpRef.current?.value ?? "",
         descriptionRef.current?.value ?? "",
         currentActiveRecipe,
+        isPublicRef.current?.checked,
         addMessage,
       )
     }
@@ -194,9 +198,12 @@ export default function FormField(props: {
       />
       <label className="text-xl">
         <input
+          defaultChecked={props.presetRecipe?.public}
+          ref={isPublicRef}
           type="checkbox"
           name="public"
           className="accent-primary-purple border-primary-white me-1.5 h-4 w-4 border-2 text-sm font-medium"
+          onChange={chageStorage}
         />
         <span>Public</span>
       </label>
@@ -224,6 +231,9 @@ function getLocalStorageItem(key: string) {
 
   return JSON.parse(stringJSON) as RecipeType
 }
+
+// Currently unused
+
 function removeLocalStorageItem(key: string) {
   const stringJSON = localStorage.getItem("recipeLookup")
   if (!stringJSON) return null
@@ -240,6 +250,7 @@ function updateLocalStorage(
   title: string,
   description: string,
   currentRecipeId: RefObject<string | null>,
+  isPublic?: boolean,
   message?: (message: string) => void,
 ) {
   // Return if new recipe
@@ -254,6 +265,7 @@ function updateLocalStorage(
     description,
     ingredients: ing,
     instructions,
+    public: isPublic,
   } satisfies RecipeType
 
   const id = currentRecipeId.current

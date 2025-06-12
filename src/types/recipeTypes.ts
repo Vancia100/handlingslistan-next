@@ -7,4 +7,6 @@ export type RecipeType = {
   instructions: string[]
   title: string
   description: string
+  id?: number
+  public?: boolean
 }
