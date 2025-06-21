@@ -24,8 +24,9 @@ import sendRecipe from "@/actions/sendRecipe"
 
 import IngredientsTable from "@/components/ingredientsTable"
 import InstructionsList from "@/components/instructionsList"
+import InviteView from "@/components/inviteView"
 // Types
-import type { RecipeType, IngredientsType } from "@/types/recipeTypes"
+import type { ClientRecipeType, IngredientsType } from "@/types/recipeTypes"
 
 // Constatnts
 const DEBOUNCETIME = 3000
@@ -33,16 +34,29 @@ const DEBOUNCETIME = 3000
 //Memos
 const MemoIngredients = memo(IngredientsTable)
 const MemoInstructionsList = memo(InstructionsList)
+const MemoInviteView = memo(InviteView)
 
 export default function FormField(props: {
   ingredeints: Ingredient[]
-  presetRecipe?: RecipeType & { id: number }
+  presetRecipe?: ClientRecipeType
 }) {
   // Refs for the title and description
   // No complex logic, no need to rerender
   const titelRef = useRef<HTMLSpanElement>(null)
   const titleInpRef = useRef<HTMLInputElement>(null)
   const descriptionRef = useRef<HTMLTextAreaElement>(null)
+
+  // State to keep count of the viewers
+  const [viewers, setViewers] = useState<string[]>(
+    props.presetRecipe?.viewers ?? [],
+  )
+
+  // Memo to make sure that the memoed addViewrs does not reload anytime that the parent does.
+  const addUsers = useMemo(() => {
+    return (user: string) => {
+      setViewers((prev) => [...prev, user])
+    }
+  }, [setViewers])
 
   // Ref to have a consistant value for the checked attribute. Sad that so many refs are used :(
   // Do not know how to use less as all of the values need to be accessed.
@@ -77,6 +91,7 @@ export default function FormField(props: {
       instructions,
       public: formData.get("public") === "on",
       id: props.presetRecipe?.id,
+      viewers,
     })
 
     if (!parsedForm.success) {
@@ -97,12 +112,15 @@ export default function FormField(props: {
   const updateLocalFunction = useMemo(() => {
     return () => {
       updateLocalStorage(
-        debouncedIngredients,
-        debouncedInstructions,
-        titleInpRef.current?.value ?? "",
-        descriptionRef.current?.value ?? "",
+        {
+          ingredients: debouncedIngredients,
+          instructions: debouncedInstructions,
+          title: titleInpRef.current?.value ?? "",
+          description: descriptionRef.current?.value ?? "",
+          public: isPublicRef.current?.checked,
+          viewers,
+        },
         currentActiveRecipe,
-        isPublicRef.current?.checked,
         addMessage,
       )
     }
@@ -138,83 +156,89 @@ export default function FormField(props: {
       currentActiveRecipe.current = recipe.title
     }
   }, [props.presetRecipe])
+
   return (
-    <form className="flex flex-col gap-4" onSubmit={clientAction}>
-      <label className="min-w-2/3">
-        <span ref={titelRef} className="p-4 text-2xl font-bold">
-          {"Title:"}
-        </span>
-        <input
-          name={"title"}
-          ref={titleInpRef}
-          onFocus={(e) => {
-            if (titelRef.current?.hidden === undefined) return
+    <>
+      <div className="fixed top-5 right-5">
+        <MemoInviteView addFunctionAction={addUsers} excludedPeople={viewers} />
+      </div>
+      <form className="flex flex-col gap-4" onSubmit={clientAction}>
+        <label className="min-w-2/3">
+          <span ref={titelRef} className="p-4 text-2xl font-bold">
+            {"Title:"}
+          </span>
+          <input
+            name={"title"}
+            ref={titleInpRef}
+            onFocus={(e) => {
+              if (titelRef.current?.hidden === undefined) return
 
-            titelRef.current.hidden = true
-            e.target.classList.add("border-4")
-          }}
-          onBlur={(e) => {
-            if (titelRef.current?.hidden === undefined) return
+              titelRef.current.hidden = true
+              e.target.classList.add("border-4")
+            }}
+            onBlur={(e) => {
+              if (titelRef.current?.hidden === undefined) return
 
-            if (e.target.value === "") {
-              titelRef.current.hidden = false
-            } else {
-              e.target.classList.remove("border-4")
-            }
-          }}
-          onChange={() => {
-            chageStorage()
-          }}
-          type={"text"}
-          className="border-primary-purple bg-primary-black rounded-lg border-4 p-2 text-center text-2xl font-bold"
+              if (e.target.value === "") {
+                titelRef.current.hidden = false
+              } else {
+                e.target.classList.remove("border-4")
+              }
+            }}
+            onChange={() => {
+              chageStorage()
+            }}
+            type={"text"}
+            className="border-primary-purple bg-primary-black rounded-lg border-4 p-2 text-center text-2xl font-bold"
+          />
+        </label>
+        <label className="min-w-2/3">
+          <div>{"Description:"}</div>
+          <textarea
+            ref={descriptionRef}
+            name={"description"}
+            className="bg-primary-black border-primary-purple w-full rounded-2xl border-4 p-2"
+            onFocus={() => {
+              descriptionRef.current?.classList.remove("border-4")
+            }}
+            onBlur={(e) => {
+              if (e.target.value === "") {
+                descriptionRef.current?.classList.add("border-4")
+              }
+            }}
+            onChange={() => {
+              chageStorage()
+            }}></textarea>
+        </label>
+        <MemoIngredients
+          allIngredients={props.ingredeints}
+          ingredients={ingredients}
+          setIngredients={setIngredients}
         />
-      </label>
-      <label className="min-w-2/3">
-        <div>{"Description:"}</div>
-        <textarea
-          ref={descriptionRef}
-          name={"description"}
-          className="bg-primary-black border-primary-purple w-full rounded-2xl border-4 p-2"
-          onFocus={() => {
-            descriptionRef.current?.classList.remove("border-4")
-          }}
-          onBlur={(e) => {
-            if (e.target.value === "") {
-              descriptionRef.current?.classList.add("border-4")
-            }
-          }}
-          onChange={() => {
-            chageStorage()
-          }}></textarea>
-      </label>
-      <MemoIngredients
-        allIngredients={props.ingredeints}
-        ingredients={ingredients}
-        setIngredients={setIngredients}
-      />
-      <MemoInstructionsList
-        instructions={instructions}
-        setInstructions={setInstructions}
-      />
-      <label className="text-xl">
-        <input
-          defaultChecked={props.presetRecipe?.public}
-          ref={isPublicRef}
-          type="checkbox"
-          name="public"
-          className="accent-primary-purple border-primary-white me-1.5 h-4 w-4 border-2 text-sm font-medium"
-          onChange={chageStorage}
+        <MemoInstructionsList
+          instructions={instructions}
+          setInstructions={setInstructions}
         />
-        <span>Public</span>
-      </label>
-      {status && <div>{status}</div>}
-      {(pending && <div>loading...</div>) || null}
-      <button
-        className="bg-primary-black border-primary-black hover:border-primary-white w-max cursor-pointer self-center rounded-xl border-2 p-2"
-        type="submit">
-        {!props.presetRecipe ? "Publish recipe" : "Save changes"}
-      </button>
-    </form>
+        <label className="text-xl">
+          <input
+            defaultChecked={props.presetRecipe?.public}
+            ref={isPublicRef}
+            type="checkbox"
+            name="public"
+            className="accent-primary-purple border-primary-white me-1.5 h-4 w-4 border-2 text-sm font-medium"
+            onChange={chageStorage}
+          />
+          <span>Public</span>
+        </label>
+        {status && <div>{status}</div>}
+        {(pending && <div>loading...</div>) || null}
+        <button
+          className="bg-primary-black border-primary-black hover:border-primary-white w-max cursor-pointer self-center rounded-xl border-2 p-2"
+          type="submit">
+          {!props.presetRecipe ? "Publish recipe" : "Save changes"}
+        </button>
+      </form>
+    </>
   )
 }
 
@@ -229,7 +253,7 @@ function getLocalStorageItem(key: string) {
   const stringJSON = localStorage.getItem(key)
   if (!stringJSON) return null
 
-  return JSON.parse(stringJSON) as RecipeType
+  return JSON.parse(stringJSON) as ClientRecipeType
 }
 
 // Currently unused
@@ -245,12 +269,8 @@ function removeLocalStorageItem(key: string) {
 }
 
 function updateLocalStorage(
-  ing: IngredientsType,
-  instructions: string[],
-  title: string,
-  description: string,
+  recipe: ClientRecipeType,
   currentRecipeId: RefObject<string | null>,
-  isPublic?: boolean,
   message?: (message: string) => void,
 ) {
   // Return if new recipe
@@ -259,14 +279,6 @@ function updateLocalStorage(
     currentRecipeId.current = id
     return
   }
-
-  const recipe = {
-    title,
-    description,
-    ingredients: ing,
-    instructions,
-    public: isPublic,
-  } satisfies RecipeType
 
   const id = currentRecipeId.current
 
@@ -279,10 +291,10 @@ function updateLocalStorage(
   if (parsed) {
     localStorage.setItem(
       "recipeLookup",
-      JSON.stringify({ ...parsed, [id]: title }),
+      JSON.stringify({ ...parsed, [id]: recipe.title }),
     )
   } else {
-    localStorage.setItem("recipeLookup", JSON.stringify({ [id]: title }))
+    localStorage.setItem("recipeLookup", JSON.stringify({ [id]: recipe.title }))
   }
   localStorage.setItem(id, JSON.stringify(recipe))
   message?.("Saved a draft localy")

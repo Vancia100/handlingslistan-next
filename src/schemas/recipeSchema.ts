@@ -71,4 +71,5 @@ export const recipeSchema = z.object({
     )
     .min(1, "Must have at least one instruction")
     .max(30, "Max 30 instructions"),
+  viewers: z.array(z.string()).nullable(),
 })

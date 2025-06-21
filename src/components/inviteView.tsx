@@ -68,7 +68,7 @@ export default function InviteView({
   }, [open, setOpen])
 
   return (
-    <div ref={popupref}>
+    <div ref={popupref} className="max-w-max">
       <button
         className="border-primary-black-50 hover:border-primary-purple rounded-2xl border-2 p-2 px-3 text-xl"
         onClick={() => setOpen((prev) => !prev)}>

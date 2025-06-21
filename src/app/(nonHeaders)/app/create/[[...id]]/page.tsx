@@ -4,7 +4,7 @@ import ContextProvider from "./contextProvider"
 import { db } from "@/server/db"
 import { auth } from "@/server/auth"
 
-import type { RecipeType } from "@/types/recipeTypes"
+import type { ClientRecipeType } from "@/types/recipeTypes"
 
 export default async function CreatePage(props: {
   params: Promise<{
@@ -23,7 +23,6 @@ export default async function CreatePage(props: {
           relationLoadStrategy: "join",
           where: {
             id: numParam,
-            createdById: userId,
           },
           select: {
             id: true,
@@ -31,6 +30,7 @@ export default async function CreatePage(props: {
             description: true,
             instructions: true,
             public: true,
+            createdById: true,
             ingredients: {
               select: {
                 ingredient: {
@@ -42,6 +42,11 @@ export default async function CreatePage(props: {
                 unit: true,
               },
             },
+            viewableBy: {
+              select: {
+                id: true,
+              },
+            },
           },
         })
       : null
@@ -50,6 +55,21 @@ export default async function CreatePage(props: {
     ingredientsAsync,
     prelodRecipeAsync,
   ])
+
+  // Fance way of saying no preloadrecipe and number exists
+  if (!(preLoadRecipe || !numParam)) {
+    return <div>There is no recipe with an id of {numParam}</div>
+  }
+
+  // Premissions exclude
+  if (
+    preLoadRecipe &&
+    user?.user.role != "ADMIN" &&
+    userId != preLoadRecipe?.createdById
+  ) {
+    return <div>You are not allowed to edit this recipe!</div>
+  }
+
   const recipe = preLoadRecipe
     ? ({
         id: preLoadRecipe.id,
@@ -61,8 +81,9 @@ export default async function CreatePage(props: {
           amount: ingredient.amount,
           unit: ingredient.unit,
         })),
+        viewers: preLoadRecipe.viewableBy.map((person) => person.id),
         public: preLoadRecipe.public,
-      } satisfies RecipeType)
+      } satisfies ClientRecipeType)
     : undefined
 
   return (

@@ -22,6 +22,12 @@ export default async function sendRecipe(
     return { message: isValid.error.issues[0]!.message }
   }
 
+  // Make a new array of viewers that always contains the user submitting
+  const viewableBy = isValid.data.viewers?.includes(user.id)
+    ? isValid.data.viewers
+    : [user.id, ...(isValid.data.viewers ?? [])]
+
+  // Helper for query
   const createOrUpdateData = {
     title: isValid.data.title,
     description: isValid.data.description,
@@ -42,6 +48,11 @@ export default async function sendRecipe(
             },
           },
         },
+      })),
+    },
+    viewableBy: {
+      connect: viewableBy.map((id) => ({
+        id,
       })),
     },
   }
@@ -79,20 +90,24 @@ export default async function sendRecipe(
   }
 
   // Otherwise, create a new recipe
-  await db.recipe.create({
-    data: {
-      ...createOrUpdateData,
-      createdBy: {
-        connect: {
-          id: user.id,
+  const results = await tryCatch(
+    db.recipe.create({
+      data: {
+        ...createOrUpdateData,
+        createdBy: {
+          connect: {
+            id: user.id,
+          },
         },
       },
-      viewableBy: {
-        connect: {
-          id: user.id,
-        },
-      },
-    },
-  })
-  return { message: "created new recipe" }
+    }),
+  )
+  console.log(results.error?.name)
+  return {
+    message: results.error
+      ? results.error.name == "PrismaClientKnownRequestError"
+        ? "You already have a reipe with that name!"
+        : results.error.message
+      : "created new recipe",
+  }
 }
