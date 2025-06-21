@@ -124,7 +124,7 @@ export default function FormField(props: {
         addMessage,
       )
     }
-  }, [debouncedIngredients, debouncedInstructions, addMessage])
+  }, [debouncedIngredients, debouncedInstructions, addMessage, viewers])
   const currentActiveRecipe = useRef<string>(null)
   useEffect(updateLocalFunction, [updateLocalFunction])
 
