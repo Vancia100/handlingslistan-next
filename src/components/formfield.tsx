@@ -71,12 +71,21 @@ export default function FormField(props: {
   const [status, setStatus] = useState("")
   const [submitStatus, formAction, pending] = useActionState(sendRecipe, {
     message: "",
+    success: true,
   })
+
+  // Title of the recipe currently loaded
+  const currentActiveRecipe = useRef<string>(null)
 
   // Sync status with submitStatus
   useEffect(() => {
     if (submitStatus) {
       setStatus(submitStatus.message)
+    }
+    // When successfully updating a recipe
+    if (submitStatus.success && currentActiveRecipe.current) {
+      removeLocalStorageItem(currentActiveRecipe.current)
+      currentActiveRecipe.current = null
     }
   }, [submitStatus])
 
@@ -106,7 +115,7 @@ export default function FormField(props: {
   const [debouncedIngredients] = useDebounce(ingredients, DEBOUNCETIME)
   const [debouncedInstructions] = useDebounce(instructions, DEBOUNCETIME)
 
-  // Add some sory of message
+  // Add some sort of message
   const addMessage = useMessageContext()
 
   const updateLocalFunction = useMemo(() => {
@@ -119,13 +128,20 @@ export default function FormField(props: {
           description: descriptionRef.current?.value ?? "",
           public: isPublicRef.current?.checked,
           viewers,
+          id: props.presetRecipe?.id,
         },
         currentActiveRecipe,
         addMessage,
       )
     }
-  }, [debouncedIngredients, debouncedInstructions, addMessage, viewers])
-  const currentActiveRecipe = useRef<string>(null)
+  }, [
+    debouncedIngredients,
+    debouncedInstructions,
+    addMessage,
+    viewers,
+    props.presetRecipe?.id,
+  ])
+
   useEffect(updateLocalFunction, [updateLocalFunction])
 
   const chageStorage = useMemo(() => {
@@ -249,6 +265,7 @@ function getLocalStorage() {
 
   return JSON.parse(stringJSON) as Record<string, string>
 }
+
 function getLocalStorageItem(key: string) {
   const stringJSON = localStorage.getItem(key)
   if (!stringJSON) return null
@@ -256,11 +273,9 @@ function getLocalStorageItem(key: string) {
   return JSON.parse(stringJSON) as ClientRecipeType
 }
 
-// Currently unused
-
 function removeLocalStorageItem(key: string) {
   const stringJSON = localStorage.getItem("recipeLookup")
-  if (!stringJSON) return null
+  if (!stringJSON) return
 
   const parsed = JSON.parse(stringJSON) as Record<string, string>
   delete parsed[key]
@@ -269,7 +284,7 @@ function removeLocalStorageItem(key: string) {
 }
 
 function updateLocalStorage(
-  recipe: ClientRecipeType,
+  recipe: ClientRecipeType & { id?: number },
   currentRecipeId: RefObject<string | null>,
   message?: (message: string) => void,
 ) {

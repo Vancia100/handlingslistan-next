@@ -10,8 +10,8 @@ import {
   useCallback,
 } from "react"
 
-// import { allowedUnits } from "@/schemas/recipeSchema"
-const allowedUnits = ["g"]
+import { allowedUnits } from "@/schemas/recipeSchema"
+
 import changeDefaultUnits from "@/actions/changeDefaultUnits"
 
 import { ingredeintSchema } from "@/schemas/ingredientSchema"

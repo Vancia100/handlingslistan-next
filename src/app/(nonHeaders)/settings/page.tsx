@@ -1,6 +1,8 @@
 import { auth, signOut } from "@/server/auth"
 import { redirect } from "next/navigation"
 
+import ClientSettings from "./clientSettings"
+
 export default async function Profile() {
   const authenticated = await auth()
   if (!authenticated) {
@@ -23,24 +25,7 @@ export default async function Profile() {
           />
         )}
       </span>
-      <div className="bg-primary-black-50 border-primary-black flex flex-col gap-3 rounded-xl border-2 p-4">
-        <SettingsPart
-          title="Username:"
-          info={user.name ?? ""}
-          change={async () => {
-            "use server"
-            console.log("change username")
-          }}
-        />
-        <SettingsPart
-          title="Email:"
-          info={user.email ?? ""}
-          change={async () => {
-            "use server"
-            console.log("change email")
-          }}
-        />
-      </div>
+      <ClientSettings user={user} />
 
       <div className="flex flex-row justify-evenly">
         <button
@@ -60,24 +45,6 @@ export default async function Profile() {
           DELETE ACCOUNT
         </button>
       </div>
-    </div>
-  )
-}
-
-function SettingsPart(props: {
-  title: string
-  change: () => void
-  info: string
-}) {
-  return (
-    <div className="flex flex-row flex-wrap items-center justify-end gap-2">
-      <h3 className="grow text-start">{props.title}</h3>
-      <p>{props.info}</p>
-      <button
-        className="bg-primary-blue border-primary-blue hover:border-primary-white cursor-pointer rounded-xl border-2 p-1"
-        onClick={props.change}>
-        Change
-      </button>
     </div>
   )
 }
