@@ -11,7 +11,7 @@ import type z from "zod"
 export default async function sendRecipe(
   prevState: { message: string },
   formData: z.infer<typeof recipeSchema>,
-): Promise<{ message: string }> {
+): Promise<{ message: string; success: boolean }> {
   const session = await auth()
   if (!session) redirect("/auth/login?redirectTo=/app")
   const user = session.user
@@ -19,7 +19,7 @@ export default async function sendRecipe(
   const isValid = recipeSchema.safeParse(formData)
   if (!isValid.success) {
     // console.error(isValid.error.issues)
-    return { message: isValid.error.issues[0]!.message }
+    return { message: isValid.error.issues[0]!.message, success: false }
   }
 
   // Make a new array of viewers that always contains the user submitting
@@ -83,10 +83,10 @@ export default async function sendRecipe(
       }),
     )
     if (!results.error) {
-      return { message: "recipe updated" }
+      return { message: "recipe updated", success: true }
     }
     console.error(results.error)
-    return { message: results.error.message }
+    return { message: results.error.message, success: false }
   }
 
   // Otherwise, create a new recipe
@@ -102,12 +102,13 @@ export default async function sendRecipe(
       },
     }),
   )
-  console.log(results.error?.name)
+  // console.log(results.error?.name)
   return {
     message: results.error
       ? results.error.name == "PrismaClientKnownRequestError"
         ? "You already have a reipe with that name!"
         : results.error.message
       : "created new recipe",
+    success: !results.error,
   }
 }
