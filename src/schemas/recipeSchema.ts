@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod/v4"
 import { Units } from "@/generated/prisma/enums"
 
 /* There is currently an issue with prisma generate with prisma-client and output dir

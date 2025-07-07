@@ -12,7 +12,8 @@ import {
   changeMail,
   type ServerAction,
 } from "@/actions/changeCredentials"
-import type { ZodEffects, ZodString } from "zod"
+
+import type { ZodType } from "zod/v4"
 export default function ClientSettings({ user }: { user: User }) {
   return (
     <div className="bg-primary-black-50 border-primary-black flex flex-col gap-3 rounded-xl border-2 p-4">
@@ -42,7 +43,8 @@ function SettingsPart(props: {
   title: string
   info: string
   changeAction: ServerAction
-  validator: ZodString | ZodEffects<ZodString>
+  validator: ZodType<string> // No clue if this is supported.
+  // Want to make it any validator that validates to a JS string.
 }) {
   const [state, action, isLoading] = useActionState(props.changeAction, {
     success: true,
@@ -63,7 +65,7 @@ function SettingsPart(props: {
 
               const isValid = props.validator.safeParse(inp)
               if (isValid.error) {
-                const errorMsg = isValid.error.errors[0]?.message
+                const errorMsg = isValid.error.message
                 console.log(errorMsg)
                 return
               }

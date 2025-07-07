@@ -6,7 +6,7 @@ import { redirect } from "next/navigation"
 
 import { tryCatch } from "@/utils/trycatch"
 
-import type z from "zod"
+import type z from "zod/v4"
 
 export default async function sendRecipe(
   prevState: { message: string },

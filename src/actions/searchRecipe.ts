@@ -1,7 +1,7 @@
 "use server"
 
 import { db } from "@/server/db"
-import { z } from "zod"
+import { z } from "zod/v4"
 import type { Recipe } from "@/generated/prisma/client"
 
 export default async function searchRecipe(

@@ -1,5 +1,5 @@
 import { allowedUnits } from "./recipeSchema"
-import { z } from "zod"
+import { z } from "zod/v4"
 import type { Units } from "@/generated/prisma/client"
 
 export const ingredeintSchema = z.array(

@@ -1,5 +1,5 @@
 import { createEnv } from "@t3-oss/env-nextjs"
-import { z } from "zod"
+import { z } from "zod/v4"
 
 export const env = createEnv({
   /**
@@ -13,7 +13,7 @@ export const env = createEnv({
         : z.string().optional(),
     AUTH_DISCORD_ID: z.string(),
     AUTH_DISCORD_SECRET: z.string(),
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
