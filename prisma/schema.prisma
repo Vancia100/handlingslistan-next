@@ -10,7 +10,7 @@ generator client {
   generatedFileExtension = "ts"
   importFileExtension    = "ts"
 
-  previewFeatures = ["driverAdapters", "relationJoins"]
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
