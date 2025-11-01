@@ -37,13 +37,15 @@ export default async function WebbApp() {
             {
               public: true,
             },
-            {
-              viewableBy: {
-                some: {
-                  id: user?.id,
-                },
-              },
-            },
+            user
+              ? {
+                  viewableBy: {
+                    some: {
+                      id: user?.id,
+                    },
+                  },
+                }
+              : {},
           ],
         },
         {
@@ -102,7 +104,8 @@ export default async function WebbApp() {
         </div>
       )}
       <Link href={"/app/recipe"}>Search for post</Link>
-      <Link href="/app/create">Create post</Link>
+      {/* @ts-expect-error This is a catch all route with a default, so next gives it a type error */}
+      <Link href={"/app/create"}>Create post</Link>
     </div>
   )
 }

@@ -1,7 +1,9 @@
 import { auth, signOut } from "@/server/auth"
 import { redirect } from "next/navigation"
 
+import deleteAcountAction from "@/actions/deleteAcount"
 import ClientSettings from "./clientSettings"
+import DeleteAcount from "./deleteAccount"
 
 export default async function Profile() {
   const authenticated = await auth()
@@ -15,6 +17,7 @@ export default async function Profile() {
       <span className="flex flex-row items-center justify-center pb-4 text-3xl">
         <h1 className="pr-5">{user.name}</h1>
         {user.image && (
+          // Not needed to have a next img when loading a separate source
           // eslint-disable-next-line @next/next/no-img-element
           <img
             className="rounded-full"
@@ -36,14 +39,13 @@ export default async function Profile() {
           }}>
           Sign Out
         </button>
-        <button
-          className="bg-primary-blue border-primary-blue mt-4 w-max cursor-pointer self-center rounded-3xl border-2 p-3 text-xl shadow-white hover:border-white hover:drop-shadow-lg"
-          onClick={async () => {
+        <DeleteAcount
+          Action={async () => {
             "use server"
-            await signOut({ redirectTo: "/auth/login" })
-          }}>
-          DELETE ACCOUNT
-        </button>
+            await deleteAcountAction()
+            redirect("/")
+          }}
+        />
       </div>
     </div>
   )

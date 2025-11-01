@@ -54,20 +54,22 @@ model Recipe {
   public     Boolean @default(false)
   viewableBy User[]  @relation("ViewableRecipes")
 
-  createdById String
-  createdBy   User   @relation(fields: [createdById], references: [id])
+  createdById String @default("[Deleted]")
+  createdBy   User?  @relation(fields: [createdById], references: [id], onDelete: Cascade)
 
   @@unique([title, createdById])
   @@index([title])
 }
 
 model RecipeIngredient {
+  // Joning table for a Recipe and ingredient
+  // Manualy done to stora a unit and amount
   id     Int   @id @default(autoincrement())
   amount Float
   unit   Units
 
   recipeId Int
-  recipe   Recipe @relation(fields: [recipeId], references: [id])
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
   ingredientId Int
   ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
@@ -76,25 +78,42 @@ model RecipeIngredient {
 }
 
 model Ingredient {
-  id          Int                @id @default(autoincrement())
-  name        String             @unique
-  defaultUnit Units?
-  recepies    RecipeIngredient[]
-  aliases     String[]
+  id              Int                @id @default(autoincrement())
+  name            String             @unique
+  defaultUnit     Units?
+  recepies        RecipeIngredient[]
+  aliases         String[]
+  ListIngredients ListIngredients[]
 
   @@index([name])
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model List {
+  id        Int    @id @default(autoincrement())
+  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId String
 
-  createdBy   User   @relation(fields: [createdById], references: [id])
-  createdById String
+  created DateTime @default(now())
+  updated DateTime @updatedAt
 
-  @@index([name])
+  editablyBy User[] @relation("EditableLists")
+
+  title String
+  items ListIngredients[]
+}
+
+model ListIngredients {
+  // Joining table. 
+  // You can shop either ingredients or other stuff
+  id     Int  @id @default(autoincrement())
+  list   List @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId Int
+
+  amount       Int
+  unit         Units
+  recipeItem   Ingredient? @relation(fields: [recipeItemID], references: [id])
+  recipeItemID Int?
+  recipeCustom String?
 }
 
 // Necessary for Next auth
@@ -130,14 +149,17 @@ model User {
   name          String?
   email         String?   @unique
   emailVerified DateTime?
+  password      String?
   image         String?
 
-  role            Role      @default(USER)
-  accounts        Account[]
-  sessions        Session[]
-  posts           Post[]
+  role     Role      @default(USER)
+  accounts Account[]
+  sessions Session[]
+
   recipesCreated  Recipe[]
-  viewableRecipes Recipe[]  @relation("ViewableRecipes")
+  viewableRecipes Recipe[] @relation("ViewableRecipes")
+  list            List[]
+  editableLists   List[]   @relation("EditableLists")
 }
 
 model VerificationToken {

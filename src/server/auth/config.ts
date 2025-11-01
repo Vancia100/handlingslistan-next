@@ -1,9 +1,14 @@
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import type { DefaultSession, NextAuthConfig } from "next-auth"
-import DiscordProvider from "next-auth/providers/discord"
 
-import type { Role } from "@/generated/prisma/client"
+import DiscordProvider from "next-auth/providers/discord"
+import Credentials from "next-auth/providers/credentials"
+
+import argon2 from "argon2"
+
+import { tryCatch } from "@/utils/trycatch"
 import { db } from "@/server/db"
+import type { Role } from "@/generated/prisma/client"
 import type { PrismaClient } from "@/generated/prisma/client"
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -43,11 +48,41 @@ export const authConfig = {
      *
      * @see https://next-auth.js.org/providers/github
      */
+    Credentials({
+      name: "Email & password",
+      credentials: {
+        email: { label: "Email", type: "text", placeholder: "v@handla.se" },
+        password: { label: "Password", type: "password" },
+      },
+
+      async authorize(credentials, req) {
+        if (!credentials.email || !credentials.password) return null
+        const user = await db.user.findUnique({
+          where: {
+            email: credentials.email as string,
+          },
+          include: {
+            sessions: {
+              select: {
+                sessionToken: true,
+              },
+            },
+          },
+        })
+        if (!user || !user.password) return null
+        const authed = await tryCatch(
+          argon2.verify(user.password, credentials.password as string),
+        )
+        if (!authed.data) return null
+
+        console.log(user, "user")
+
+        console.log("cookies", req.headers.getSetCookie())
+        return user
+      },
+    }),
   ],
-  //Temporary solution, database update not typed the same as prisma adapter exprects.
-  // still works
-  // eslint-disable-next-line
-  adapter: PrismaAdapter(db as unknown as PrismaClient),
+  adapter: PrismaAdapter(db as PrismaClient),
   callbacks: {
     session: ({ session, user }) => ({
       ...session,

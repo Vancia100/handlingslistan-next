@@ -14,19 +14,21 @@ import {
 
 import { useDebounce } from "use-debounce"
 
-import type { Ingredient } from "@/generated/prisma/client"
 import { recipeSchema } from "@/schemas/recipeSchema"
 
 import { useMessageContext } from "@/context/messageContext"
 
 import { functionalDebounce } from "@/utils/simpleDebounce"
+
 import sendRecipe from "@/actions/sendRecipe"
 
 import IngredientsTable from "@/components/ingredientsTable"
 import InstructionsList from "@/components/instructionsList"
 import InviteView from "@/components/inviteView"
+
 // Types
 import type { ClientRecipeType, IngredientsType } from "@/types/recipeTypes"
+import type { Ingredient } from "@/generated/prisma/client"
 
 // Constatnts
 const DEBOUNCETIME = 3000
@@ -78,6 +80,13 @@ export default function FormField(props: {
   const currentActiveRecipe = useRef<string>(null)
 
   // Sync status with submitStatus
+
+  console.log("rerendere")
+  // const currentStatus = useMemo(() => {
+  //   return submitStatus.message ? submitStatus : status
+  // }, [status, submitStatus])
+
+  // Causes side effects, preferably use something else?
   useEffect(() => {
     if (submitStatus) {
       setStatus(submitStatus.message)
