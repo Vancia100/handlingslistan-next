@@ -1,6 +1,6 @@
 "use client"
 
-import type { ListType, IngredientsType } from "./page"
+import type { ListType, IngredientsType } from "./[...id]/page"
 
 import { useState, use, useEffect } from "react"
 export default function ListComponent(props: {

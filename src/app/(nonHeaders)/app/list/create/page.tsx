@@ -2,7 +2,7 @@ import { redirect } from "next/navigation"
 import { auth } from "@/server/auth"
 import { db } from "@/server/db"
 import RouteReplacer from "./routeChanger"
-import ListComponent from "./[...id]/ListComponent"
+import ListComponent from "./ListComponent"
 import { fetchIngredients } from "./[...id]/page"
 
 export default async function CreateList() {

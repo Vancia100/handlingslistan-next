@@ -1,4 +1,4 @@
-import ListComponent from "./ListComponent"
+import ListComponent from "../ListComponent"
 import { db } from "@/server/db"
 import { auth } from "@/server/auth"
 
