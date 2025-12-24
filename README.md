@@ -5,13 +5,23 @@ A free to self host list
 
 ## TODO
 
+### Monorepo:
+
+- [ ] Migrate to TRPC where it makes sense.
+- [ ] Make sure that Lint and format scripts work.
+- []
+
+### Old stuff:
+
 - [x] Responsive navbar with hamburger menu. CSS only.
 - [x] Setup database
 - [ ] Cool mainpage with descriptions
 - [ ] Implement auth:
   - [ ] Add Google provider
-  - [ ] Credentials?
-  - [ ] Middleware?
+  - [ ] Add discord provider
+  - [ ] Fix delete account
+  - [x] Credentials
+  - [ ] Middleware
 - [ ] Profile page:
   - [ ] Edit options saved on account basis
   - [ ] Changeable name and pfp etc
@@ -35,12 +45,13 @@ A free to self host list
   - [ ] Recipe to list interaction
   - [ ] Go shoping, things left in list gets put inte new list, data saved ...
   - [ ] Have shoping lists sync with multiple users
-  - [ ] Migrate to betterAuth to do credentials without issues
+  - [x] Migrate to betterAuth to do credentials without issues
 
 - [ ] Docs
-- [ ] Hosting options with open-source API
+- [ ] Hosting options with
 
-  **Long-long term:**
-  - [ ] Expo app in monorepo
-  - Tauri or electron app based on the Webb app
-  - Mobile? Either Tauri on mobile or something like React Native perhaps. This will be a big project so will definativly take some time.
+open-source API
+
+**Long-long term:**
+
+- [ ] Expo app in monorepo
