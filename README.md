@@ -1,12 +1,12 @@
 # Handlingslistan
 
+A turborepo implementation of handlingslistan. Currently in early state, and does have some issues. On top of moving to a separe backend the auth is also moved to BetterAuth. No of the endpoints have been moved to TRPC.
 A free to self host list
 
 ## TODO
 
 - [x] Responsive navbar with hamburger menu. CSS only.
 - [x] Setup database
-- [ ] Test deploy, vercel/netlify/docker(?)
 - [ ] Cool mainpage with descriptions
 - [ ] Implement auth:
   - [ ] Add Google provider
@@ -41,9 +41,6 @@ A free to self host list
 - [ ] Hosting options with open-source API
 
   **Long-long term:**
+  - [ ] Expo app in monorepo
   - Tauri or electron app based on the Webb app
   - Mobile? Either Tauri on mobile or something like React Native perhaps. This will be a big project so will definativly take some time.
-
-# Mobile plan:
-
-The current plan is to make a hugo monorepo with a express/tRPC backend with database and betterAuth, expo React native app, and NextJs webapp. Might take some inspiration from t3 monorepo setup and use turborepo even if I will not use the stash on vercel or hosting options. Make sure to do a docker compose to deploy 3 containers. One with database, other with express backend and a third with the nextjs backend. It seems hard to make the real time parts for the lits when hosting with vercel. Might want to make a option to host on vercel, but since that is not my plan to do I probably wont put any energy into it. currently the plan is to make a preliminary list, then migrate to betterAuth. After that I will try to migrate this project to next 16 and express/trpc backend in possibly a seperate repo. There will be so mush changes that I see no point in keeping it in this repo. Hopefully won't take that long until I get a working prototype of it.

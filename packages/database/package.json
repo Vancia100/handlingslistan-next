@@ -1,0 +1,41 @@
+{
+  "name": "@hndl/database",
+  "version": "1.0.0",
+  "description": "",
+  "main": "prisma.ts",
+  "scripts": {
+    "lint": "eslint",
+    "build": "tsc",
+    "dev": "pnpm run db:generate --watch",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrade dev"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/types.d",
+      "default": "./src/prisma.ts"
+    },
+    "./enums": "./generated/prisma/enums.ts",
+    "./client": "./generated/prisma/client.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@hndl/eslint-config": "workspace:*",
+    "@hndl/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pg": "^8.16.0",
+    "dotenv": "^17.2.3",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "prisma": "^7.2.0",
+    "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/client": "^7.2.0",
+    "pg": "^8.16.3"
+  }
+}

@@ -1,0 +1,185 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+
+  runtime                = "nodejs"
+  moduleFormat           = "esm"
+  generatedFileExtension = "ts"
+  importFileExtension    = "ts"
+
+  previewFeatures = ["relationJoins"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Units {
+  g
+  hg
+  kg
+  ml
+  cl
+  dl
+  l
+  tsp
+  msk
+  krm
+  st
+  pkt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Recipe {
+  id           Int                @id @default(autoincrement())
+  title        String
+  description  String
+  ingredients  RecipeIngredient[]
+  instructions String[]
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  public     Boolean @default(false)
+  viewableBy User[]  @relation("ViewableRecipes")
+
+  createdById String @default("[Deleted]")
+  createdBy   User?  @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@unique([title, createdById])
+  @@index([title])
+}
+
+model RecipeIngredient {
+  // Joning table for a Recipe and ingredient
+  // Manualy done to stora a unit and amount
+  id     Int   @id @default(autoincrement())
+  amount Float
+  unit   Units
+
+  recipeId Int
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  ingredientId Int
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+
+  @@unique([recipeId, ingredientId])
+}
+
+model Ingredient {
+  id              Int                @id @default(autoincrement())
+  name            String             @unique
+  defaultUnit     Units?
+  recepies        RecipeIngredient[]
+  aliases         String[]
+  ListIngredients ListIngredients[]
+
+  @@index([name])
+}
+
+model List {
+  id        Int    @id @default(autoincrement())
+  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId String
+
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+
+  editablyBy User[] @relation("EditableLists")
+
+  title String
+  items ListIngredients[]
+}
+
+model ListIngredients {
+  // Joining table. 
+  // You can shop either ingredients or other stuff
+  id     Int  @id @default(autoincrement())
+  list   List @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId Int
+
+  amount       Int
+  unit         Units
+  recipeItem   Ingredient? @relation(fields: [recipeItemID], references: [id])
+  recipeItemID Int?
+  recipeCustom String?
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  role Role @default(USER)
+
+  recipesCreated  Recipe[]
+  viewableRecipes Recipe[] @relation("ViewableRecipes")
+  list            List[]
+  editableLists   List[]   @relation("EditableLists")
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}

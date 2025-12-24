@@ -1,0 +1,30 @@
+{
+  "name": "@hndl/auth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "lint": "eslint",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "exports": {
+    "./client": "./src/client.ts",
+    "./server": "./src/auth.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.26.1",
+  "dependencies": {
+    "@hndl/database": "workspace:^",
+    "better-auth": "catalog:"
+  },
+  "devDependencies": {
+    "@hndl/eslint-config": "workspace:^",
+    "@hndl/typescript-config": "workspace:^",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
+  }
+}

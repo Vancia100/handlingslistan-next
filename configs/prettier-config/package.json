@@ -1,0 +1,17 @@
+{
+  "name": "@hndl/prettier-config",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": "./prettier.config.js"
+  },
+  "dependencies": {
+    "tailwindcss": "catalog:",
+    "prettier-plugin-tailwindcss": "^0.7.2"
+  }
+}

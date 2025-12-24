@@ -1,64 +1,25 @@
 {
-  "name": "handlingslistan-next",
-  "version": "0.1.0",
+  "name": "turbolistan",
   "private": true,
-  "type": "module",
   "scripts": {
-    "build": "next build",
-    "check": "eslint && next typegen && tsc --noEmit",
-    "db:generate": "prisma migrate dev",
-    "db:migrate": "prisma migrate deploy",
-    "db:push": "prisma db push",
-    "db:studio": "prisma studio",
-    "dev": "next dev --turbo",
-    "postinstall": "prisma generate",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
-    "preview": "next build --turbo && next start",
-    "start": "next start",
-    "typecheck": "tsc --noEmit",
-    "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache"
-  },
-  "dependencies": {
-    "@auth/prisma-adapter": "^2.11.1",
-    "@prisma/adapter-pg": "^6.19.1",
-    "@prisma/client": "^6.19.1",
-    "@t3-oss/env-nextjs": "^0.13.10",
-    "argon2": "^0.44.0",
-    "geist": "^1.5.1",
-    "next": "^15.5.9",
-    "next-auth": "5.0.0-beta.29",
-    "pg": "^8.16.3",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "use-debounce": "^10.0.6",
-    "ws": "^8.18.3",
-    "zod": "^4.1.12"
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "typecheck": "turbo run typecheck",
+    "db:push": "turbo run --filter='@hndl/database' pnpm run db:push",
+    "db:generate": "turbo run --filter='@hndl/database' pnpm run db:generate",
+    "db:migrate": "turbo run --filter='@hndl/database' pnpm run db:migrate"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.18",
-    "@types/node": "^25.0.3",
-    "@types/pg": "^8.16.0",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
-    "@typescript-eslint/eslint-plugin": "^8.50.0",
-    "eslint": "^9.39.2",
-    "eslint-config-next": "^16.0.10",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-react-compiler": "19.1.0-rc.2",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "globals": "^16.5.0",
-    "postcss": "^8.5.6",
-    "prettier": "^3.7.4",
-    "prettier-plugin-tailwindcss": "^0.7.2",
-    "prisma": "^6.19.1",
-    "tailwindcss": "^4.1.18",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.50.0"
+    "@types/node": "catalog:",
+    "prettier": "catalog:",
+    "turbo": "^2.7.1",
+    "typescript": "catalog:"
   },
-  "ct3aMetadata": {
-    "initVersion": "7.38.1"
+  "packageManager": "pnpm@10.26.1",
+  "engines": {
+    "node": ">=18"
   },
-  "packageManager": "pnpm@10.22.0"
+  "license": "MIT"
 }
