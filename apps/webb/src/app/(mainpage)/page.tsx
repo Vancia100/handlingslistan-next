@@ -22,7 +22,7 @@ export default function HomePage() {
           Login
         </Link>
         <Link
-          href={"/auth/register"}
+          href={"/auth/login"}
           className="bg-primary-black-50 hover:bg-primary-black-75 mx-5 w-50 min-w-min rounded-md p-3 text-center text-2xl shadow-md md:text-3xl">
           Register
         </Link>

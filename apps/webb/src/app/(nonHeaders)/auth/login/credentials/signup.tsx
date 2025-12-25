@@ -42,6 +42,7 @@ export default function Credentials(props: { redirect?: string }) {
             password: creds.password,
           })
       if (!signin.error) {
+        // @ts-expect-error might 404
         router.push(props.redirect ?? "/app")
       }
     },
@@ -51,11 +52,11 @@ export default function Credentials(props: { redirect?: string }) {
   const error = login || extraPass == pass ? null : "The passwords do not match"
   return (
     <>
-      <div className="flex flex-row w-full">
+      <div className="flex w-full flex-row">
         <span
           className={
             (login ? "bg-primary-black-75 " : "") +
-            " grow rounded-l-2xl border-b-2 border-primary-blue py-5 hover:underline "
+            " border-primary-blue grow rounded-l-2xl border-b-2 py-5 hover:underline"
           }
           onClick={() => setLogin(true)}>
           <h1 className="text-3xl">Sign In</h1>
@@ -63,13 +64,13 @@ export default function Credentials(props: { redirect?: string }) {
         <span
           className={
             (!login ? "bg-primary-black-75 " : "") +
-            "grow border-b-2 rounded-r-2xl border-primary-blue py-5 hover:underline shadow-white hover:drop-shadow-lg"
+            "border-primary-blue grow rounded-r-2xl border-b-2 py-5 shadow-white hover:underline hover:drop-shadow-lg"
           }
           onClick={() => setLogin(false)}>
           <h1 className="text-3xl">Sign Up</h1>
         </span>
       </div>
-      <form action={clientAction} className="flex flex-col p-9 gap-2">
+      <form action={clientAction} className="flex flex-col gap-2 p-9">
         <label htmlFor="eamil" className="m-3 w-max text-xl">
           Email:
           <label htmlFor="password"></label>
@@ -117,7 +118,7 @@ export default function Credentials(props: { redirect?: string }) {
         <button
           disabled={!!error}
           type="submit"
-          className="bg-primary-blue border-primary-blue rounded-3xl border-2 p-2 max-w-[70%] px-30 mx-auto text-xl shadow-white hover:border-white hover:drop-shadow-lg">
+          className="bg-primary-blue border-primary-blue mx-auto max-w-[70%] rounded-3xl border-2 p-2 px-30 text-xl shadow-white hover:border-white hover:drop-shadow-lg">
           Sign in
         </button>
       </form>

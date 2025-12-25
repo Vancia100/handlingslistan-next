@@ -24,6 +24,9 @@ catalogs:
     prettier:
       specifier: 3.7.4
       version: 3.7.4
+    prettier-plugin-tailwindcss:
+      specifier: 0.7.2
+      version: 0.7.2
     tailwindcss:
       specifier: 4.1.18
       version: 4.1.18
@@ -175,6 +178,9 @@ importers:
       prettier:
         specifier: 'catalog:'
         version: 3.7.4
+      prettier-plugin-tailwindcss:
+        specifier: 'catalog:'
+        version: 0.7.2(prettier@3.7.4)
       tailwindcss:
         specifier: 'catalog:'
         version: 4.1.18
@@ -219,9 +225,9 @@ importers:
         version: 8.49.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
 
   configs/prettier-config:
-    dependencies:
+    devDependencies:
       prettier-plugin-tailwindcss:
-        specifier: ^0.7.2
+        specifier: 'catalog:'
         version: 0.7.2(prettier@3.7.4)
       tailwindcss:
         specifier: 'catalog:'

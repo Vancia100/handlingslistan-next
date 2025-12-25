@@ -1,17 +1,14 @@
 "use client"
 
-import { useState, useRef, useActionState } from "react"
+import { useState, useRef } from "react"
 
-import { type User } from "next-auth"
+import type { User } from "@hndl/auth"
+import { authClient } from "@hndl/auth/client"
 import {
   usernameValidator,
   emailValidator,
 } from "@/schemas/chageCredentialsSchema"
-import {
-  changeUsername,
-  changeMail,
-  type ServerAction,
-} from "@/actions/changeCredentials"
+import { useRouter } from "next/navigation"
 
 import type { ZodType } from "zod/v4"
 export default function ClientSettings({ user }: { user: User }) {
@@ -20,7 +17,12 @@ export default function ClientSettings({ user }: { user: User }) {
       <SettingsPart
         title="Username:"
         info={user.name ?? ""}
-        changeAction={changeUsername}
+        changeAction={async (newUsername) => {
+          const mes = await authClient.updateUser({
+            name: newUsername,
+          })
+          return mes.error?.message
+        }}
         validator={usernameValidator.refine(
           (name) => name != user.name,
           "Username cant be the same as old username!",
@@ -29,7 +31,12 @@ export default function ClientSettings({ user }: { user: User }) {
       <SettingsPart
         title="Email:"
         info={user.email ?? ""}
-        changeAction={changeMail}
+        changeAction={async (newEmail) => {
+          const mes = await authClient.changeEmail({
+            newEmail,
+          })
+          return mes.error?.message
+        }}
         validator={emailValidator.refine(
           (email) => email != user.email,
           "Email cant be the same as old email!",
@@ -42,17 +49,14 @@ export default function ClientSettings({ user }: { user: User }) {
 function SettingsPart(props: {
   title: string
   info: string
-  changeAction: ServerAction
+  changeAction: (arg0: string) => Promise<string | undefined>
   validator: ZodType<string> // No clue if this is supported.
   // Want to make it any validator that validates to a JS string.
 }) {
-  const [state, action, isLoading] = useActionState(props.changeAction, {
-    success: true,
-    message: "",
-  })
   const [isOpen, setIsOpen] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
 
+  const router = useRouter()
   return (
     <div className="flex flex-row flex-wrap items-center justify-end gap-2">
       <h3 className="grow text-start">{props.title}</h3>
@@ -75,7 +79,12 @@ function SettingsPart(props: {
                 return
 
               setIsOpen(false)
-              action(isValid.data)
+              const ret = await props.changeAction(isValid.data)
+              if (ret) {
+                alert(ret)
+              } else {
+                router.refresh()
+              }
             }}
             ref={formRef}>
             <input type="text" name="new" placeholder={`new ${props.title}`} />

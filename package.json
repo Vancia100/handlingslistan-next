@@ -9,7 +9,8 @@
     "typecheck": "turbo run typecheck",
     "db:push": "turbo run --filter='@hndl/database' pnpm run db:push",
     "db:generate": "turbo run --filter='@hndl/database' pnpm run db:generate",
-    "db:migrate": "turbo run --filter='@hndl/database' pnpm run db:migrate"
+    "db:migrate": "turbo run --filter='@hndl/database' 'pnpm run db:migrate'",
+    "db:studio": "turbo run --filter='@hndl/database' db:generate"
   },
   "devDependencies": {
     "@types/node": "catalog:",

@@ -3,6 +3,9 @@ import { prisma as db } from "@hndl/database"
 import { auth } from "@hndl/auth/server"
 import { headers } from "next/headers"
 
+// eslint-disable-next-line
+import type { Prisma } from "@hndl/database/client"
+
 export default async function CreateListWithID(props: { id: Promise<string> }) {
   const id = Number(await props.id)
   if (Number.isNaN(id)) {
@@ -18,9 +21,8 @@ export default async function CreateListWithID(props: { id: Promise<string> }) {
   const ingredients = fetchIngredients()
   return <ListComponent startlist={list} ingredients={ingredients} />
 }
-
 function fetchDataFromDB(userID: string, listID: number) {
-  return db.list.findUnique({
+  const data = db.list.findUnique({
     include: {
       editablyBy: {
         select: {
@@ -42,6 +44,7 @@ function fetchDataFromDB(userID: string, listID: number) {
       },
     },
   })
+  return data
 }
 
 // Might move to an dedicated lib file to declare that thease are supposed to be used everywhere list related

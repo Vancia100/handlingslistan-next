@@ -20,8 +20,8 @@ async function SignUpSuspense(props: {
 }) {
   const redir = await props.redir
   const user = await auth.api.getSession({ headers: await headers() })
-  console.log(user)
   if (user) {
+    // @ts-expect-error this might 404
     redirect(redir.redirect ?? "/app")
   }
   return <SignUp redirect={redir.redirect} />

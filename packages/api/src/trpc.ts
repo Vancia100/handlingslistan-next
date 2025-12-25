@@ -1,4 +1,4 @@
-import { initTRPC, type AnyRouter } from "@trpc/server"
+import { initTRPC } from "@trpc/server"
 import * as trpcExpress from "@trpc/server/adapters/express"
 import { auth } from "@hndl/auth/server"
 import { fromNodeHeaders } from "better-auth/node"

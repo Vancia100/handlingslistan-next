@@ -1,15 +1,16 @@
 # Handlingslistan
 
-A turborepo implementation of handlingslistan. Currently in early state, and does have some issues. On top of moving to a separe backend the auth is also moved to BetterAuth. No of the endpoints have been moved to TRPC.
-A free to self host list
+A turborepo implementation of handlingslistan. Currently in early state, and does have some issues. On top of moving to a separe backend the auth is also moved to BetterAuth. None of the endpoints have been moved to TRPC.
 
 ## TODO
 
 ### Monorepo:
 
 - [ ] Migrate to TRPC where it makes sense.
-- [ ] Make sure that Lint and format scripts work.
-- []
+- [x] Make sure that Linting works.
+- [ ] Formatting works
+- [ ] Propper environment variable management
+- [ ] Remove hard coded localhost to build stuff
 
 ### Old stuff:
 
@@ -18,10 +19,11 @@ A free to self host list
 - [ ] Cool mainpage with descriptions
 - [ ] Implement auth:
   - [ ] Add Google provider
-  - [ ] Add discord provider
+  - [x] Add discord provider
   - [ ] Fix delete account
   - [x] Credentials
   - [ ] Middleware
+  - [ ] Make auth page look a litter nicer
 - [ ] Profile page:
   - [ ] Edit options saved on account basis
   - [ ] Changeable name and pfp etc
@@ -48,10 +50,8 @@ A free to self host list
   - [x] Migrate to betterAuth to do credentials without issues
 
 - [ ] Docs
-- [ ] Hosting options with
-
-open-source API
+- [ ] Hosting options withopen-source API
 
 **Long-long term:**
 
-- [ ] Expo app in monorepo
+- [ ] Expo + React Native app in monorepo

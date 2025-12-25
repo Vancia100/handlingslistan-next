@@ -144,6 +144,7 @@ function NotAuthed({
   ) : (
     <div>
       <p>{"You need to be logged in to view this content"}</p>
+      {/*@ts-expect-error TS can not garante that HREF exists */}
       <Link href={redir}>Login</Link>
     </div>
   )

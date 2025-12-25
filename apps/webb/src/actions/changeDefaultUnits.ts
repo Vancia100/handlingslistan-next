@@ -14,7 +14,7 @@ export default async function changeDefaultUnits(
   const cookies = await headers()
   const user = (await auth.api.getSession({ headers: cookies }))?.user
   if (!user || user.role !== "ADMIN") {
-    redirect("/login")
+    redirect("/auth/login")
   }
   const isValid = ingredeintSchema.safeParse(unitsArray)
   if (!isValid.success) {

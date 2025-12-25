@@ -3,7 +3,7 @@ import { auth } from "@hndl/auth/server"
 import { redirect } from "next/navigation"
 import { headers } from "next/headers"
 
-// import ClientSettings from "./clientSettings"
+import ClientSettings from "./clientSettings"
 import DeleteAcount from "./deleteAccount"
 import SignOut from "./signOutButton"
 
@@ -32,7 +32,7 @@ export default async function Profile() {
           />
         )}
       </span>
-      {/* <ClientSettings user={user} /> */}
+      <ClientSettings user={user} />
 
       <div className="flex flex-row justify-evenly">
         <SignOut />

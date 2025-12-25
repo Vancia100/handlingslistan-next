@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "prisma.ts",
+  "type": "module",
   "scripts": {
-    "lint": "eslint",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "build": "tsc",
     "dev": "pnpm run db:generate --watch",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
-    "db:migrate": "prisma migrade dev"
+    "db:migrate": "prisma migrade dev",
+    "db:studio": "prisma studio"
   },
   "exports": {
     ".": {

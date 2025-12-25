@@ -104,6 +104,7 @@ export default async function WebbApp() {
         </div>
       )}
       <Link href={"/app/recipe"}>Search for post</Link>
+      {/* @ts-expect-error Next type does not generate for dynamic routes */}
       <Link href={"/app/create"}>Create post</Link>
     </div>
   )

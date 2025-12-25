@@ -1,5 +1,5 @@
 {
   "extends": "@hndl/typescript-config/base.json",
   "include": ["src"],
-  "exclude": ["node_modules", "generaged/prisma"]
+  "exclude": ["node_modules"]
 }

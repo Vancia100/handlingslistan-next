@@ -1,4 +1,4 @@
-import express, { request, response } from "express"
+import express from "express"
 import { auth } from "@hndl/auth/server"
 import { toNodeHandler } from "better-auth/node"
 import * as trpcExpress from "@trpc/server/adapters/express"

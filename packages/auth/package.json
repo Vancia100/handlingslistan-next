@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
+  "type": "module",
   "scripts": {
-    "lint": "eslint",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "exports": {
+    ".": "./src/index.ts",
     "./client": "./src/client.ts",
     "./server": "./src/auth.ts"
   },
