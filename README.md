@@ -48,6 +48,7 @@ A turborepo implementation of handlingslistan. Currently in early state, and doe
   - [ ] Go shoping, things left in list gets put inte new list, data saved ...
   - [ ] Have shoping lists sync with multiple users
   - [x] Migrate to betterAuth to do credentials without issues
+  - [ ] Implement Cache strategy with NextJS 16 / Merge the cache branch
 
 - [ ] Docs
 - [ ] Hosting options withopen-source API
@@ -55,3 +56,4 @@ A turborepo implementation of handlingslistan. Currently in early state, and doe
 **Long-long term:**
 
 - [ ] Expo + React Native app in monorepo
+
