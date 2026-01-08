@@ -19,7 +19,7 @@ app.use(
 // Auth
 app.all("/auth/*splat", toNodeHandler(auth))
 app.get("/", async (req, res) => {
-  res.json("test")
+  res.json("test2")
 })
 app.use(express.json())
 //trpc

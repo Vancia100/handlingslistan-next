@@ -7,7 +7,12 @@
   "scripts": {
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "build": "tsc"
+    "build": "tsc",
+    "dev": "tsc"
+  },
+  "exports": {
+    "types": "./src/index.ts",
+    "default": "./dist/index.js"
   },
   "keywords": [],
   "author": "",

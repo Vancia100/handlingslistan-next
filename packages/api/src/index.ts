@@ -1,5 +1,5 @@
-import { router } from "./trpc"
-export { createContext } from "./trpc"
+import { router } from "./trpc.js"
+export { createContext } from "./trpc.js"
 
 export const appRouter = router({})
 

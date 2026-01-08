@@ -7,10 +7,10 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "typecheck": "turbo run typecheck",
-    "db:push": "turbo run --filter='@hndl/database' pnpm run db:push",
-    "db:generate": "turbo run --filter='@hndl/database' pnpm run db:generate",
-    "db:migrate": "turbo run --filter='@hndl/database' 'pnpm run db:migrate'",
-    "db:studio": "turbo run --filter='@hndl/database' db:generate"
+    "db:push": "turbo run db:push",
+    "db:generate": "turbo run db:generate",
+    "db:migrate": "turbo run db:migrate'",
+    "db:studio": "turbo run db:studio"
   },
   "devDependencies": {
     "@types/node": "catalog:",
@@ -18,9 +18,9 @@
     "turbo": "^2.7.1",
     "typescript": "catalog:"
   },
-  "packageManager": "pnpm@10.26.1",
+  "packageManager": "pnpm@10.27.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "license": "MIT"
 }

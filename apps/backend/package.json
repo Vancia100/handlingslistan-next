@@ -6,8 +6,9 @@
   "scripts": {
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "dev": "pnpx tsx --watch ./src/index.ts",
-    "build": "tsc"
+    "dev": "tsx --watch ./src/index.ts",
+    "build": "tsc",
+    "start": "node ./dist/index.js"
   },
   "dependencies": {
     "@hndl/api": "workspace:^",
@@ -28,6 +29,7 @@
     "eslint": "catalog:",
     "prettier": "catalog:",
     "ts-node": "^10.9.2",
+    "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "typescript": "catalog:"
   },

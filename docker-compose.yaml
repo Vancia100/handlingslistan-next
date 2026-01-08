@@ -1,0 +1,59 @@
+services:
+  webb: 
+    build:
+      dockerfile: ./apps/webb/Dockerfile
+      network: host
+    ports:
+      - "3000:3000"
+    networks:
+      - db
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/listan?schema=public"
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+  backend:
+    build:
+      dockerfile: ./apps/backend/Dockerfile
+      network: host
+    ports:
+      - "3001:3001"
+    networks:
+      - db
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/listan?schema=public"
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+  database:
+    container_name: postgres
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /data/postgres
+      POSTGRES_DB: listan
+    volumes:
+      - db:/data/postgres
+    ports:
+      - "5422:5432"
+    networks:
+      - db
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d listan" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+networks:
+  db:
+    driver: bridge
+
+volumes:
+  db:
