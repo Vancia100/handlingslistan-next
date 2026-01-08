@@ -14,15 +14,15 @@
   "devDependencies": {
     "@hndl/eslint-config": "workspace:*",
     "@hndl/typescript-config": "workspace:*",
-    "typescript": "catalog:",
-    "eslint": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.2"
+    "@types/react-dom": "19.2.2",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   },
   "dependencies": {
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   },
   "license": "MIT"
 }

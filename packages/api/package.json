@@ -32,7 +32,7 @@
   "dependencies": {
     "@hndl/auth": "workspace:^",
     "@hndl/database": "workspace:^",
-    "@trpc/server": "^11.8.0",
+    "@trpc/server": "^11.8.1",
     "better-auth": "catalog:",
     "zod": "catalog:"
   }

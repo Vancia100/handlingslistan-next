@@ -16,8 +16,8 @@
     "@hndl/prettier-config": "workspace:^",
     "@hndl/ui": "workspace:*",
     "next": "16.0.10",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "use-debounce": "^10.0.6",
     "zod": "catalog:"
   },
