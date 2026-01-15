@@ -1,16 +1,18 @@
 services:
   migrate:
-    network_mode: host
+    env_file:
+      - .env
     container_name: migrate
     build:
       context: .
       dockerfile: ./packages/database/Dockerfile
-      network: host
     depends_on:
       database:
         condition: service_healthy
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5422/listan?schema=public"
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/listan?schema=public
+    networks:
+      - db
   database:
     container_name: postgres
     image: postgres:18-alpine
@@ -21,16 +23,14 @@ services:
       POSTGRES_DB: listan
     volumes:
       - db:/data/postgres
-    ports:
-      - "5422:5432"
     networks:
       - db
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d listan"]
-      interval: 30s
+      interval: 10s
       timeout: 10s
-      retries: 5
+      retries: 6
 networks:
   db:
     driver: bridge

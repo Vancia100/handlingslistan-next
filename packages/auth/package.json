@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "build": "tsc",
     "dev": "tsc",
@@ -13,15 +13,15 @@
   },
   "exports": {
     ".": {
-      "types": "./index.ts",
+      "types": "./src/index.ts",
       "default": "./dist/index.js"
     },
     "./client": {
-      "types": "./client.ts",
+      "types": "./src/client.ts",
       "default": "./dist/client.js"
     },
     "./server": {
-      "types": "./auth.ts",
+      "types": "./src/auth.ts",
       "default": "./dist/auth.js"
     }
   },

@@ -2,7 +2,6 @@ services:
   webb: 
     build:
       dockerfile: ./apps/webb/Dockerfile
-      network: host
     ports:
       - "3000:3000"
     networks:
@@ -11,14 +10,13 @@ services:
       database:
         condition: service_healthy
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/listan?schema=public"
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/listan?schema=public"
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
       - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
   backend:
     build:
       dockerfile: ./apps/backend/Dockerfile
-      network: host
     ports:
       - "3001:3001"
     networks:
@@ -27,7 +25,7 @@ services:
       database:
         condition: service_healthy
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/listan?schema=public"
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/listan?schema=public"
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
       - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}

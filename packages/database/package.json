@@ -5,7 +5,7 @@
   "main": "src/client.ts",
   "type": "module",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "build": "tsc",
     "dev": "tsc",
@@ -33,6 +33,7 @@
   "license": "MIT",
   "devDependencies": {
     "@hndl/eslint-config": "workspace:*",
+    "@hndl/prettier-config": "workspace:^",
     "@hndl/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "@types/pg": "^8.16.0",
@@ -45,6 +46,6 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
-    "pg": "^8.16.3"
+    "pg": "^8.17.0"
   }
 }
