@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "build": "tsc",
     "dev": "tsc",
+    "format": "prettier . --write",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrade dev",

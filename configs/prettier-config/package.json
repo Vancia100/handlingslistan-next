@@ -11,7 +11,6 @@
     ".": "./prettier.config.js"
   },
   "devDependencies": {
-    "prettier-plugin-tailwindcss": "catalog:",
     "tailwindcss": "catalog:"
   }
 }

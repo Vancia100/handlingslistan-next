@@ -8,7 +8,7 @@ A turborepo implementation of handlingslistan. Currently in early state, and doe
 
 - [ ] Migrate to TRPC where it makes sense.
 - [x] Make sure that Linting works.
-- [ ] Formatting works
+- [x] Formatting works
 - [ ] Propper environment variable management
 - [ ] Remove hard coded localhost to build stuff
 
@@ -56,4 +56,3 @@ A turborepo implementation of handlingslistan. Currently in early state, and doe
 **Long-long term:**
 
 - [ ] Expo + React Native app in monorepo
-

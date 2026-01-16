@@ -8,7 +8,8 @@
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "build": "tsc",
-    "dev": "tsc"
+    "dev": "tsc",
+    "format": "prettier . --write"
   },
   "exports": {
     "types": "./src/index.ts",
