@@ -3,17 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
+  "type": "module",
   "scripts": {
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "dev": "tsx --watch ./src/index.ts",
     "build": "tsc",
-    "start": "node ./dist/index.js"
+    "start": "node ./dist/index.js",
+    "format": "prettier . --write"
   },
   "dependencies": {
     "@hndl/api": "workspace:^",
     "@hndl/auth": "workspace:^",
-    "@hndl/prettier-config": "workspace:^",
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
     "better-auth": "catalog:",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@hndl/eslint-config": "workspace:*",
+    "@hndl/prettier-config": "workspace:^",
     "@hndl/typescript-config": "workspace:*",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",

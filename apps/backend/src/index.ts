@@ -14,21 +14,23 @@ app.use(
   cors({
     origin: "http://localhost:3000",
     credentials: true,
-  })
+  }),
 )
 // Auth
 app.all("/auth/*splat", toNodeHandler(auth))
+
 app.get("/", async (req, res) => {
   res.json("test2")
 })
 app.use(express.json())
+
 //trpc
 app.use(
   "/trpc",
   trpcExpress.createExpressMiddleware({
     router: appRouter,
     createContext,
-  })
+  }),
 )
 
 app.listen(port, () => {
