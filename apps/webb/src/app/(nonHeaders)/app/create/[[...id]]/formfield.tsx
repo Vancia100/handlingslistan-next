@@ -57,6 +57,7 @@ export default function FormField(props: {
   const addUsers = useMemo(() => {
     return (user: string) => {
       setViewers((prev) => [...prev, user])
+      return true
     }
   }, [setViewers])
 

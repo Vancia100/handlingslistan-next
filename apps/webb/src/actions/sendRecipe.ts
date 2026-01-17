@@ -24,6 +24,33 @@ export default async function sendRecipe(
     return { message: isValid.error.issues[0]!.message, success: false }
   }
 
+  // Validate all the IDS
+  const validatedUsers =
+    isValid.data.viewers &&
+    (
+      await Promise.all(
+        isValid.data.viewers.map((userId) => {
+          return db.user.findUnique({
+            where: {
+              id: userId,
+            },
+            select: {
+              id: true,
+            },
+          })
+        }),
+      )
+    )
+      .filter((user) => {
+        return user
+      })
+      .map((filteredUser) => {
+        return filteredUser?.id
+      })
+  if (validatedUsers?.length !== isValid.data.viewers?.length) {
+    //
+  }
+
   // Make a new array of viewers that always contains the user submitting
   const viewableBy = isValid.data.viewers?.includes(user.id)
     ? isValid.data.viewers

@@ -65,6 +65,14 @@ export default async function Recipe(props: {
             excludedPeople={excluded}
             addFunctionAction={async (id) => {
               "use server"
+              const user = await db.user.findUnique({
+                where: {
+                  id,
+                },
+              })
+              if (!user) {
+                return false
+              }
               if (userCanEdit) {
                 await db.recipe.update({
                   where: {
@@ -79,6 +87,7 @@ export default async function Recipe(props: {
                   },
                 })
               }
+              return true
             }}
           />
           <Link

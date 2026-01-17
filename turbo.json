@@ -32,6 +32,7 @@
       "cache": false
     },
     "db:migrate": {
+      "persistent": true,
       "cache": false
     },
     "db:studio": {

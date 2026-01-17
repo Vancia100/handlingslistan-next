@@ -1,49 +1,38 @@
 "use client"
-import {
-  useState,
-  startTransition,
-  useCallback,
-  useEffect,
-  useRef,
-} from "react"
+import { useState, useEffect, useRef } from "react"
 
-import { functionalDebounce as debounce } from "@/utils/simpleDebounce"
-import searchPeople from "@/actions/searchPeople"
-
-type ExtendedUser = (Awaited<ReturnType<typeof searchPeople>>[0] & {
-  viewer: boolean
-})[]
+import { useTRPC, useTRPCClient } from "@/utils/trpc"
+import { useQuery } from "@tanstack/react-query"
+import { useDebounce } from "use-debounce"
 
 export default function InviteView({
   addFunctionAction,
   excludedPeople,
 }: {
-  addFunctionAction: (id: string) => void
+  addFunctionAction: (id: string) => Promise<boolean> | boolean
   excludedPeople: string[]
 }) {
+  const [excluded, setExcluded] = useState(excludedPeople)
+
+  const trpcClient = useTRPCClient()
+  const trpc = useTRPC()
+  const [search, setSearch] = useState("")
+
+  const [debouncedSearch] = useDebounce(search, 500)
+  const myQueryOptions = trpc.searchPeople.queryOptions(debouncedSearch, {
+    enabled: search.length > 1,
+  })
+  const { data } = useQuery(myQueryOptions)
+
+  const shownPeople =
+    data?.map((item) => ({
+      ...item,
+      viewer: excluded.includes(item.id),
+    })) || []
+
+  // Popup logic
   const [open, setOpen] = useState(false)
   const popupref = useRef<HTMLDivElement>(null)
-
-  const [shownPeople, setShownPeople] = useState<ExtendedUser>([])
-
-  // React optimized debounced api call to get names
-  const debouncedSearchPeople = useCallback(
-    (name: string) => {
-      debounce(async (name: string) => {
-        startTransition(async () => {
-          const users = await searchPeople(name)
-          setShownPeople(
-            users.map((item) => ({
-              ...item,
-              viewer: excludedPeople.includes(item.id),
-            })),
-          )
-        })
-      }, 500)(name)
-    },
-    [setShownPeople, excludedPeople],
-  )
-
   // Clicking outside will close the popup
   useEffect(() => {
     const controller = new AbortController()
@@ -78,14 +67,25 @@ export default function InviteView({
         <div className="border-primary-black-50 absolute mt-2 rounded-2xl border-2 p-2">
           <label>
             <form
-              action={async (data) => {
-                // Check if the user exists and add it to the recipe.
-
-                const name = data.get("Name")
-                if (!name) return
-                const users = await searchPeople(name as string)
-                if (users.length === 1 && users[0]?.name === name) {
-                  addFunctionAction(users[0].id)
+              action={async () => {
+                const cur = search
+                setSearch("")
+                const users = await trpcClient.searchPeople.query(cur)
+                const filusers =
+                  users.length === 1
+                    ? users
+                    : users.filter(
+                        (usr) => usr.name === cur || usr.email === cur,
+                      )
+                if (filusers.length === 1) {
+                  const addUser = filusers[0]!.id
+                  const succ = await addFunctionAction(addUser)
+                  if (succ) {
+                    setExcluded((prev) => prev.concat(addUser))
+                  }
+                } else {
+                  console.log("Search did not work")
+                  // Add errors and such here
                 }
               }}>
               <input
@@ -93,11 +93,9 @@ export default function InviteView({
                 type="text"
                 placeholder="Lars-goran420"
                 name="Name"
+                value={search}
                 onChange={(e) => {
-                  // Add clickable options with a debounce
-                  const name = e.target.value
-                  if (!name) return
-                  debouncedSearchPeople(name)
+                  setSearch(e.target.value)
                 }}
               />
               <button type="submit"></button>
@@ -120,11 +118,8 @@ export default function InviteView({
                   onClick={() => {
                     if (!user.viewer) {
                       addFunctionAction(user.id)
-                      setShownPeople((cur) => {
-                        return cur.map((play) =>
-                          play.id == user.id ? { ...play, viewer: true } : play,
-                        )
-                      })
+                      // Optimisticly blur their name
+                      setExcluded((prev) => prev.concat(user.id))
                     }
                   }}>
                   <p className="px-2 text-start">{user.name ?? user.email}</p>

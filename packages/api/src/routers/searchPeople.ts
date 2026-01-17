@@ -1,7 +1,8 @@
-"use server"
 import { prisma as db } from "@hndl/database"
-
-export default async function searchPeople(name: string) {
+import { publicPrecidure } from "../trpc.js"
+import { z } from "zod/v4"
+export default publicPrecidure.input(z.string()).query(async (opts) => {
+  const name = opts.input
   const users = await db.user.findMany({
     where: {
       OR: [
@@ -26,4 +27,4 @@ export default async function searchPeople(name: string) {
     },
   })
   return users
-}
+})

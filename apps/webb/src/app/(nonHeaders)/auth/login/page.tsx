@@ -1,7 +1,5 @@
 import SignIn from "./sign-in"
-import { auth } from "@hndl/auth"
 import Link from "next/link"
-import { redirect } from "next/navigation"
 
 export default async function Login(props: {
   searchParams: Promise<Record<string, string>>

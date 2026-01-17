@@ -1,13 +1,18 @@
 "use client"
 
-import { useActionState } from "react"
-import searchRecipe from "@/actions/searchRecipe"
+import { useTRPC } from "@/utils/trpc"
+import { useQuery } from "@tanstack/react-query"
 import Card from "@/components/card"
+import { useState } from "react"
 
 export default function RecipePage() {
-  const [state, action, isLoading] = useActionState(searchRecipe, {
-    message: "",
+  const trpc = useTRPC()
+  const [searchTerm, setSearchterm] = useState("")
+  const strippedSearchTerm = searchTerm.trim()
+  const queryParams = trpc.searchRecipe.queryOptions(strippedSearchTerm, {
+    enabled: strippedSearchTerm.length > 1,
   })
+  const { data: state, isLoading } = useQuery(queryParams)
   const clientAction = async (formData: FormData) => {
     const searchTerm = formData.get("searchTerm")
     if (
@@ -17,7 +22,7 @@ export default function RecipePage() {
     ) {
       return
     }
-    action(searchTerm)
+    setSearchterm(searchTerm)
   }
 
   return (
@@ -36,8 +41,8 @@ export default function RecipePage() {
 
       <div className="flex flex-col">
         {isLoading && <div>Loading ...</div>}
-        {state.message && <div>{state.message}</div>}
-        {state.recipes && state.recipes.length > 0 && (
+        {state?.message && <div>{state.message}</div>}
+        {state?.recipes && state.recipes.length > 0 && (
           <div className="flex flex-col items-center">
             {state.recipes.map((recipe) => (
               <Card
