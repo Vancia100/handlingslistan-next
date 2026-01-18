@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": "./src"
   },
+  "include": ["./src"],
   "extends": "@hndl/typescript-config/compiled-package.json",
-  "include": ["src"],
   "exclude": ["node_modules"]
 }

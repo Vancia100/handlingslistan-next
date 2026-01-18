@@ -1,5 +1,5 @@
 import { prisma as db } from "@hndl/database"
-import { publicPrecidure } from "../trpc.js"
+import { publicPrecidure } from "../../trpc.js"
 import { z } from "zod/v4"
 
 export default publicPrecidure

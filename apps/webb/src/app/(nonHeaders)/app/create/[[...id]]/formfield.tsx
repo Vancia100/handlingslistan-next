@@ -14,7 +14,7 @@ import {
 
 import { useDebounce } from "use-debounce"
 
-import { recipeSchema } from "@/schemas/recipeSchema"
+import { recipeSchema } from "@hndl/validators"
 
 import { useMessageContext } from "@/context/messageContext"
 

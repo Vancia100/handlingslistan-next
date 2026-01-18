@@ -16,6 +16,7 @@
     "@hndl/database": "workspace:^",
     "@hndl/prettier-config": "workspace:^",
     "@hndl/ui": "workspace:*",
+    "@hndl/validators": "workspace:^",
     "@tanstack/react-query": "^5.90.18",
     "@trpc/client": "catalog:",
     "@trpc/tanstack-react-query": "^11.8.1",

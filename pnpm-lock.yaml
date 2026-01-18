@@ -135,6 +135,9 @@ importers:
       '@hndl/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@hndl/validators':
+        specifier: workspace:^
+        version: link:../../packages/validators
       '@tanstack/react-query':
         specifier: ^5.90.18
         version: 5.90.18(react@19.2.3)
@@ -412,6 +415,28 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: 'catalog:'
         version: 0.7.2(prettier@3.7.4)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
+  packages/validators:
+    dependencies:
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.5
+    devDependencies:
+      '@hndl/database':
+        specifier: workspace:^
+        version: link:../database
+      '@hndl/eslint-config':
+        specifier: workspace:^
+        version: link:../../configs/eslint-config
+      '@hndl/prettier-config':
+        specifier: workspace:^
+        version: link:../../configs/prettier-config
+      '@hndl/typescript-config':
+        specifier: workspace:^
+        version: link:../../configs/typescript-config
       typescript:
         specifier: 'catalog:'
         version: 5.9.3

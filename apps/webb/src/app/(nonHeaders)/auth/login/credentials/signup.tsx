@@ -1,5 +1,5 @@
 "use client"
-import { credentialsSchame } from "@/schemas/credentialsSchema"
+import { credentialsSchame } from "@hndl/validators"
 import { authClient } from "@hndl/auth/client"
 import { useRouter } from "next/navigation"
 import { useState, useCallback } from "react"

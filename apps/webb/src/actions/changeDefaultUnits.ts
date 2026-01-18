@@ -4,7 +4,7 @@ import { prisma as db } from "@hndl/database"
 import { redirect } from "next/navigation"
 import { tryCatch } from "@/utils/trycatch"
 import { headers } from "next/headers"
-import { ingredeintSchema } from "@/schemas/ingredientSchema"
+import { ingredeintSchema } from "@hndl/validators"
 
 import type { Ingredient } from "@hndl/database/client"
 export default async function changeDefaultUnits(

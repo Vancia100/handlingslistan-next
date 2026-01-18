@@ -1,5 +1,5 @@
 "use server"
-import { recipeSchema } from "@/schemas/recipeSchema"
+import { recipeSchema } from "@hndl/validators"
 import { auth } from "@hndl/auth/server"
 import { prisma as db } from "@hndl/database"
 import { redirect } from "next/navigation"

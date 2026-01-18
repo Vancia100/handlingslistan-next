@@ -9,9 +9,12 @@ export default function RecipePage() {
   const trpc = useTRPC()
   const [searchTerm, setSearchterm] = useState("")
   const strippedSearchTerm = searchTerm.trim()
-  const queryParams = trpc.searchRecipe.queryOptions(strippedSearchTerm, {
-    enabled: strippedSearchTerm.length > 1,
-  })
+  const queryParams = trpc.recipe.searchRecipe.queryOptions(
+    strippedSearchTerm,
+    {
+      enabled: strippedSearchTerm.length > 1,
+    },
+  )
   const { data: state, isLoading } = useQuery(queryParams)
   const clientAction = async (formData: FormData) => {
     const searchTerm = formData.get("searchTerm")

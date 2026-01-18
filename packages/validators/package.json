@@ -1,0 +1,30 @@
+{
+  "name": "@hndl/validators",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsc",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.27.0",
+  "devDependencies": {
+    "@hndl/database": "workspace:^",
+    "@hndl/eslint-config": "workspace:^",
+    "@hndl/prettier-config": "workspace:^",
+    "@hndl/typescript-config": "workspace:^",
+    "typescript": "catalog:"
+  },
+  "exports": {
+    "types": "./src/index.ts",
+    "default": "./dist/index.js"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  }
+}

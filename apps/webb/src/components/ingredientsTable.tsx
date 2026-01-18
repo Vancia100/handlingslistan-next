@@ -10,7 +10,7 @@ import {
   useCallback,
 } from "react"
 
-import { allowedUnits, type recipeSchema } from "@/schemas/recipeSchema"
+import { allowedUnits, type recipeSchema } from "@hndl/validators"
 import type { Ingredient } from "@hndl/database/client"
 
 import spellCheck from "@/utils/spellcheck"
