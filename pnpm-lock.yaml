@@ -132,12 +132,12 @@ importers:
       '@hndl/prettier-config':
         specifier: workspace:^
         version: link:../../configs/prettier-config
-      '@hndl/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
-      '@hndl/validators':
+      '@hndl/types':
         specifier: workspace:^
         version: link:../../packages/validators
+      '@hndl/utils':
+        specifier: workspace:^
+        version: link:../../packages/utils
       '@tanstack/react-query':
         specifier: ^5.90.18
         version: 5.90.18(react@19.2.3)
@@ -273,6 +273,12 @@ importers:
       '@hndl/database':
         specifier: workspace:^
         version: link:../database
+      '@hndl/types':
+        specifier: workspace:^
+        version: link:../validators
+      '@hndl/utils':
+        specifier: workspace:^
+        version: link:../utils
       '@trpc/server':
         specifier: ^11.8.1
         version: 11.8.1(typescript@5.9.3)
@@ -382,39 +388,26 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
-  packages/ui:
-    dependencies:
-      react:
-        specifier: ^19.2.3
-        version: 19.2.3
-      react-dom:
-        specifier: ^19.2.3
-        version: 19.2.3(react@19.2.3)
+  packages/utils:
     devDependencies:
+      '@hndl/database':
+        specifier: workspace:^
+        version: link:../database
       '@hndl/eslint-config':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../configs/eslint-config
       '@hndl/prettier-config':
         specifier: workspace:^
         version: link:../../configs/prettier-config
       '@hndl/typescript-config':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../configs/typescript-config
-      '@types/node':
-        specifier: 'catalog:'
-        version: 25.0.8
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.2.8
-      '@types/react-dom':
-        specifier: 'catalog:'
-        version: 19.2.3(@types/react@19.2.8)
       eslint:
         specifier: 'catalog:'
         version: 9.39.2(jiti@2.6.1)
-      prettier-plugin-tailwindcss:
+      prettier:
         specifier: 'catalog:'
-        version: 0.7.2(prettier@3.7.4)
+        version: 3.7.4
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -437,6 +430,12 @@ importers:
       '@hndl/typescript-config':
         specifier: workspace:^
         version: link:../../configs/typescript-config
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.2(jiti@2.6.1)
+      prettier:
+        specifier: 'catalog:'
+        version: 3.7.4
       typescript:
         specifier: 'catalog:'
         version: 5.9.3

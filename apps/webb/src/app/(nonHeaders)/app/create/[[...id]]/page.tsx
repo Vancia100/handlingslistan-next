@@ -5,7 +5,7 @@ import { prisma as db } from "@hndl/database"
 import { auth } from "@hndl/auth/server"
 import { headers } from "next/headers"
 
-import type { ClientRecipeType } from "@/types/recipeTypes"
+import type { ClientRecipeType } from "@hndl/types"
 
 export default async function CreatePage(props: {
   params: Promise<{

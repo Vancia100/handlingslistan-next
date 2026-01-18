@@ -26,7 +26,7 @@ function levenshteinDistance(a: string, b: string): number {
   return matrix[a.length]![b.length]!
 }
 
-export default function spellCheck(partialWord: string, dictionary: string[]) {
+export function spellCheck(partialWord: string, dictionary: string[]) {
   return dictionary
     .map((word) => {
       const distance = levenshteinDistance(

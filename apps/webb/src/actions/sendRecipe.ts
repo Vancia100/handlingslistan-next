@@ -1,15 +1,15 @@
 "use server"
-import { recipeSchema } from "@hndl/validators"
+import { recipeSchema } from "@hndl/types/validators"
 import { auth } from "@hndl/auth/server"
 import { prisma as db } from "@hndl/database"
 import { redirect } from "next/navigation"
 
-import { tryCatch } from "@/utils/trycatch"
+import { tryCatch } from "@hndl/utils"
 import { headers } from "next/headers"
 
 import type z from "zod/v4"
 
-export default async function sendRecipe(
+async function sendRecipe(
   prevState: { message: string },
   formData: z.infer<typeof recipeSchema>,
 ): Promise<{ message: string; success: boolean }> {

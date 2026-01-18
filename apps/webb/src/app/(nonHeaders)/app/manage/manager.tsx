@@ -10,7 +10,7 @@ import {
   useCallback,
 } from "react"
 
-import { allowedUnits, ingredeintSchema } from "@hndl/validators"
+import { allowedUnits, ingredeintSchema } from "@hndl/types/validators"
 
 import changeDefaultUnits from "@/actions/changeDefaultUnits"
 

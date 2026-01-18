@@ -10,12 +10,12 @@ import {
   useCallback,
 } from "react"
 
-import { allowedUnits, type recipeSchema } from "@hndl/validators"
+import { allowedUnits, type recipeSchema } from "@hndl/types/validators"
 import type { Ingredient } from "@hndl/database/client"
 
-import spellCheck from "@/utils/spellcheck"
+import { spellCheck } from "@hndl/utils"
 
-import type { IngredientsType } from "@/types/recipeTypes"
+import type { IngredientsType } from "@hndl/types"
 
 type AlternativesType = {
   forIndex: number

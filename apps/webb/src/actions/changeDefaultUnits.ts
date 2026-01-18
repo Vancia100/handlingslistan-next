@@ -2,9 +2,9 @@
 import { auth } from "@hndl/auth/server"
 import { prisma as db } from "@hndl/database"
 import { redirect } from "next/navigation"
-import { tryCatch } from "@/utils/trycatch"
+import { tryCatch } from "@hndl/utils"
 import { headers } from "next/headers"
-import { ingredeintSchema } from "@hndl/validators"
+import { ingredeintSchema } from "@hndl/types/validators"
 
 import type { Ingredient } from "@hndl/database/client"
 export default async function changeDefaultUnits(

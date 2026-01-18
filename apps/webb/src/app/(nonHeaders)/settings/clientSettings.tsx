@@ -4,7 +4,7 @@ import { useState, useRef } from "react"
 
 import type { User } from "@hndl/auth"
 import { authClient } from "@hndl/auth/client"
-import { usernameValidator, emailValidator } from "@hndl/validators"
+import { usernameValidator, emailValidator } from "@hndl/types/validators"
 import { useRouter } from "next/navigation"
 
 import type { ZodType } from "zod/v4"

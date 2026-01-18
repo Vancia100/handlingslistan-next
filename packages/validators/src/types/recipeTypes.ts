@@ -1,5 +1,5 @@
 import type { z } from "zod"
-import type { recipeSchema } from "@hndl/validators"
+import type { recipeSchema } from "@hndl/types/validators"
 
 export type IngredientsType = z.infer<typeof recipeSchema>["ingredients"]
 export type ClientRecipeType = {

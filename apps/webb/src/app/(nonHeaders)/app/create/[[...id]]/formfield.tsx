@@ -2,10 +2,8 @@
 
 import {
   useRef,
-  useActionState,
   useState,
   useEffect,
-  startTransition,
   useMemo,
   memo,
   type ChangeEvent,
@@ -14,22 +12,21 @@ import {
 
 import { useDebounce } from "use-debounce"
 
-import { recipeSchema } from "@hndl/validators"
+import { recipeSchema } from "@hndl/types/validators"
 
 import { useMessageContext } from "@/context/messageContext"
 
-import { functionalDebounce } from "@/utils/simpleDebounce"
-
-import sendRecipe from "@/actions/sendRecipe"
-
+import { functionalDebounce } from "@hndl/utils"
 import IngredientsTable from "@/components/ingredientsTable"
 import InstructionsList from "@/components/instructionsList"
 import InviteView from "@/components/inviteView"
 
 // Types
-import type { ClientRecipeType, IngredientsType } from "@/types/recipeTypes"
+import type { ClientRecipeType, IngredientsType } from "@hndl/types"
 import type { Ingredient } from "@hndl/database/client"
 
+import { useMutation } from "@tanstack/react-query"
+import { useTRPC } from "@/utils/trpc"
 // Constatnts
 const DEBOUNCETIME = 3000
 
@@ -69,35 +66,27 @@ export default function FormField(props: {
   const [instructions, setInstructions] = useState<string[]>([])
   const [ingredients, setIngredients] = useState<IngredientsType>([])
 
-  // Formstatus and actions
-  // status can be manipulated in multiple places
-  const [status, setStatus] = useState("")
-  const [submitStatus, formAction, pending] = useActionState(sendRecipe, {
-    message: "",
-    success: true,
-  })
-
   // Title of the recipe currently loaded
   const currentActiveRecipe = useRef<string>(null)
 
+  // Formstatus and actions
+  // status can be manipulated in multiple places
+  const trpc = useTRPC()
+  const trpcParams = trpc.recipe.sendRecipe.mutationOptions()
+  const { mutate, isPending, isSuccess } = useMutation(trpcParams)
+
   // Sync status with submitStatus
+  const [localerror, setLocalerror] = useState("")
 
-  console.log("rerendere")
-  // const currentStatus = useMemo(() => {
-  //   return submitStatus.message ? submitStatus : status
-  // }, [status, submitStatus])
-
+  const displayedError = isSuccess ? "Recipe has been saved" : localerror
   // Causes side effects, preferably use something else?
   useEffect(() => {
-    if (submitStatus) {
-      setStatus(submitStatus.message)
-    }
     // When successfully updating a recipe
-    if (submitStatus.success && currentActiveRecipe.current) {
+    if (isSuccess && currentActiveRecipe.current) {
       removeLocalStorageItem(currentActiveRecipe.current)
       currentActiveRecipe.current = null
     }
-  }, [submitStatus])
+  }, [isSuccess])
 
   const clientAction = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -115,10 +104,10 @@ export default function FormField(props: {
 
     if (!parsedForm.success) {
       console.log(parsedForm.error.issues)
-      setStatus(parsedForm.error.issues[0]!.message)
+      setLocalerror(parsedForm.error.issues[0]!.message)
       return
     }
-    startTransition(() => formAction(parsedForm.data))
+    mutate(parsedForm.data)
   }
 
   // When inputs haven't changed for 3 sec, update local storage
@@ -256,8 +245,8 @@ export default function FormField(props: {
           />
           <span>Public</span>
         </label>
-        {status && <div>{status}</div>}
-        {(pending && <div>loading...</div>) || null}
+        {localerror && <div>{localerror}</div>}
+        {(isPending && <div>loading...</div>) || null}
         <button
           className="bg-primary-black border-primary-black hover:border-primary-white w-max cursor-pointer self-center rounded-xl border-2 p-2"
           type="submit">

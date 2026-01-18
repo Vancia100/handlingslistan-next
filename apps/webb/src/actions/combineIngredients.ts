@@ -1,6 +1,6 @@
 "use server"
 
-import { tryCatch } from "@/utils/trycatch"
+import { tryCatch } from "@hndl/utils"
 import { prisma as db } from "@hndl/database"
 import { auth } from "@hndl/auth/server"
 import { redirect } from "next/navigation"
