@@ -38,17 +38,13 @@ export default async function Recipe(props: {
   if (!recipe) return <NotFount />
   const cookies = await headers()
   const user = (await auth.api.getSession({ headers: cookies }))?.user
-  if (!recipe.public) {
-    if (
-      !(
-        user &&
-        user.role !== "ADMIN" &&
-        recipe.viewableBy.find((usr) => usr.id === user.id) !== undefined
-      )
-    ) {
-      console.log("Not authed", user, recipe.viewableBy)
-      return <NotAuthed isLoggedIn={Boolean(user)} num={postId} />
-    }
+  if (
+    !recipe.public &&
+    user?.role !== "ADMIN" &&
+    !(user && recipe.viewableBy.find((usr) => usr.id === user.id) !== undefined)
+  ) {
+    console.log("Not authed", user, recipe.viewableBy)
+    return <NotAuthed isLoggedIn={Boolean(user)} num={postId} />
   }
   const userCanEdit = user?.id === recipe.createdById || user?.role === "ADMIN"
 
