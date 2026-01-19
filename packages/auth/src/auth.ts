@@ -1,7 +1,9 @@
-import { betterAuth } from "better-auth";
-import { customSession } from "better-auth/plugins";
-import { prismaAdapter } from "better-auth/adapters/prisma";
-import { prisma } from "@hndl/database";
+import { betterAuth } from "better-auth"
+import { customSession } from "better-auth/plugins"
+import { prismaAdapter } from "better-auth/adapters/prisma"
+import { prisma } from "@hndl/database"
+
+// TODO: make sure that thease URL:s are not hard coded.
 export const auth = betterAuth({
   user: {
     deleteUser: {
@@ -16,7 +18,7 @@ export const auth = betterAuth({
     discord: {
       clientId: process.env.DISCORD_CLIENT_ID as string,
       clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
-      redirectURL: "http://localhost:3000/settings",
+      redirectURL: "http://localhost:3001/settings",
     },
   },
   plugins: [
@@ -25,14 +27,14 @@ export const auth = betterAuth({
         where: {
           id: user.id,
         },
-      });
+      })
       return {
         session,
         user: {
           ...user,
           role: userDb?.role,
         },
-      };
+      }
     }),
   ],
   database: prismaAdapter(prisma, {
@@ -42,8 +44,8 @@ export const auth = betterAuth({
     enabled: true,
   },
   basePath: "/auth",
-  trustedOrigins: ["http://localhost:3000"],
-});
+  trustedOrigins: ["http://localhost:3000", "http://localhost:3001"],
+})
 
-export type User = typeof auth.$Infer.Session.user;
-export type Session = typeof auth.$Infer.Session.session;
+export type User = typeof auth.$Infer.Session.user
+export type Session = typeof auth.$Infer.Session.session

@@ -1,9 +1,10 @@
 import express from "express"
 import { auth } from "@hndl/auth/server"
-import { toNodeHandler, fromNodeHeaders } from "better-auth/node"
+import { toNodeHandler } from "better-auth/node"
 import * as trpcExpress from "@trpc/server/adapters/express"
 import { appRouter, createContext } from "@hndl/api"
 import cors from "cors"
+import proxy from "express-http-proxy"
 
 const app = express()
 
@@ -19,17 +20,6 @@ app.use(
 // Auth
 app.all("/auth/*splat", toNodeHandler(auth))
 
-app.get("/", async (req, res) => {
-  res.json("test2")
-})
-app.get("/testAuth", async (req, res) => {
-  const ses = auth.api.getSession({
-    headers: fromNodeHeaders(req.headers),
-  })
-  return res.json(ses)
-})
-app.use(express.json())
-
 //trpc
 app.use(
   "/trpc",
@@ -38,7 +28,8 @@ app.use(
     createContext,
   }),
 )
-
+// Do not use this in production code.
+app.use("/", proxy("localhost:3000"))
 app.listen(port, () => {
   console.log(`The server is running at http://localhost:${port}`)
 })
