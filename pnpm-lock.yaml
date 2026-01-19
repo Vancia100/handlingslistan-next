@@ -134,7 +134,7 @@ importers:
         version: link:../../configs/prettier-config
       '@hndl/types':
         specifier: workspace:^
-        version: link:../../packages/validators
+        version: link:../../packages/types
       '@hndl/utils':
         specifier: workspace:^
         version: link:../../packages/utils
@@ -275,7 +275,7 @@ importers:
         version: link:../database
       '@hndl/types':
         specifier: workspace:^
-        version: link:../validators
+        version: link:../types
       '@hndl/utils':
         specifier: workspace:^
         version: link:../utils
@@ -388,7 +388,11 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
-  packages/utils:
+  packages/types:
+    dependencies:
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.5
     devDependencies:
       '@hndl/database':
         specifier: workspace:^
@@ -412,11 +416,7 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
-  packages/validators:
-    dependencies:
-      zod:
-        specifier: 'catalog:'
-        version: 4.3.5
+  packages/utils:
     devDependencies:
       '@hndl/database':
         specifier: workspace:^

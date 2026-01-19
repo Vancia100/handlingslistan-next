@@ -1,4 +1,4 @@
-import { allowedUnits } from "./recipeSchema"
+import { allowedUnits } from "./recipeSchema.js"
 import { z } from "zod/v4"
 import type { Units } from "@hndl/database/client"
 

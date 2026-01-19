@@ -1,7 +1,7 @@
 import { router } from "./trpc.js"
 export { createContext } from "./trpc.js"
 import searchPeople from "./routers/searchPeople.js"
-import { postRouter } from "./routers/recipies/router.js"
+import { postRouter } from "./routers/recipes/router.js"
 
 export const appRouter = router({
   searchPeople,

@@ -2,7 +2,6 @@
 import type { Ingredient } from "@hndl/database/client"
 import {
   useRef,
-  useActionState,
   useState,
   useEffect,
   startTransition,
@@ -12,10 +11,10 @@ import {
 
 import { allowedUnits, ingredeintSchema } from "@hndl/types/validators"
 
-import changeDefaultUnits from "@/actions/changeDefaultUnits"
+import { useTRPC } from "@/utils/trpc"
+import { useMutation } from "@tanstack/react-query"
 
 import manager from "./manager.module.css"
-import combineIngredeints from "@/actions/combineIngredients"
 
 type InternalIngredient = (Ingredient & {
   blured?: boolean
@@ -26,9 +25,19 @@ export default function IngredietsManager({
 }: {
   ingredeints: Ingredient[]
 }) {
-  //To store id of clicked item
+  // To store id of clicked item
   const [combinator, setCombinator] = useState<number | null>(null)
 
+  const trpc = useTRPC()
+  const { mutateAsync: combineIngredeints } = useMutation(
+    trpc.recipe.combineIngredients.mutationOptions(),
+  )
+  const {
+    mutate: changeUnits,
+    data: state,
+    isPending,
+  } = useMutation(trpc.recipe.changeDefaultUnits.mutationOptions())
+  // Nested function to combine 2 ingredients
   async function combine(id: number) {
     console.log(id)
     if (!combinator) return
@@ -63,14 +72,10 @@ export default function IngredietsManager({
   //To store eventual error messages
   const [message, setMessage] = useState("")
 
-  const [state, changeUnits, isPending] = useActionState(changeDefaultUnits, {
-    message: "",
-  })
-
   //Sync state and message
   //Perhaps not prefered with side effects
   useEffect(() => {
-    setMessage(state.message)
+    setMessage(state?.message ?? "")
   }, [state])
 
   // click of the list item

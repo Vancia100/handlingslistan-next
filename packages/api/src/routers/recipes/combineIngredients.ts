@@ -1,0 +1,125 @@
+import { adminPrecidure } from "../../trpc.js"
+import { tryCatch } from "@hndl/utils"
+import { prisma as db } from "@hndl/database"
+import { z } from "zod/v4"
+
+export default adminPrecidure
+  .input(
+    z.object({
+      changer: z.number(),
+      changeTo: z.number(),
+    }),
+  )
+  .mutation(async (opts) => {
+    const { changer, changeTo } = opts.input
+
+    // Transaction to make sure everything fails at once.
+    const transaction = db.$transaction(async (tx) => {
+      // Find recipes with conflicting ingredients
+      const constraints = await tx.recipeIngredient.findMany({
+        relationLoadStrategy: "join",
+        select: {
+          amount: true,
+          id: true,
+          recipe: {
+            select: {
+              id: true,
+              ingredients: {
+                select: {
+                  ingredientId: true,
+                  amount: true,
+                },
+              },
+            },
+          },
+        },
+        where: {
+          AND: [
+            {
+              ingredientId: changeTo,
+            },
+            {
+              recipe: {
+                ingredients: {
+                  some: {
+                    ingredientId: changer,
+                  },
+                },
+              },
+            },
+          ],
+        },
+      })
+      // Update all recipes which conflict with constraints
+      await Promise.all(
+        constraints.map((constraint) =>
+          tx.recipeIngredient.updateMany({
+            data: {
+              amount: {
+                increment: constraint.recipe.ingredients.find(
+                  (ingredient) => ingredient.ingredientId === changer,
+                )?.amount,
+              },
+            },
+            where: {
+              id: constraint.id,
+            },
+          }),
+        ),
+      )
+
+      // Delete all recipe ingredients which are not needed anymore
+      await db.recipeIngredient.deleteMany({
+        where: {
+          AND: [
+            {
+              ingredientId: changer,
+            },
+            {
+              recipe: {
+                ingredients: {
+                  some: {
+                    ingredientId: changeTo,
+                  },
+                },
+              },
+            },
+          ],
+        },
+      })
+      await db.recipeIngredient.updateMany({
+        where: {
+          ingredientId: changer,
+        },
+        data: {
+          ingredientId: changeTo,
+        },
+      })
+      const secc = db.ingredient.delete({
+        select: {
+          name: true,
+          id: true,
+        },
+        where: {
+          id: changer,
+        },
+      })
+      const name = (await secc).name
+      await db.ingredient.update({
+        where: {
+          id: changeTo,
+        },
+        data: {
+          aliases: {
+            push: name,
+          },
+        },
+      })
+    })
+
+    const val = await tryCatch(transaction)
+    return {
+      removedId: changer,
+      error: val.error,
+    }
+  })

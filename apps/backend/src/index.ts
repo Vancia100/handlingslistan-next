@@ -1,6 +1,6 @@
 import express from "express"
 import { auth } from "@hndl/auth/server"
-import { toNodeHandler } from "better-auth/node"
+import { toNodeHandler, fromNodeHeaders } from "better-auth/node"
 import * as trpcExpress from "@trpc/server/adapters/express"
 import { appRouter, createContext } from "@hndl/api"
 import cors from "cors"
@@ -21,6 +21,12 @@ app.all("/auth/*splat", toNodeHandler(auth))
 
 app.get("/", async (req, res) => {
   res.json("test2")
+})
+app.get("/testAuth", async (req, res) => {
+  const ses = auth.api.getSession({
+    headers: fromNodeHeaders(req.headers),
+  })
+  return res.json(ses)
 })
 app.use(express.json())
 
