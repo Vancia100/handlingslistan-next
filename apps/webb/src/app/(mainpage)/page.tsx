@@ -12,7 +12,7 @@ export default function HomePage() {
         Download now
       </Link>
       <Link href={"/app"} className="mt-9 text-xl hover:underline md:text-3xl">
-        Do not want to download? try the web vertion{" "}
+        Do not want to download? Try the web vertion{" "}
         <u className="text-blue-400"> here</u>
       </Link>
       <div className="mt-9 flex flex-row flex-wrap justify-center gap-5">

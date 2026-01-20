@@ -10,8 +10,8 @@ export default function SignIn(props: { redirect?: string }) {
         await authClient.signIn.social({
           provider: "discord",
           callbackURL: props.redirect
-            ? "http://localhost:3000" + props.redirect
-            : "http://localhost:3000/app",
+            ? "http://localhost:3001" + props.redirect
+            : "http://localhost:3001/app",
         })
       }}>
       Sign in with Discord
