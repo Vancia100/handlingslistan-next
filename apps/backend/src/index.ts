@@ -10,15 +10,15 @@ const app = express()
 const port = process.env.PORT || 3001
 
 const server = http.createServer(app)
+const proxy = httpProxy.createProxyServer({
+  ws: true,
+})
 
 server.on("upgrade", (req, socket, head) => {
   console.log("test")
   proxy.ws(req, socket, head, {
     target: "ws://localhost:3000",
   })
-})
-const proxy = httpProxy.createProxyServer({
-  ws: true,
 })
 //Make sure that the nextJS backend can be used
 app.use(

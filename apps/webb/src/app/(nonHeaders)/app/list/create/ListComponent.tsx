@@ -2,19 +2,23 @@
 
 import type { ListType, IngredientsType } from "./[...id]/page"
 
-import { useState, use, useEffect } from "react"
+import { useMutation } from "@tanstack/react-query"
+import { useTRPC } from "@/utils/trpc"
+import { useState, use } from "react"
 export default function ListComponent(props: {
   startlist?: ListType
   ingredients: IngredientsType
+  listId: number
 }) {
   const firstList = props.startlist ? use(props.startlist) : null
   const ingredeints = use(props.ingredients)
-
+  const trpc = useTRPC()
   const [list, setList] = useState(firstList)
-  useEffect(() => {
-    // setup socket connection
-    fetch("/api/test")
-  }, [])
+
+  const thing = trpc.list.listSubscription.subscriptionOptions({
+    listId: props.listId,
+  })
+  const { mutate } = useMutation(trpc.list.addListItem.mutationOptions())
 
   const itemlist = list?.items.map((item) => ({
     name: item.recipeCustom ?? item.recipeItem?.name,

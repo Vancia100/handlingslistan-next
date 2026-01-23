@@ -9,7 +9,7 @@ export default function Navbar() {
       className={
         styles.navBar +
         " " +
-        "bg-primary-black fixed top-0 left-[-100%] m-0 min-h-full w-max flex-col text-2xl text-white md:sticky md:h-min md:bg-[#ffffff00] md:text-center md:backdrop-blur-xl"
+        "bg-primary-black fixed top-0 left-full m-0 min-h-full w-max flex-col text-2xl text-white md:sticky md:h-min md:bg-[#ffffff00] md:text-center md:backdrop-blur-xl"
       }>
       <input type="checkbox" id="menu-toggle" className="hidden" />
       <label

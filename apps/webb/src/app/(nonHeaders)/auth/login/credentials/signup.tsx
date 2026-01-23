@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useState, useCallback } from "react"
 
 export default function Credentials(props: { redirect?: string }) {
-  const [login, setLogin] = useState(false)
+  const [login, setLogin] = useState(true)
   const router = useRouter()
 
   const [pass, setPass] = useState("")

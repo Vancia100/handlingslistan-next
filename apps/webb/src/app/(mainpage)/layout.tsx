@@ -7,7 +7,7 @@ export default function HeaderFooterLayout({
   return (
     <>
       <Navbar />
-      <main className="from-primary-purple to-primary-black mb-4 flex h-min min-h-screen w-screen flex-col items-center bg-gradient-to-b p-10 pt-15 text-center">
+      <main className="from-primary-purple to-primary-black mb-4 flex h-min min-h-screen w-screen flex-col items-center bg-linear-to-b p-10 pt-15 text-center">
         {children}
       </main>
       <Footer />
