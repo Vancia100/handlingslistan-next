@@ -1,9 +1,9 @@
-import { adminPrecidure } from "../../trpc.js"
+import { adminProcidure } from "../../trpc.js"
 import { tryCatch } from "@hndl/utils"
 import { prisma as db } from "@hndl/database"
 import { z } from "zod/v4"
 
-export default adminPrecidure
+export default adminProcidure
   .input(
     z.object({
       changer: z.number(),

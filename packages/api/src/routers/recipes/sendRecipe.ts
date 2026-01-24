@@ -3,10 +3,10 @@ import { prisma as db } from "@hndl/database"
 import { Prisma } from "@hndl/database/client"
 import { tryCatch } from "@hndl/utils"
 
-import { authedPrecidure } from "../../trpc.js"
+import { authedProcidure } from "../../trpc.js"
 import { TRPCError } from "@trpc/server"
 
-export default authedPrecidure.input(recipeSchema).mutation(async (opts) => {
+export default authedProcidure.input(recipeSchema).mutation(async (opts) => {
   const { input, ctx } = opts
   const user = ctx.session.user
 

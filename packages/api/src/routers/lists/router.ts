@@ -1,11 +1,11 @@
-import { router, authedPrecidure } from "../../trpc.js"
+import { router, authedProcidure } from "../../trpc.js"
 import { tracked, TRPCError } from "@trpc/server"
 import { z } from "zod/v4"
 import { prisma } from "@hndl/database"
 import { newListValidator } from "@hndl/types/validators"
 
 import { ee } from "./eeWrapper.js"
-const test = authedPrecidure
+const test = authedProcidure
   .input(
     z.object({
       lastEventId: z.string().nullish(),
@@ -13,20 +13,30 @@ const test = authedPrecidure
     }),
   )
   .subscription(async function* (opts) {
-    const { input, signal } = opts
-    function* yieldIds<T>(id: number, arg: T): Generator<T> {
+    const { input, signal, ctx } = opts
+    function* yieldIds<T>(
+      id: number,
+      userSessionId: string,
+      arg: T,
+    ): Generator<T> {
+      // Push updates only to the right lists.
       if (id !== input.listId) {
+        return
+      }
+      // Dont send updates to the one who prompted the update.
+      // Session IDs to work with multiple devices with the same account
+      if (userSessionId == ctx.session.session.id) {
         return
       }
       yield arg
     }
-    for await (const [id, data] of ee.toIterable("new", {
+    for await (const [id, data, userId] of ee.toIterable("new", {
       signal,
     })) {
-      yield* yieldIds(id, data)
+      yield* yieldIds(id, userId, data)
     }
   })
-const addThings = authedPrecidure
+const addThings = authedProcidure
   .input(
     z.object({
       listId: z.number(),
@@ -53,7 +63,7 @@ const addThings = authedPrecidure
     //     code: "BAD_REQUEST",
     //   })
     // }
-    ee.emit("new", input.listId, input.item)
+    ee.emit("new", input.listId, input.item, ctx.session.session.id)
     // await prisma.list.update({
     //   where: {
     //     id: input.listId,

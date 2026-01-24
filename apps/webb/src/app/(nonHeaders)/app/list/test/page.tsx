@@ -10,7 +10,7 @@ export default function TestSubscription() {
   const { mutate } = useMutation(trpc.list.addListItem.mutationOptions())
   const { data, status, error } = useSubscription(
     trpc.list.listSubscription.subscriptionOptions({
-      listId: 100,
+      listId: 200,
     }),
   )
   const [thing, setThing] = useState("")

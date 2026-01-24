@@ -19,8 +19,8 @@ type Context = Awaited<ReturnType<typeof createContext>>
 const t = initTRPC.context<Context>().create()
 
 export const router = t.router
-export const publicPrecidure = t.procedure
-export const authedPrecidure = t.procedure.use(async (opts) => {
+export const publicProcidure = t.procedure
+export const authedProcidure = t.procedure.use(async (opts) => {
   const { ctx } = opts
   const ses = await ctx.session
   if (!ses) {
@@ -33,7 +33,7 @@ export const authedPrecidure = t.procedure.use(async (opts) => {
     },
   })
 })
-export const adminPrecidure = authedPrecidure.use(async (opts) => {
+export const adminProcidure = authedProcidure.use(async (opts) => {
   const { ctx } = opts
   console.log(ctx.session.user.role)
   if (ctx.session.user.role !== "ADMIN") {

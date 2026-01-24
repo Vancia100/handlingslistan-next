@@ -4,7 +4,11 @@ import type { newListValidator } from "@hndl/types/validators"
 import { z } from "zod"
 
 interface Inputs {
-  new: [listID: number, list: z.infer<typeof newListValidator>]
+  new: [
+    listID: number,
+    list: z.infer<typeof newListValidator>,
+    sentUserSessionId: string,
+  ]
 }
 type EventMap<T> = Record<keyof T, any[]>
 class IterableEventEmitter<T extends EventMap<T>> extends EventEmitter<T> {
