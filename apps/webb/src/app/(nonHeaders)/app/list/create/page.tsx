@@ -26,7 +26,7 @@ export default async function CreateList() {
   const ingredients = fetchIngredients()
   return (
     <>
-      <ListComponent ingredients={ingredients} />
+      <ListComponent listId={list.id} ingredients={ingredients} />
       <RouteReplacer id={list.id} />
     </>
   )

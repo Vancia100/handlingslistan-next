@@ -19,7 +19,9 @@ export default async function CreateListWithID(props: { id: Promise<string> }) {
 
   const list = fetchDataFromDB(user.id, id)
   const ingredients = fetchIngredients()
-  return <ListComponent startlist={list} ingredients={ingredients} />
+  return (
+    <ListComponent listId={id} startlist={list} ingredients={ingredients} />
+  )
 }
 function fetchDataFromDB(userID: string, listID: number) {
   const data = db.list.findUnique({
