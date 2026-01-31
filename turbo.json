@@ -4,7 +4,7 @@
   "globalEnv": ["DATABASE_URL", "DISCORD_CLIENT_ID", "DISCORD_CLIENT_SECRET"],
   "tasks": {
     "build": {
-      "env": ["POSTGRES_PASSWORD", "POSTGRES_USER", "PORT"],
+      "env": ["POSTGRES_PASSWORD", "POSTGRES_USER", "PORT", "ENVIRONMENT"],
       "dependsOn": ["^build", "db:generate"],
       "inputs": ["$TURBO_DEFAULT$"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
