@@ -43,7 +43,9 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder --chown=nextjs:nodejs /app/apps/webb/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/webb/.next/static ./apps/webb/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/webb/public ./apps/webb/public
-
 USER nextjs
+
+ENV HOSTNAME 0.0.0.0
+ENV NODE_ENV production
 EXPOSE 3000
 CMD ["node", "apps/webb/server.js"]

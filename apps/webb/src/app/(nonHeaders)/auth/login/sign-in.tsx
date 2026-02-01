@@ -9,9 +9,7 @@ export default function SignIn(props: { redirect?: string }) {
         // Implement discord auth with betterAuth
         await authClient.signIn.social({
           provider: "discord",
-          callbackURL: props.redirect
-            ? "http://localhost:3001" + props.redirect
-            : "http://localhost:3001/app",
+          callbackURL: props.redirect,
         })
       }}>
       Sign in with Discord

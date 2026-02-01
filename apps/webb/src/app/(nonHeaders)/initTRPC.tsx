@@ -36,7 +36,7 @@ export default function Init(props: { children: ReactNode }) {
     createTRPCClient<AppRouter>({
       links: [
         httpBatchLink({
-          url: "http://localhost:3001/api/trpc",
+          url: "/api/trpc",
         }),
       ],
     }),
