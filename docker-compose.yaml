@@ -1,31 +1,31 @@
 services:
-  webb: 
+  webb:
     build:
       dockerfile: ./apps/webb/Dockerfile
-    ports:
-      - "3000:3000"
     networks:
       - db
+      - proxy
     depends_on:
       database:
         condition: service_healthy
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/listan?schema=public"
+      - BETTER_AUTH_URL=https://localhost
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/listan?schema=public
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
       - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
   backend:
     build:
       dockerfile: ./apps/backend/Dockerfile
-    ports:
-      - "3001:3001"
     networks:
       - db
+      - proxy
     depends_on:
       database:
         condition: service_healthy
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/listan?schema=public"
+      - BETTER_AUTH_URL=https://localhost
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/listan?schema=public
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
       - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
@@ -39,19 +39,33 @@ services:
       POSTGRES_DB: listan
     volumes:
       - db:/data/postgres
-    ports:
-      - "5422:5432"
     networks:
       - db
     restart: unless-stopped
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d listan" ]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d listan"]
       interval: 30s
       timeout: 10s
       retries: 5
+  proxy:
+    container_name: proxy
+    image: caddy:2-alpine
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - proxy
+    ports:
+      - 80:80
+      - 443:443
 networks:
+  proxy:
+    driver: bridge
   db:
     driver: bridge
-
+    internal: true
 volumes:
+  caddy_data:
+  caddy_config:
   db:

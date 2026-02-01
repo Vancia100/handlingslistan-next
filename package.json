@@ -15,10 +15,10 @@
   "devDependencies": {
     "@types/node": "catalog:",
     "prettier": "catalog:",
-    "turbo": "^2.7.5",
+    "turbo": "^2.8.1",
     "typescript": "catalog:"
   },
-  "packageManager": "pnpm@10.27.0",
+  "packageManager": "pnpm@10.28.2",
   "engines": {
     "node": ">=20"
   },
