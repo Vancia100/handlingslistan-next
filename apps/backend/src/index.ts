@@ -5,11 +5,10 @@ import * as trpcExpress from "@trpc/server/adapters/express"
 import { appRouter, createContext } from "@hndl/api"
 import httpProxy from "http-proxy"
 import http from "http"
-
-const PROD = process.env.ENVIRONMENT == "PRODUCTION"
+const PROD = process.env.NODE_ENV == "production"
 
 const app = express()
-const port = process.env.PORT || 3001
+const port = Number(process.env.PORT) || 3001
 
 const server = http.createServer(app)
 
@@ -25,7 +24,7 @@ apiRouter.use(
     createContext,
   }),
 )
-app.use(PROD ? "/" : "/api", apiRouter)
+app.use("/api", apiRouter)
 // Do not use this in production code.
 if (!PROD) {
   const proxy = httpProxy.createProxyServer({
@@ -44,6 +43,6 @@ if (!PROD) {
   })
 }
 
-server.listen(port, () => {
+server.listen(port, "0.0.0.0", () => {
   console.log("Started server on Port", port)
 })

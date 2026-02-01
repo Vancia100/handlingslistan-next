@@ -10,8 +10,9 @@ A turborepo implementation of handlingslistan. Currently in early state, and doe
 - [x] Make sure that Linting works.
 - [x] Formatting works
 - [ ] Propper environment variable management
-- [ ] Remove hard coded localhost to build stuff
+- [x] Remove hard coded localhost to build stuff
 - [ ] Page for each user where you can see names etc. Option to "see profile" or "invite" on recipie invitation.
+- [ ] Make sure the implemented TRPC endpoints show propper errors
 
 ### Old stuff:
 

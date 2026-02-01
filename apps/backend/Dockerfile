@@ -35,10 +35,10 @@ RUN pnpm exec turbo build
 FROM base AS runner
 # Don't run production as root for security reasons
 RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-USER nextjs
-
-COPY --from=builder --chown=nextjs:nodejs /app/. .
+RUN adduser --system --uid 1001 nodeusr
+USER nodeusr
+ENV NODE_ENV production
+COPY --from=builder --chown=nodeusr:nodejs /app/. .
 
 EXPOSE 3001
 CMD ["node", "apps/backend/dist/index.js"]

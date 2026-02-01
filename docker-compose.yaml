@@ -4,11 +4,13 @@ services:
       dockerfile: ./apps/webb/Dockerfile
     networks:
       - db
+      - proxy
     depends_on:
       database:
         condition: service_healthy
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/listan?schema=public"
+      - BETTER_AUTH_URL=https://localhost
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/listan?schema=public
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
       - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
@@ -17,12 +19,13 @@ services:
       dockerfile: ./apps/backend/Dockerfile
     networks:
       - db
+      - proxy
     depends_on:
       database:
         condition: service_healthy
     environment:
-      - ENVIRONMENT=PRODUCTION
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/listan?schema=public"
+      - BETTER_AUTH_URL=https://localhost
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/listan?schema=public
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
       - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
@@ -46,17 +49,19 @@ services:
       retries: 5
   proxy:
     container_name: proxy
-    image: caddy:latest-alpine
+    image: caddy:2-alpine
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddy:ro
+      - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
     networks:
       - proxy
+    ports:
+      - 80:80
+      - 443:443
 networks:
   proxy:
     driver: bridge
-    internal: true
   db:
     driver: bridge
     internal: true
