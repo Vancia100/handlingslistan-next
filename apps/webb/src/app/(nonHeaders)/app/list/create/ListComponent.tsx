@@ -4,7 +4,8 @@ import type { ListType, IngredientsType } from "./[...id]/page"
 
 import { useMutation } from "@tanstack/react-query"
 import { useTRPC } from "@/utils/trpc"
-import { useState, use } from "react"
+import { useReducer, use } from "react"
+import { listReducer } from "./listreducer"
 export default function ListComponent(props: {
   startlist?: ListType
   ingredients: IngredientsType
@@ -13,21 +14,29 @@ export default function ListComponent(props: {
   const firstList = props.startlist ? use(props.startlist) : null
   const ingredeints = use(props.ingredients)
   const trpc = useTRPC()
-  const [list, setList] = useState(firstList)
-
+  const [list, dispatch] = useReducer(
+    listReducer,
+    firstList?.items.map((item) => ({
+      name: item.recipeCustom ?? item.recipeItem?.name,
+      amount: item.amount,
+      id: item.id,
+    })) ?? [],
+  )
+  function test() {
+    dispatch({
+      type: "test",
+      huh: "what",
+    })
+  }
   const thing = trpc.list.listSubscription.subscriptionOptions({
     listId: props.listId,
   })
   const { mutate } = useMutation(trpc.list.addListItem.mutationOptions())
 
-  const itemlist = list?.items.map((item) => ({
-    name: item.recipeCustom ?? item.recipeItem?.name,
-    amount: item.amount,
-  }))
   return (
     <div>
-      {itemlist?.map(({ name, amount }) => (
-        <div key={name}>
+      {list.map(({ name, amount, id }) => (
+        <div key={id}>
           <div>{name}</div>
           <div>{amount}</div>
         </div>
