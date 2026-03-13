@@ -9,8 +9,8 @@ export default function TestSubscription() {
   const trpc = useTRPC()
   const { mutate } = useMutation(trpc.list.addListItem.mutationOptions())
   const { data, status, error } = useSubscription(
-    trpc.list.listSubscription.subscriptionOptions({
-      listId: 200,
+    trpc.list.newItemInList.subscriptionOptions({
+      listId: 1,
     }),
   )
   const [thing, setThing] = useState("")
@@ -31,10 +31,11 @@ export default function TestSubscription() {
       <button
         onClick={() => {
           mutate({
-            listId: 200,
+            listId: 1,
             item: {
               amount: 20,
               name: thing,
+              checked: false,
             },
           })
         }}>

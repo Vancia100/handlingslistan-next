@@ -1,11 +1,14 @@
 import { router, authedProcidure } from "../../trpc.js"
-import { tracked, TRPCError } from "@trpc/server"
+import { TRPCError } from "@trpc/server"
 import { z } from "zod/v4"
 import { prisma } from "@hndl/database"
 import { newListValidator } from "@hndl/types/validators"
 
 import { ee } from "./eeWrapper.js"
-const test = authedProcidure
+import type {} from "express"
+import type {} from "qs"
+
+const newListSub = authedProcidure
   .input(
     z.object({
       lastEventId: z.string().nullish(),
@@ -64,7 +67,7 @@ const addThings = authedProcidure
     //   })
     // }
     ee.emit("new", input.listId, input.item, ctx.session.session.id)
-    // await prisma.list.update({
+    // const updatedRecipie = await prisma.list.update({
     //   where: {
     //     id: input.listId,
     //   },
@@ -78,9 +81,10 @@ const addThings = authedProcidure
     //     },
     //   },
     // })
+    return 200 //updatedRecipie.id
   })
 
 export default router({
   addListItem: addThings,
-  listSubscription: test,
+  newItemInList: newListSub,
 })

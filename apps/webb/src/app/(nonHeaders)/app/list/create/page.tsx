@@ -4,7 +4,7 @@ import { headers } from "next/headers"
 import { prisma as db } from "@hndl/database"
 import RouteReplacer from "./routeChanger"
 import ListComponent from "./ListComponent"
-import { fetchIngredients } from "./[...id]/page"
+import { fetchIngredients } from "./serverSideFetchers"
 
 export default async function CreateList() {
   const cookies = await headers()

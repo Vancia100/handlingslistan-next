@@ -9,6 +9,12 @@ interface Inputs {
     list: z.infer<typeof newListValidator>,
     sentUserSessionId: string,
   ]
+  update: [
+    listID: number,
+    list: z.infer<typeof newListValidator>,
+    sentUserSessionId: string,
+    listIngredientId: number,
+  ]
 }
 type EventMap<T> = Record<keyof T, any[]>
 class IterableEventEmitter<T extends EventMap<T>> extends EventEmitter<T> {
