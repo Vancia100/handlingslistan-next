@@ -5,7 +5,7 @@ export const functionalDebounce = <
   func: F,
   waitFor: number,
 ) => {
-  let timeout: NodeJS.Timeout
+  let timeout: ReturnType<typeof setTimeout>
 
   const debounced = (...args: Parameters<F>) => {
     clearTimeout(timeout)
