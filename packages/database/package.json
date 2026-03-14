@@ -37,16 +37,16 @@
     "@hndl/prettier-config": "workspace:^",
     "@hndl/typescript-config": "workspace:*",
     "@types/node": "catalog:",
-    "@types/pg": "^8.16.0",
-    "dotenv": "^17.2.3",
+    "@types/pg": "catalog:",
+    "dotenv": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "prisma": "^7.3.0",
+    "prisma": "catalog:",
     "typescript": "catalog:"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.3.0",
-    "@prisma/client": "^7.3.0",
-    "pg": "^8.18.0"
+    "@prisma/adapter-pg": "catalog:",
+    "@prisma/client": "catalog:",
+    "pg": "catalog:"
   }
 }

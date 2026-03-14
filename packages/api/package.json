@@ -23,10 +23,10 @@
     "@hndl/eslint-config": "workspace:^",
     "@hndl/prettier-config": "workspace:^",
     "@hndl/typescript-config": "workspace:^",
-    "@types/express": "^5.0.6",
-    "@types/express-serve-static-core": "^5.1.1",
+    "@types/express": "catalog:",
+    "@types/express-serve-static-core": "catalog:",
     "@types/node": "catalog:",
-    "@types/qs": "^6.14.0",
+    "@types/qs": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
@@ -36,7 +36,7 @@
     "@hndl/database": "workspace:^",
     "@hndl/types": "workspace:^",
     "@hndl/utils": "workspace:^",
-    "@trpc/server": "^11.9.0",
+    "@trpc/server": "catalog:",
     "better-auth": "catalog:",
     "zod": "catalog:"
   }
