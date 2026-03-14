@@ -449,6 +449,9 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 9.39.4(jiti@2.6.1)
+      prettier:
+        specifier: 'catalog:'
+        version: 3.8.1
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
