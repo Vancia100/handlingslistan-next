@@ -107,6 +107,7 @@ model ListIngredients {
   recipeItem   Ingredient? @relation(fields: [recipeItemID], references: [id])
   recipeItemID Int?
   recipeCustom String?
+  checked      Boolean
 }
 
 model User {
