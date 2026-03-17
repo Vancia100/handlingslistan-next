@@ -25,7 +25,7 @@ const addNewItemTest = authedProcidure
   })
 
 export default router({
-  addListItem: addNewItemTest, // addNewItem,
+  addListItem: addNewItem,
   newItemInList: newItemSub,
   updateItemInList: updateItem,
   newUpdateOnItem: updateItemSub,

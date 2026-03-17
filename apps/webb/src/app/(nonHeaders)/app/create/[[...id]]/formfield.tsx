@@ -37,7 +37,7 @@ const MemoInviteView = memo(InviteView)
 
 export default function FormField(props: {
   ingredeints: Ingredient[]
-  presetRecipe?: ClientRecipeType
+  presetRecipe: ClientRecipeType | undefined
 }) {
   // Refs for the title and description
   // No complex logic, no need to rerender
@@ -283,7 +283,7 @@ function removeLocalStorageItem(key: string) {
 }
 
 function updateLocalStorage(
-  recipe: ClientRecipeType & { id?: number },
+  recipe: ClientRecipeType & { id?: number | undefined },
   currentRecipeId: RefObject<string | null>,
   message?: (message: string) => void,
 ) {

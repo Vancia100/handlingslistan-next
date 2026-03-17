@@ -19,11 +19,18 @@ export const addNewItem = authedProcidure
     const list = await prisma.list.findUnique({
       where: {
         id: input.listId,
-        editablyBy: {
-          some: {
-            id: user.id,
+        OR: [
+          {
+            editablyBy: {
+              some: {
+                id: user.id,
+              },
+            },
           },
-        },
+          {
+            creatorId: user.id,
+          },
+        ],
       },
     })
     if (!list) {

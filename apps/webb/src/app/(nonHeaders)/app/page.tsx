@@ -48,11 +48,13 @@ export default async function WebbApp() {
               : {},
           ],
         },
-        {
-          NOT: {
-            createdById: user?.id,
-          },
-        },
+        user
+          ? {
+              NOT: {
+                createdById: user?.id,
+              },
+            }
+          : {},
       ],
     },
   })

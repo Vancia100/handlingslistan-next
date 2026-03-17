@@ -4,7 +4,7 @@ import { authClient } from "@hndl/auth/client"
 import { useRouter } from "next/navigation"
 import { useState, useCallback } from "react"
 
-export default function Credentials(props: { redirect?: string }) {
+export default function Credentials(props: { redirect: string | undefined }) {
   const [login, setLogin] = useState(true)
   const router = useRouter()
 

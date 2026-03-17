@@ -58,7 +58,7 @@ export default adminProcidure
               amount: {
                 increment: constraint.recipe.ingredients.find(
                   (ingredient) => ingredient.ingredientId === changer,
-                )?.amount,
+                )!.amount,
               },
             },
             where: {

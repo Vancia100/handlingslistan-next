@@ -46,17 +46,18 @@ export default authedProcidure.input(recipeSchema).mutation(async (opts) => {
   }
 
   // if we have the id, update the current recipe
-  if (input.id) {
+  if (input.id !== undefined) {
+    const id = input.id
     const results = await tryCatch(
       db.$transaction(async (tx) => {
         await tx.recipeIngredient.deleteMany({
           where: {
-            recipeId: input.id,
+            recipeId: input.id!,
           },
         })
         const createdByUser = await tx.recipe.update({
           where: {
-            id: input.id,
+            id,
           },
           select: {
             createdById: true,

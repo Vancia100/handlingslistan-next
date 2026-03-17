@@ -11,14 +11,9 @@ type Action =
       id: number
     }
   | {
-      type: "ChangeName"
+      type: "Update"
       id: number
-      name: string
-    }
-  | {
-      type: "ChangeAmount"
-      id: number
-      amount: number
+      data: Partial<{ amount: number; name: string; check: boolean }>
     }
 
 interface StartListFormated {
@@ -43,23 +38,12 @@ export function listReducer<T extends StartListFormated[]>(
           return val
         }
       })
-    case "ChangeName":
+    case "Update":
       return state.map((val) => {
         if (val.id == action.id) {
           return {
             ...val,
-            name: action.name,
-          }
-        } else {
-          return val
-        }
-      })
-    case "ChangeAmount":
-      return state.map((val) => {
-        if (val.id == action.id) {
-          return {
-            ...val,
-            amount: action.amount,
+            ...action.data,
           }
         } else {
           return val

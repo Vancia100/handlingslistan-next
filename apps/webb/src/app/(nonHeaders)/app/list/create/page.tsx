@@ -11,7 +11,9 @@ export default async function CreateList() {
   const user = (await auth.api.getSession({ headers: cookies }))?.user
 
   // Redirect if user is not logged in
-  if (!user) redirect("/auth/login#redirect=/list/create")
+  if (!user) {
+    redirect("/auth/login?redirect=/app/list/create")
+  }
 
   const list = await db.list.create({
     data: {

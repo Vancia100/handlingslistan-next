@@ -1,6 +1,7 @@
 import ListComponent from "../ListComponent"
 import { auth } from "@hndl/auth/server"
 import { headers } from "next/headers"
+import { redirect } from "next/navigation"
 
 import { fetchDataFromDB, fetchIngredients } from "../serverSideFetchers"
 
@@ -16,12 +17,12 @@ export default async function CreateListWithID({
   const cookies = await headers()
   const user = (await auth.api.getSession({ headers: cookies }))?.user
   if (!user) {
-    return <UnAuthed />
+    redirect(`/auth/login?redirect=/app/list/create/${id}`)
   }
 
   const list = fetchDataFromDB(user.id, id)
   const ingredients = fetchIngredients()
-  console.log("test")
+  console.log(list)
   return (
     <ListComponent listId={id} startlist={list} ingredients={ingredients} />
   )
@@ -29,7 +30,4 @@ export default async function CreateListWithID({
 
 function ArguemntError(props: { errnum: string }) {
   return <div>Something wrong with args {props.errnum}</div>
-}
-function UnAuthed() {
-  return <div></div>
 }

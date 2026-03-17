@@ -7,7 +7,7 @@ export type ClientRecipeType = {
   instructions: string[]
   title: string
   description: string
-  id?: number
-  public?: boolean
-  viewers?: string[]
+  id: number | undefined
+  public: boolean | undefined
+  viewers: string[] | undefined
 }
