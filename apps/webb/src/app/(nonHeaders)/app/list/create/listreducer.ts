@@ -13,9 +13,13 @@ type Action =
   | {
       type: "Update"
       id: number
-      data: Partial<{ amount: number; name: string; check: boolean }>
+      data: UpdateType
     }
-
+export type UpdateType = Partial<{
+  amount: number
+  name: string
+  check: boolean
+}>
 interface StartListFormated {
   name: string | undefined
   amount: number

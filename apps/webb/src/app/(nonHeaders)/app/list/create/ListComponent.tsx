@@ -5,9 +5,10 @@ import type { ListType, IngredientsType } from "./serverSideFetchers"
 import { useMutation } from "@tanstack/react-query"
 import { useTRPC } from "@/utils/trpc"
 import { useReducer, use, useEffect } from "react"
-import { listReducer } from "./listreducer"
+import { listReducer, type UpdateType } from "./listreducer"
 import { useSubscription } from "@trpc/tanstack-react-query"
 import { newListValidator } from "@hndl/types/validators"
+import { functionalDebounce as debouce } from "@hndl/utils"
 
 export default function ListComponent(props: {
   startlist?: ListType
@@ -19,9 +20,11 @@ export default function ListComponent(props: {
 
   console.log(firstList, "List", props.startlist)
   const trpc = useTRPC()
-  const { mutate, variables, isPending } = useMutation(
-    trpc.list.addListItem.mutationOptions(),
-  )
+  const {
+    mutate: addItemMutate,
+    variables,
+    isPending,
+  } = useMutation(trpc.list.addListItem.mutationOptions())
   const { data: newItemSubscription } = useSubscription(
     trpc.list.newItemInList.subscriptionOptions({
       listId: props.listId,
@@ -29,7 +32,6 @@ export default function ListComponent(props: {
   )
   const [list, dispatch] = useReducer(
     listReducer,
-    // The initial lists are not loaded
     firstList?.items.map((item) => ({
       name: item.recipeCustom ?? item.recipeItem?.name,
       amount: item.amount,
@@ -49,17 +51,35 @@ export default function ListComponent(props: {
       id,
     })
   }
-  function update(id: number) {
+  function update(id: number, data: UpdateType) {
     dispatch({
       type: "Update",
       id,
-      data: {
-        amount: 12,
-      },
+      data,
     })
   }
+  const deboucedMutate = debouce(
+    (newVal: string, id: number, oldVal: string) => {
+      update(id, {
+        name: newVal,
+      })
+      // Do mutate
+      // Revert if mutate fails
+    },
+    1000,
+  )
+  const deboucedChangeAmount = debouce(
+    (newVal: number, id: number, oldVal: number) => {
+      update(id, {
+        amount: newVal,
+      })
+      // Do mutate
+      // Revert if mutate fails
+    },
+    1000,
+  )
   function newItem(name: string, amount: number) {
-    mutate(
+    addItemMutate(
       {
         listId: props.listId,
         item: {
@@ -129,8 +149,31 @@ export default function ListComponent(props: {
       <ul>
         {list.map(({ name, amount, id, done }) => (
           <li key={id}>
-            <div>{name}</div>
-            <div>{amount}</div>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => {
+                const newName = e.target.value
+                update(id, { name: newName })
+                // deboucedMutate(newName, id, name ?? "")
+              }}
+            />
+            <input
+              type="number"
+              defaultValue={amount}
+              onChange={(e) => {
+                const newAmount = Number(e.target.value)
+                update(id, { amount: newAmount })
+                // deboucedMutate(newName, id, name ?? "")
+              }}
+            />
+            <input
+              type="checkbox"
+              checked={done}
+              onChange={() => {
+                check(id)
+              }}
+            />
           </li>
         ))}
         {isPending && (
