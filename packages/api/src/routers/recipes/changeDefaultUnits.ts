@@ -5,7 +5,6 @@ import { tryCatch } from "@hndl/utils"
 import { ingredeintSchema } from "@hndl/types/validators"
 
 export default adminProcidure.input(ingredeintSchema).mutation(async (opts) => {
-  console.log("TEST")
   const { input } = opts
   const res = await tryCatch(
     Promise.all(

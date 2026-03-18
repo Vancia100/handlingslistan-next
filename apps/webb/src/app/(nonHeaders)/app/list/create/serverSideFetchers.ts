@@ -18,11 +18,18 @@ export function fetchDataFromDB(userID: string, listID: number) {
     },
     where: {
       id: listID,
-      editablyBy: {
-        some: {
-          id: userID,
+      OR: [
+        {
+          editablyBy: {
+            some: {
+              id: userID,
+            },
+          },
         },
-      },
+        {
+          creatorId: userID,
+        },
+      ],
     },
   })
   return data

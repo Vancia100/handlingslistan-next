@@ -100,7 +100,6 @@ export default authedProcidure.input(recipeSchema).mutation(async (opts) => {
       },
     }),
   )
-  // console.log(results.error?.name)
   if (results.error) {
     throw new TRPCError({
       message: results.error.message,

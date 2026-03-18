@@ -16,6 +16,8 @@ export default function ListComponent(props: {
 }) {
   const firstList = props.startlist ? use(props.startlist) : null
   const ingredeints = use(props.ingredients)
+
+  console.log(firstList, "List", props.startlist)
   const trpc = useTRPC()
   const { mutate, variables, isPending } = useMutation(
     trpc.list.addListItem.mutationOptions(),
@@ -83,7 +85,6 @@ export default function ListComponent(props: {
     if (newItemSubscription) {
       dispatch({
         type: "New",
-        id: props.listId,
         ...newItemSubscription,
       })
     }

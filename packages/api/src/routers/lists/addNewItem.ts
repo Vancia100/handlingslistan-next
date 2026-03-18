@@ -39,21 +39,20 @@ export const addNewItem = authedProcidure
         code: "BAD_REQUEST",
       })
     }
-    ee.emit("new", input.listId, input.item, ctx.session.session.id)
-    const updatedRecipie = await prisma.list.update({
-      where: {
-        id: input.listId,
-      },
+    const updatedRecipie = await prisma.listIngredients.create({
       data: {
-        items: {
-          create: {
-            amount: input.item.amount,
-            unit: "st",
-            recipeCustom: input.item.name,
-            checked: false,
-          },
-        },
+        amount: input.item.amount,
+        unit: "st",
+        recipeCustom: input.item.name,
+        checked: false,
+        listId: input.listId,
       },
     })
+    ee.emit(
+      "new",
+      input.listId,
+      { ...input.item, id: updatedRecipie.id },
+      ctx.session.session.id,
+    )
     return updatedRecipie.id
   })

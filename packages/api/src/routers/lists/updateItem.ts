@@ -54,13 +54,6 @@ export const updateItem = authedProcidure
         code: "BAD_REQUEST",
       })
     }
-    ee.emit(
-      "update",
-      input.listId,
-      input.item,
-      ctx.session.session.id,
-      input.itemId,
-    )
     // If there is an ingredient, connect to that one in DB
     const isIngredient = await isIngredientPromise
     const { amount, name, checked } = input.item
@@ -81,5 +74,12 @@ export const updateItem = authedProcidure
         ...update,
       },
     })
+    ee.emit(
+      "update",
+      input.listId,
+      { ...input.item, id: updatedRecipie.id },
+      ctx.session.session.id,
+      input.itemId,
+    )
     return updatedRecipie.id
   })

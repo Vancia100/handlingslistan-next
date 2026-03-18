@@ -35,7 +35,6 @@ export const authedProcidure = t.procedure.use(async (opts) => {
 })
 export const adminProcidure = authedProcidure.use(async (opts) => {
   const { ctx } = opts
-  console.log(ctx.session.user.role)
   if (ctx.session.user.role !== "ADMIN") {
     throw new TRPCError({ code: "UNAUTHORIZED" })
   }

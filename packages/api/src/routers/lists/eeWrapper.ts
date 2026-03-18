@@ -6,12 +6,12 @@ import { z } from "zod"
 interface Inputs {
   new: [
     listID: number,
-    list: z.infer<typeof newListValidator>,
+    list: z.infer<typeof newListValidator> & { id: number },
     sentUserSessionId: string,
   ]
   update: [
     listID: number,
-    list: z.infer<typeof newListValidator>,
+    list: z.infer<typeof newListValidator> & { id: number },
     sentUserSessionId: string,
     listIngredientId: number,
   ]

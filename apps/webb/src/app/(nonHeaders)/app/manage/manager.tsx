@@ -39,7 +39,6 @@ export default function IngredietsManager({
   } = useMutation(trpc.recipe.changeDefaultUnits.mutationOptions())
   // Nested function to combine 2 ingredients
   async function combine(id: number) {
-    console.log(id)
     if (!combinator) return
 
     //Start server action

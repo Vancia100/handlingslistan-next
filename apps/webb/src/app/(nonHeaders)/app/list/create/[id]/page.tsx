@@ -22,7 +22,6 @@ export default async function CreateListWithID({
 
   const list = fetchDataFromDB(user.id, id)
   const ingredients = fetchIngredients()
-  console.log(list)
   return (
     <ListComponent listId={id} startlist={list} ingredients={ingredients} />
   )
