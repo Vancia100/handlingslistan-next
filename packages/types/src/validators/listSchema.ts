@@ -5,3 +5,9 @@ export const newListValidator = z.object({
   name: z.string(),
   checked: z.boolean(),
 })
+
+export const updateListValidator = z.object({
+  amount: z.number().positive().optional(),
+  name: z.string().optional(),
+  checked: z.boolean().optional(),
+})

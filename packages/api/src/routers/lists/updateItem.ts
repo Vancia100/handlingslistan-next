@@ -1,7 +1,7 @@
 import { authedProcidure } from "../../trpc.js"
 import { TRPCError } from "@trpc/server"
 import { prisma } from "@hndl/database"
-import { newListValidator } from "@hndl/types/validators"
+import { updateListValidator } from "@hndl/types/validators"
 import { z } from "zod/v4"
 import { ee } from "./eeWrapper.js"
 
@@ -9,7 +9,7 @@ export const updateItem = authedProcidure
   .input(
     z.object({
       listId: z.number(),
-      item: newListValidator,
+      item: updateListValidator,
       itemId: z.number(),
     }),
   )
@@ -21,11 +21,18 @@ export const updateItem = authedProcidure
     const listPromise = prisma.list.findUnique({
       where: {
         id: input.listId,
-        editablyBy: {
-          some: {
-            id: user.id,
+        OR: [
+          {
+            editablyBy: {
+              some: {
+                id: user.id,
+              },
+            },
           },
-        },
+          {
+            creatorId: user.id,
+          },
+        ],
         items: {
           some: {
             id: input.itemId,
@@ -33,20 +40,22 @@ export const updateItem = authedProcidure
         },
       },
     })
-    const isIngredientPromise = prisma.ingredient.findFirst({
-      where: {
-        OR: [
-          {
-            name: input.item.name,
+    const isIngredientPromise = input.item.name
+      ? prisma.ingredient.findFirst({
+          where: {
+            OR: [
+              {
+                name: input.item.name,
+              },
+              {
+                aliases: {
+                  has: input.item.name,
+                },
+              },
+            ],
           },
-          {
-            aliases: {
-              has: input.item.name,
-            },
-          },
-        ],
-      },
-    })
+        })
+      : null
     // Must have an recipe
     if (!(await listPromise)) {
       throw new TRPCError({
@@ -56,30 +65,25 @@ export const updateItem = authedProcidure
     }
     // If there is an ingredient, connect to that one in DB
     const isIngredient = await isIngredientPromise
-    const { amount, name, checked } = input.item
-    const update = isIngredient
-      ? {
-          recipeItemID: isIngredient.id,
-        }
-      : {
-          name,
-        }
+    const { name, amount, checked } = input.item
     const updatedRecipie = await prisma.listIngredients.update({
       where: {
         id: input.itemId,
       },
       data: {
-        amount,
         checked,
-        ...update,
+        amount,
+        recipeCustom: isIngredient ? name : undefined,
+        recipeItemID: isIngredient?.id,
       },
     })
-    ee.emit(
-      "update",
-      input.listId,
-      { ...input.item, id: updatedRecipie.id },
-      ctx.session.session.id,
-      input.itemId,
-    )
+    ee.emit(String(input.listId), ctx.session.session.id, {
+      type: "update",
+      listIngredientId: input.itemId,
+      list: {
+        ...input.item,
+        id: updatedRecipie.id,
+      },
+    })
     return updatedRecipie.id
   })

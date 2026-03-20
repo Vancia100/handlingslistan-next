@@ -18,7 +18,7 @@ export default function TestSubscription() {
     <div>
       {status}
       <br />
-      {!error && data?.name}
+      {!error && data?.list.name}
       <br />
       <input
         className="border-2 border-white"

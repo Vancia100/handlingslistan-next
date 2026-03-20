@@ -19,14 +19,17 @@ export default async function CreateListWithID({
   if (!user) {
     redirect(`/auth/login?redirect=/app/list/create/${id}`)
   }
+  const list = await fetchDataFromDB(user.id, id)
 
-  const list = fetchDataFromDB(user.id, id)
+  if (!list) {
+    return <div>You are not allowed to view this recipe! </div>
+  }
   const ingredients = fetchIngredients()
   return (
     <ListComponent listId={id} startlist={list} ingredients={ingredients} />
   )
 }
 
-function ArguemntError(props: { errnum: string }) {
+function ArguemntError(props: { errnum?: string }) {
   return <div>Something wrong with args {props.errnum}</div>
 }

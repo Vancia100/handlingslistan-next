@@ -2,7 +2,6 @@ import { router } from "../../trpc.js"
 
 import { addNewItem } from "./addNewItem.js"
 import { updateItem } from "./updateItem.js"
-import { updateItemSub } from "./updateItemSubscription.js"
 import { newItemSub } from "./newItemSubscription.js"
 
 import type {} from "qs"
@@ -12,5 +11,4 @@ export default router({
   addListItem: addNewItem,
   newItemInList: newItemSub,
   updateItemInList: updateItem,
-  newUpdateOnItem: updateItemSub,
 })

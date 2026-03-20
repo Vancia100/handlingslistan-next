@@ -11,15 +11,7 @@ export const newItemSub = authedProcidure
   )
   .subscription(async function* (opts) {
     const { input, signal, ctx } = opts
-    function* yieldIds<T>(
-      id: number,
-      userSessionId: string,
-      arg: T,
-    ): Generator<T> {
-      // Push updates only to the right lists.
-      if (id !== input.listId) {
-        return
-      }
+    function* yieldIds<T>(userSessionId: string, arg: T): Generator<T> {
       // Dont send updates to the one who prompted the update.
       // Session IDs to work with multiple devices with the same account
       if (userSessionId == ctx.session.session.id) {
@@ -27,9 +19,9 @@ export const newItemSub = authedProcidure
       }
       yield arg
     }
-    for await (const [id, data, userId] of ee.toIterable("new", {
+    for await (const [id, data] of ee.toIterable(String(input.listId), {
       signal,
     })) {
-      yield* yieldIds(id, userId, data)
+      yield* yieldIds(id, data)
     }
   })

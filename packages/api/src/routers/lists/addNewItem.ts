@@ -48,11 +48,9 @@ export const addNewItem = authedProcidure
         listId: input.listId,
       },
     })
-    ee.emit(
-      "new",
-      input.listId,
-      { ...input.item, id: updatedRecipie.id },
-      ctx.session.session.id,
-    )
+    ee.emit(String(input.listId), ctx.session.session.id, {
+      type: "new",
+      list: { ...input.item, id: updatedRecipie.id },
+    })
     return updatedRecipie.id
   })

@@ -8,14 +8,14 @@ import { useReducer, use, useEffect } from "react"
 import { listReducer, type UpdateType } from "./listreducer"
 import { useSubscription } from "@trpc/tanstack-react-query"
 import { newListValidator } from "@hndl/types/validators"
-import { functionalDebounce as debouce } from "@hndl/utils"
+import { functionalDebounce as debounce } from "@hndl/utils"
 
 export default function ListComponent(props: {
-  startlist?: ListType
+  startlist?: Awaited<ListType>
   ingredients: IngredientsType
   listId: number
 }) {
-  const firstList = props.startlist ? use(props.startlist) : null
+  const firstList = props.startlist ?? null
   const ingredeints = use(props.ingredients)
 
   console.log(firstList, "List", props.startlist)
@@ -25,7 +25,10 @@ export default function ListComponent(props: {
     variables,
     isPending,
   } = useMutation(trpc.list.addListItem.mutationOptions())
-  const { data: newItemSubscription } = useSubscription(
+  const { mutate: updateItemMutate } = useMutation(
+    trpc.list.updateItemInList.mutationOptions(),
+  )
+  const { data: subscriptionData } = useSubscription(
     trpc.list.newItemInList.subscriptionOptions({
       listId: props.listId,
     }),
@@ -41,42 +44,42 @@ export default function ListComponent(props: {
   )
   function remove(id: number) {
     dispatch({
-      type: "Remove",
+      type: "remove",
       id,
     })
   }
   function check(id: number) {
     dispatch({
-      type: "Check",
+      type: "check",
       id,
     })
   }
   function update(id: number, data: UpdateType) {
     dispatch({
-      type: "Update",
+      type: "update",
       id,
       data,
     })
   }
-  const deboucedMutate = debouce(
-    (newVal: string, id: number, oldVal: string) => {
-      update(id, {
-        name: newVal,
-      })
+  const debouncedMutate = debounce(
+    (newVal: UpdateType, id: number, oldVal: UpdateType) => {
       // Do mutate
-      // Revert if mutate fails
+      updateItemMutate(
+        {
+          listId: props.listId,
+          itemId: id,
+          item: newVal,
+        },
+        {
+          onError: (e) => {
+            // Revert if there is an error
+            update(id, oldVal)
+            // Should have an error box so that the user knows
+          },
+        },
+      )
     },
-    1000,
-  )
-  const deboucedChangeAmount = debouce(
-    (newVal: number, id: number, oldVal: number) => {
-      update(id, {
-        amount: newVal,
-      })
-      // Do mutate
-      // Revert if mutate fails
-    },
-    1000,
+    3000,
   )
   function newItem(name: string, amount: number) {
     addItemMutate(
@@ -91,7 +94,7 @@ export default function ListComponent(props: {
       {
         onSuccess: (id) => {
           dispatch({
-            type: "New",
+            type: "new",
             name,
             amount,
             id,
@@ -102,14 +105,19 @@ export default function ListComponent(props: {
   }
 
   useEffect(() => {
-    if (newItemSubscription) {
-      dispatch({
-        type: "New",
-        ...newItemSubscription,
-      })
+    if (subscriptionData) {
+      switch (subscriptionData.type) {
+        case "new":
+          dispatch({
+            type: "new",
+            ...subscriptionData.list,
+          })
+          break
+        case "update":
+          update(subscriptionData.listIngredientId, subscriptionData.list)
+      }
     }
-  }, [newItemSubscription, dispatch, props.listId])
-
+  }, [subscriptionData, dispatch, props.listId])
   return (
     <>
       <h2 className="text-2xl">List {String(props.listId)}</h2>
@@ -153,18 +161,18 @@ export default function ListComponent(props: {
               type="text"
               value={name}
               onChange={(e) => {
-                const newName = e.target.value
-                update(id, { name: newName })
-                // deboucedMutate(newName, id, name ?? "")
+                const newName = { name: e.target.value }
+                update(id, newName)
+                debouncedMutate(newName, id, name ? { name } : {})
               }}
             />
             <input
               type="number"
-              defaultValue={amount}
+              value={amount}
               onChange={(e) => {
-                const newAmount = Number(e.target.value)
-                update(id, { amount: newAmount })
-                // deboucedMutate(newName, id, name ?? "")
+                const newAmount = { amount: Number(e.target.value) }
+                update(id, newAmount)
+                debouncedMutate(newAmount, id, amount ? { amount } : {})
               }}
             />
             <input

@@ -1,19 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import EventEmitter, { on } from "node:events"
-import type { newListValidator } from "@hndl/types/validators"
+import type {
+  newListValidator,
+  updateListValidator,
+} from "@hndl/types/validators"
 import { z } from "zod"
-
+type DifInputTypes = {
+  [key: string]: [
+    sentUserSessionId: string,
+    list:
+      | {
+          type: "new"
+          list: z.infer<typeof newListValidator> & { id: number }
+        }
+      | {
+          type: "update"
+          list: z.infer<typeof updateListValidator> & { id: number }
+          listIngredientId: number
+        },
+  ]
+}
 interface Inputs {
   new: [
     listID: number,
     list: z.infer<typeof newListValidator> & { id: number },
     sentUserSessionId: string,
-  ]
-  update: [
-    listID: number,
-    list: z.infer<typeof newListValidator> & { id: number },
-    sentUserSessionId: string,
-    listIngredientId: number,
   ]
 }
 type EventMap<T> = Record<keyof T, any[]>
@@ -25,5 +36,5 @@ class IterableEventEmitter<T extends EventMap<T>> extends EventEmitter<T> {
     return on(this as any, eventName, opts) as any
   }
 }
-export const ee = new IterableEventEmitter<Inputs>()
+export const ee = new IterableEventEmitter<DifInputTypes>()
 ee.emit("")

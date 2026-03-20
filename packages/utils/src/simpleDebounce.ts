@@ -8,6 +8,7 @@ export const functionalDebounce = <
   let timeout: ReturnType<typeof setTimeout>
 
   const debounced = (...args: Parameters<F>) => {
+    console.log("clearing timeout", timeout)
     clearTimeout(timeout)
     timeout = setTimeout(() => func(...args), waitFor)
   }

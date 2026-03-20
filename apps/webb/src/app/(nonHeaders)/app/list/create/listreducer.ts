@@ -1,17 +1,17 @@
 type Action =
-  | { type: "Check"; id: number }
+  | { type: "check"; id: number }
   | {
-      type: "New"
+      type: "new"
       name: string
       amount: number
       id: number
     }
   | {
-      type: "Remove"
+      type: "remove"
       id: number
     }
   | {
-      type: "Update"
+      type: "update"
       id: number
       data: UpdateType
     }
@@ -31,7 +31,7 @@ export function listReducer<T extends StartListFormated[]>(
   action: Action,
 ) {
   switch (action.type) {
-    case "Check":
+    case "check":
       return state.map((val) => {
         if (val.id == action.id) {
           return {
@@ -42,18 +42,23 @@ export function listReducer<T extends StartListFormated[]>(
           return val
         }
       })
-    case "Update":
+    case "update":
       return state.map((val) => {
         if (val.id == action.id) {
+          const nonNull = Object.fromEntries(
+            Object.entries(action.data).filter((val) => {
+              return val[0] != undefined
+            }),
+          )
           return {
             ...val,
-            ...action.data,
+            ...nonNull,
           }
         } else {
           return val
         }
       })
-    case "New":
+    case "new":
       return [
         {
           name: action.name,
@@ -63,7 +68,7 @@ export function listReducer<T extends StartListFormated[]>(
         },
         ...state,
       ]
-    case "Remove":
+    case "remove":
       return state.filter((val) => val.id != action.id)
   }
 }
