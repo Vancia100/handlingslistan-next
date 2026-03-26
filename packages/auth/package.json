@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@hndl/eslint-config": "workspace:^",
+    "@hndl/prettier-config": "workspace:^",
     "@hndl/typescript-config": "workspace:^",
     "@types/node": "catalog:",
     "eslint": "catalog:",
