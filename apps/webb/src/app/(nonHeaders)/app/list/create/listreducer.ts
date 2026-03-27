@@ -24,7 +24,7 @@ interface StartListFormated {
   name: string | undefined
   amount: number
   id: number
-  done: boolean
+  checked: boolean
 }
 export function listReducer<T extends StartListFormated[]>(
   state: T,
@@ -36,7 +36,7 @@ export function listReducer<T extends StartListFormated[]>(
         if (val.id == action.id) {
           return {
             ...val,
-            done: !val.done,
+            checked: !val.checked,
           }
         } else {
           return val
@@ -64,7 +64,7 @@ export function listReducer<T extends StartListFormated[]>(
           name: action.name,
           amount: action.amount,
           id: action.id,
-          done: false,
+          checked: false,
         },
         ...state,
       ]

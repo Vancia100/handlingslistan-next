@@ -4,7 +4,7 @@ import type { ListType, IngredientsType } from "./serverSideFetchers"
 
 import { useMutation } from "@tanstack/react-query"
 import { useTRPC } from "@/utils/trpc"
-import { useReducer, use, useEffect } from "react"
+import { useReducer, use, useEffect, useMemo } from "react"
 import { listReducer, type UpdateType } from "./listreducer"
 import { useSubscription } from "@trpc/tanstack-react-query"
 import { newListValidator } from "@hndl/types/validators"
@@ -18,7 +18,6 @@ export default function ListComponent(props: {
   const firstList = props.startlist ?? null
   const ingredeints = use(props.ingredients)
 
-  console.log(firstList, "List", props.startlist)
   const trpc = useTRPC()
   const {
     mutate: addItemMutate,
@@ -39,7 +38,7 @@ export default function ListComponent(props: {
       name: item.recipeCustom ?? item.recipeItem?.name,
       amount: item.amount,
       id: item.id,
-      done: false,
+      checked: item.checked,
     })) ?? [],
   )
   function remove(id: number) {
@@ -48,7 +47,28 @@ export default function ListComponent(props: {
       id,
     })
   }
-  function check(id: number) {
+  function check(id: number, checked: boolean) {
+    updateItemMutate(
+      {
+        listId: props.listId,
+        itemId: id,
+        item: {
+          checked,
+        },
+      },
+      {
+        onError: (e) => {
+          console.log(e)
+          dispatch({
+            type: "update",
+            id,
+            data: {
+              check: !checked,
+            },
+          })
+        },
+      },
+    )
     dispatch({
       type: "check",
       id,
@@ -61,8 +81,8 @@ export default function ListComponent(props: {
       data,
     })
   }
-  const debouncedMutate = debounce(
-    (newVal: UpdateType, id: number, oldVal: UpdateType) => {
+  const debouncedMutate = useMemo(() => {
+    return debounce((newVal: UpdateType, id: number, oldVal: UpdateType) => {
       // Do mutate
       updateItemMutate(
         {
@@ -78,9 +98,8 @@ export default function ListComponent(props: {
           },
         },
       )
-    },
-    3000,
-  )
+    }, 2000)
+  }, [updateItemMutate, props.listId])
   function newItem(name: string, amount: number) {
     addItemMutate(
       {
@@ -155,7 +174,7 @@ export default function ListComponent(props: {
         </button>
       </form>
       <ul>
-        {list.map(({ name, amount, id, done }) => (
+        {list.map(({ name, amount, id, checked }) => (
           <li key={id}>
             <input
               type="text"
@@ -177,9 +196,11 @@ export default function ListComponent(props: {
             />
             <input
               type="checkbox"
-              checked={done}
-              onChange={() => {
-                check(id)
+              checked={checked}
+              onChange={(e) => {
+                const checked = e.target.checked
+                console.log(checked)
+                check(id, checked)
               }}
             />
           </li>
