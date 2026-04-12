@@ -19,7 +19,7 @@ export const newItemSub = authedProcidure
       }
       yield arg
     }
-    for await (const [id, data] of ee.toIterable(String(input.listId), {
+    for await (const [id, data] of ee.toIterable(`onList-${input.listId}`, {
       signal,
     })) {
       yield* yieldIds(id, data)

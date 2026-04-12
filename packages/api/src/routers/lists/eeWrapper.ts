@@ -5,29 +5,27 @@ import type {
   updateListValidator,
 } from "@hndl/types/validators"
 import { z } from "zod"
-type DifInputTypes = {
-  [key: string]: [
-    sentUserSessionId: string,
-    list:
-      | {
-          type: "new"
-          list: z.infer<typeof newListValidator> & { id: number }
-        }
-      | {
-          type: "update"
-          list: z.infer<typeof updateListValidator> & { id: number }
-          listIngredientId: number
-        },
-  ]
+
+type NewData = {
+  type: "new"
+  list: z.infer<typeof newListValidator> & { id: number }
 }
-interface Inputs {
-  new: [
-    listID: number,
-    list: z.infer<typeof newListValidator> & { id: number },
-    sentUserSessionId: string,
-  ]
+type UpdData = {
+  type: "update"
+  list: z.infer<typeof updateListValidator> & { id: number }
+  listIngredientId: number
 }
+type ListPayload<T extends "new" | "update"> = T extends "new"
+  ? [sentUserSessionId: string, data: NewData]
+  : T extends "update"
+    ? [sentUserSessionId: string, data: UpdData]
+    : never
+interface ListEventMap {
+  [K: `onList-${number}`]: ListPayload<"new"> | ListPayload<"update">
+}
+
 type EventMap<T> = Record<keyof T, any[]>
+
 class IterableEventEmitter<T extends EventMap<T>> extends EventEmitter<T> {
   toIterable<TEventName extends keyof T & string>(
     eventName: TEventName,
@@ -35,6 +33,12 @@ class IterableEventEmitter<T extends EventMap<T>> extends EventEmitter<T> {
   ): AsyncIterable<T[TEventName]> {
     return on(this as any, eventName, opts) as any
   }
+  eimtForId<IdNumber extends number, K extends "new" | "update">(
+    id: IdNumber,
+    ...args: ListPayload<K>
+  ) {
+    this.emit(`onList-${id}`, ...(args as any))
+  }
 }
-export const ee = new IterableEventEmitter<DifInputTypes>()
-ee.emit("")
+export const ee = new IterableEventEmitter<ListEventMap>()
+ee.emit("test", "wadwa")

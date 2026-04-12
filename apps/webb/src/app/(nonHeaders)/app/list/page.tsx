@@ -2,6 +2,7 @@ import { auth } from "@hndl/auth/server"
 import { headers } from "next/headers"
 import { prisma as db } from "@hndl/database"
 import { redirect } from "next/navigation"
+import Link from "next/link"
 
 export default async function List() {
   const cookies = await headers()
@@ -32,11 +33,24 @@ export default async function List() {
     select: {
       title: true,
       updated: true,
+      id: true,
     },
   })
   return (
-    <div>
-      <h3>Your lists:</h3>
-    </div>
+    <>
+      <h1 className="text-2xl">Your lists:</h1>
+      <ul>
+        {yourLists.map((list) => (
+          <li className="cursor-pointer underline" key={list.id}>
+            <Link
+              href={`/app/list/create/${list.id}`}
+              className="hover:text-primary-blue">
+              {list.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <Link href={"/app/list/create"}>Create new list</Link>
+    </>
   )
 }

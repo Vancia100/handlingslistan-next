@@ -58,10 +58,30 @@ export default async function WebbApp() {
       ],
     },
   })
-
-  const [myRecepies, recomendedRecepies] = await Promise.all([
+  const myListsAsync = user
+    ? db.list.findMany({
+        orderBy: {
+          updatedAt: "desc",
+        },
+        take: 10,
+        where: {
+          OR: [
+            {
+              creatorId: user.id,
+            },
+            {
+              editablyBy: {
+                some: user,
+              },
+            },
+          ],
+        },
+      })
+    : null
+  const [myRecepies, recomendedRecepies, myLists] = await Promise.all([
     myRecepiesAsync,
     recomendedRecepiesAsync,
+    myListsAsync,
   ])
   return (
     <div className="flex w-full flex-col text-center align-middle">
@@ -100,6 +120,20 @@ export default async function WebbApp() {
                 url={`/app/recipe/${recipe.id}`}
                 title={recipe.title}
                 description={recipe.description}
+              />
+            ))}
+          </Slider>
+        </div>
+      )}
+      {myLists && myLists.length > 0 && (
+        <div className="m-5">
+          <h2 className="mb-1 text-start text-4xl">Your lists:</h2>
+          <Slider>
+            {myLists.map((list, index) => (
+              <Card
+                key={index}
+                url={`/app/list/create/${list.id}`}
+                title={list.title}
               />
             ))}
           </Slider>

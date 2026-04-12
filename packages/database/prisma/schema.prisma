@@ -86,8 +86,8 @@ model List {
   creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId String
 
-  created DateTime @default(now())
-  updated DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   editablyBy User[] @relation("EditableLists")
 
@@ -108,6 +108,12 @@ model ListIngredients {
   recipeItemID Int?
   recipeCustom String?
   checked      Boolean
+
+  // To check if it is created or not
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([listId, recipeItemID])
 }
 
 model User {

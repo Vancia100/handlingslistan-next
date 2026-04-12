@@ -2,7 +2,7 @@ import Link from "next/link"
 
 export default function Card(props: {
   title: string
-  description: string
+  description?: string
   url: string
   picUrl?: string
 }) {
@@ -13,7 +13,9 @@ export default function Card(props: {
       href={props.url}>
       <div className="relative p-4">
         <h3 className="mb-2 text-lg font-bold">{props.title}</h3>
-        <p className="line-clamp-3 text-gray-600">{props.description}</p>
+        {props.description && (
+          <p className="line-clamp-3 text-gray-600">{props.description}</p>
+        )}
       </div>
     </Link>
   )

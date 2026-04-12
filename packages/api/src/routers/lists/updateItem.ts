@@ -66,7 +66,7 @@ export const updateItem = authedProcidure
     // If there is an ingredient, connect to that one in DB
     const isIngredient = await isIngredientPromise
     const { name, amount, checked } = input.item
-    const updatedRecipie = await prisma.listIngredients.update({
+    const updatedList = await prisma.listIngredients.update({
       where: {
         id: input.itemId,
       },
@@ -77,13 +77,13 @@ export const updateItem = authedProcidure
         recipeItemID: isIngredient?.id,
       },
     })
-    ee.emit(String(input.listId), ctx.session.session.id, {
+    ee.eimtForId(input.listId, ctx.session.session.id, {
       type: "update",
       listIngredientId: input.itemId,
       list: {
         ...input.item,
-        id: updatedRecipie.id,
+        id: updatedList.id,
       },
     })
-    return updatedRecipie.id
+    return updatedList.id
   })
