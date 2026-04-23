@@ -14,10 +14,35 @@ export default function AddToList(props: { recipeId: number }) {
   const { mutate } = useMutation(trpc.list.addRecipeToList.mutationOptions())
 
   const [open, setIsOpen] = useState(false)
-
+  useEffect(() => {
+    if (data?.time) {
+      setTime(data?.time)
+    }
+  }, [data, setTime])
   useEffect(() => {
     if (open == true) {
-      refetch({})
+      refetch()
     }
-  }, [open])
+  }, [open, refetch])
+
+  return (
+    // TODO: add styles
+    <div>
+      {isLoading && "Loading..."}
+      {!isLoading && data && (
+        <ul>
+          {data.lists.map((list) => (
+            <li
+              key={list.id}
+              onClick={() => {
+                setIsOpen(false)
+                mutate({ recipeId: props.recipeId, listId: list.id })
+              }}>
+              {list.title}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
 }
