@@ -13,7 +13,7 @@ export default async function List() {
   const user = session.user
   const yourLists = await db.list.findMany({
     orderBy: {
-      updated: "desc",
+      updatedAt: "desc",
     },
     take: 10,
     where: {

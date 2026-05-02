@@ -1,5 +1,5 @@
 "use client"
-
+// TODO, rewrite this component to store that data in TanStack Store
 import {
   useRef,
   useState,
@@ -79,7 +79,7 @@ export default function FormField(props: {
   const [localerror, setLocalerror] = useState("")
 
   const displayedError = isSuccess ? "Recipe has been saved" : localerror
-  // Causes side effects, preferably use something else?
+  // Does not cause side effects
   useEffect(() => {
     // When successfully updating a recipe
     if (isSuccess && currentActiveRecipe.current) {
@@ -117,6 +117,7 @@ export default function FormField(props: {
   // Add some sort of message
   const addMessage = useMessageContext()
 
+  // This will regenerate
   const updateLocalFunction = useMemo(() => {
     return () => {
       updateLocalStorage(
@@ -143,17 +144,21 @@ export default function FormField(props: {
 
   useEffect(updateLocalFunction, [updateLocalFunction])
 
-  const chageStorage = useMemo(() => {
+  const changeStorage = useMemo(() => {
+    // This error is fine as this is only called as a Event handler
     return functionalDebounce(updateLocalFunction, DEBOUNCETIME)
   }, [updateLocalFunction])
 
-  // If local storage has a recipe, load it.
+  // If local storage has a recipe or a recipe is passed as prop, load it.
   useEffect(() => {
     if (!props.presetRecipe) {
+      // Can hold multiple recipes in localstorage
       const localStorageRecipe = Object.keys(getLocalStorage() ?? {})
+      // Get the first loaded recipe
       const localStorageRecipeId = getLocalStorageItem(
         localStorageRecipe[0] ?? "",
       )
+      // Update fields
       if (localStorageRecipeId) {
         setIngredients(localStorageRecipeId.ingredients)
         setInstructions(localStorageRecipeId.instructions)
@@ -163,6 +168,7 @@ export default function FormField(props: {
       }
       currentActiveRecipe.current = localStorageRecipe[0] ?? null
     } else {
+      // If we get a server rendered recipe load that
       const recipe = props.presetRecipe
       setIngredients(recipe.ingredients)
       setInstructions(recipe.instructions)
@@ -170,6 +176,7 @@ export default function FormField(props: {
       descriptionRef.current!.value = recipe.description
       currentActiveRecipe.current = recipe.title
     }
+    // This prop will not change without reload
   }, [props.presetRecipe])
 
   return (
@@ -201,7 +208,7 @@ export default function FormField(props: {
               }
             }}
             onChange={() => {
-              chageStorage()
+              changeStorage()
             }}
             type={"text"}
             className="border-primary-purple bg-primary-black rounded-lg border-4 p-2 text-center text-2xl font-bold"
@@ -222,7 +229,7 @@ export default function FormField(props: {
               }
             }}
             onChange={() => {
-              chageStorage()
+              changeStorage()
             }}></textarea>
         </label>
         <MemoIngredients
@@ -241,11 +248,11 @@ export default function FormField(props: {
             type="checkbox"
             name="public"
             className="accent-primary-purple border-primary-white me-1.5 h-4 w-4 border-2 text-sm font-medium"
-            onChange={chageStorage}
+            onChange={changeStorage}
           />
           <span>Public</span>
         </label>
-        {localerror && <div>{localerror}</div>}
+        {displayedError && <div>{displayedError}</div>}
         {(isPending && <div>loading...</div>) || null}
         <button
           className="bg-primary-black border-primary-black hover:border-primary-white w-max cursor-pointer self-center rounded-xl border-2 p-2"

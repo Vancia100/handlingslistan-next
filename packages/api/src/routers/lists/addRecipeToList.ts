@@ -31,7 +31,6 @@ export const recipeToList = authedProcidure
             },
           ],
         },
-        select: {},
       })
     // Fråga farsan hur man ska strukturera denna för att optimera queryn.
     const recipeValidAsync = prisma.recipe.findUnique({
@@ -111,7 +110,6 @@ export const recipeToList = authedProcidure
           })
         }),
       )
-
       // Send events to update recipe in real time
       for (const update of updates) {
         if (update.updatedAt === update.createdAt) {

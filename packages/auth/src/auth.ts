@@ -3,6 +3,7 @@ import { customSession } from "better-auth/plugins"
 import { prismaAdapter } from "better-auth/adapters/prisma"
 import { prisma } from "@hndl/database"
 
+import type {} from "zod/v4"
 // TODO: make sure that thease URL:s are not hard coded.
 export const auth = betterAuth({
   user: {
