@@ -32,7 +32,7 @@ export default async function List() {
     },
     select: {
       title: true,
-      updated: true,
+      updatedAt: true,
       id: true,
     },
   })

@@ -27,7 +27,7 @@ export default function AddToList(props: { recipeId: number }) {
   const { isPending, refetch } = query
   const [data, setReturn] = useState<NonNullable<typeof query.data>>([])
   useEffect(() => {
-    if (open == true) {
+    if (open) {
       refetch()
     }
   }, [open, refetch])
