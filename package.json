@@ -9,7 +9,8 @@
     "typecheck": "turbo run typecheck",
     "db:push": "turbo run db:push",
     "db:generate": "turbo run db:generate",
-    "db:migrate": "turbo run db:migrate'",
+    "db:migrate": "turbo run db:migrate",
+    "db:deploy": "turbo run db:deploy",
     "db:studio": "turbo run db:studio"
   },
   "devDependencies": {

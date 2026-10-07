@@ -58,8 +58,6 @@ catalog:
 catalogMode: prefer
 
 ignoredBuiltDependencies:
-  - '@prisma/engines'
   - esbuild
-  - prisma
 
 linkWorkspacePackages: true

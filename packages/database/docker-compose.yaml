@@ -1,0 +1,21 @@
+services:
+  devdb:
+    container_name: devdb
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /data/postgres
+      POSTGRES_DB: listan
+    volumes:
+      - db:/data/postgresdev
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d listan"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+volumes:
+  db:

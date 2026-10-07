@@ -12,8 +12,9 @@
     "format": "prettier . --write",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
-    "db:migrate": "prisma migrade dev",
-    "db:studio": "prisma studio"
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:deploy": "prisma migrate deploy"
   },
   "exports": {
     ".": {

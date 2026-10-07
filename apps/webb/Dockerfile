@@ -9,12 +9,13 @@ WORKDIR /app
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
+RUN corepack install --global pnpm@10.33.1
 
 # ---
 FROM base AS prepare
 # Replace <your-major-version> with the major version installed in your repository. For example:
 # RUN yarn global add turbo@^2
-RUN pnpm add -global turbo@^2.7.1
+RUN pnpm add --global turbo@^2.7.1
 COPY . .
 # Add lockfile and package.json's of isolated subworkspace
 # Generate a partial monorepo with a pruned lockfile for a target workspace.

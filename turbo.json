@@ -42,6 +42,10 @@
       "persistent": true,
       "cache": false
     },
+    "db:deploy": {
+      "persistent": true,
+      "cache": false
+    },
     "db:studio": {
       "cache": false
     }

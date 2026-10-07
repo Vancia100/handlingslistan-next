@@ -1,5 +1,5 @@
-// Your domain here
-// I recomend using Duckdns or simular to use for free
+# Your domain here
+# I recomend using Duckdns or simular to use for free
 localhost
 
 reverse_proxy /api/* backend:3001
