@@ -24,9 +24,6 @@ export default function Navbar() {
             Listan
           </span>
         </Link>
-        <Link href="/download" className="hover:underline md:w-max">
-          Download
-        </Link>
         <Link href="/docs" className="hover:underline md:w-max">
           Docs
         </Link>
