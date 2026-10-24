@@ -1,6 +1,6 @@
 # Handlingslistan
 
-A turborepo implementation of handlingslistan. Currently in early state, and does have some issues. On top of moving to a separe backend the auth is also moved to BetterAuth. None of the endpoints have been moved to TRPC.
+A turborepo implementation of handlingslistan. Currently in early state, and does have some issues. On top of moving to a separe backend the auth is also moved to BetterAuth. All enpoints, but no server rendering has been moved to TRPC
 
 ## TODO
 
