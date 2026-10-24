@@ -4,14 +4,16 @@ import { headers } from "next/headers"
 import { prisma as db } from "@hndl/database"
 import RouteReplacer from "./routeChanger"
 import ListComponent from "./ListComponent"
-import { fetchIngredients } from "./[...id]/page"
+import { fetchIngredients } from "./serverSideFetchers"
 
 export default async function CreateList() {
   const cookies = await headers()
   const user = (await auth.api.getSession({ headers: cookies }))?.user
 
   // Redirect if user is not logged in
-  if (!user) redirect("/auth/login#redirect=/list/create")
+  if (!user) {
+    redirect("/auth/login?redirect=/app/list/create")
+  }
 
   const list = await db.list.create({
     data: {
@@ -26,7 +28,7 @@ export default async function CreateList() {
   const ingredients = fetchIngredients()
   return (
     <>
-      <ListComponent ingredients={ingredients} />
+      <ListComponent listId={list.id} ingredients={ingredients} />
       <RouteReplacer id={list.id} />
     </>
   )

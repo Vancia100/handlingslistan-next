@@ -9,7 +9,7 @@ services:
       database:
         condition: service_healthy
     environment:
-      - BETTER_AUTH_URL=https://localhost
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL}
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/listan?schema=public
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
@@ -24,7 +24,7 @@ services:
       database:
         condition: service_healthy
     environment:
-      - BETTER_AUTH_URL=https://localhost
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL}
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/listan?schema=public
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
@@ -50,8 +50,10 @@ services:
   proxy:
     container_name: proxy
     image: caddy:2-alpine
+    environment:
+      URL: ${URL}
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./Caddyfile:/etc/caddy/Caddyfile:Z
       - caddy_data:/data
       - caddy_config:/config
     networks:

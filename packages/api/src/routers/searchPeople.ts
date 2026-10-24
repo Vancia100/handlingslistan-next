@@ -1,7 +1,7 @@
 import { prisma as db } from "@hndl/database"
-import { publicPrecidure } from "../trpc.js"
+import { publicProcidure } from "../trpc.js"
 import { z } from "zod/v4"
-export default publicPrecidure.input(z.string()).query(async (opts) => {
+export default publicProcidure.input(z.string()).query(async (opts) => {
   const name = opts.input
   const users = await db.user.findMany({
     where: {

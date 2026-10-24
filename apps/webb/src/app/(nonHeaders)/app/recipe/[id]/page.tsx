@@ -4,6 +4,7 @@ import { auth } from "@hndl/auth/server"
 import { headers } from "next/headers"
 import Link from "next/link"
 
+import AddToList from "./addToList"
 import InviteView from "@/components/inviteView"
 export default async function Recipe(props: {
   params: Promise<{ id: string }>
@@ -91,6 +92,7 @@ export default async function Recipe(props: {
             className="border-primary-black-50 hover:border-primary-purple rounded-2xl border-2 p-2 px-3 text-xl">
             Edit
           </Link>
+          <AddToList recipeId={recipe.id} />
         </div>
       )}
       <h1 className="text-3xl font-bold">{recipe.title}</h1>

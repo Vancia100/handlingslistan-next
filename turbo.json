@@ -22,6 +22,7 @@
       "dependsOn": ["^typecheck", "db:generate"]
     },
     "dev": {
+      "dependsOn": ["db:generate"],
       "cache": false,
       "persistent": true
     },
@@ -38,6 +39,10 @@
       "cache": false
     },
     "db:migrate": {
+      "persistent": true,
+      "cache": false
+    },
+    "db:deploy": {
       "persistent": true,
       "cache": false
     },

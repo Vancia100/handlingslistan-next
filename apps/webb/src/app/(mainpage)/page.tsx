@@ -5,14 +5,12 @@ export default function HomePage() {
       <h1 className="text-4xl md:text-8xl">Handlingslistan</h1>
       <p className="mt-4 text-xl md:text-3xl">
         {"The all in one domestics management tool"}
+      </p >
+      <p className="mt-4 text-xl md:text-3xl">
+        Please not that this project is under development and not everything will work as expected.
       </p>
-      <Link
-        href={"/download"}
-        className="bg-primary-black-50 hover:bg-primary-black-75 mt-4 rounded-md p-3 text-2xl shadow-md md:text-4xl">
-        Download now
-      </Link>
-      <Link href={"/app"} className="mt-9 text-xl hover:underline md:text-3xl">
-        Do not want to download? Try the web version{" "}
+      <Link href={"https://github.com/Vancia100/handlingslistan-next"} className="mt-9 text-xl hover:underline md:text-3xl">
+        Check out the sourcecode and add issues 
         <u className="text-blue-400"> here</u>
       </Link>
       <div className="mt-9 flex flex-row flex-wrap justify-center gap-5">

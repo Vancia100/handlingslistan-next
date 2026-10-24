@@ -1,6 +1,9 @@
 node_modules
 .turbo
 dist
+.next
+coverage
+*.tsbuildinfo
 .git
 .gitignore
 .env

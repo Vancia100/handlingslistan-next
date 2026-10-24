@@ -1,11 +1,10 @@
-import { adminPrecidure } from "../../trpc.js"
+import { adminProcidure } from "../../trpc.js"
 
 import { prisma as db } from "@hndl/database"
 import { tryCatch } from "@hndl/utils"
 import { ingredeintSchema } from "@hndl/types/validators"
 
-export default adminPrecidure.input(ingredeintSchema).mutation(async (opts) => {
-  console.log("TEST")
+export default adminProcidure.input(ingredeintSchema).mutation(async (opts) => {
   const { input } = opts
   const res = await tryCatch(
     Promise.all(

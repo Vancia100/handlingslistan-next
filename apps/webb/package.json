@@ -18,6 +18,7 @@
     "@hndl/types": "workspace:^",
     "@hndl/utils": "workspace:^",
     "@tanstack/react-query": "catalog:",
+    "@tanstack/react-store": "catalog:",
     "@trpc/client": "catalog:",
     "@trpc/tanstack-react-query": "catalog:",
     "next": "catalog:",

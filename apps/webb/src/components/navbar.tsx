@@ -9,7 +9,7 @@ export default function Navbar() {
       className={
         styles.navBar +
         " " +
-        "bg-primary-black fixed top-0 left-[-100%] m-0 min-h-full w-max flex-col text-2xl text-white md:sticky md:h-min md:bg-[#ffffff00] md:text-center md:backdrop-blur-xl"
+        "bg-primary-black fixed top-0 left-full m-0 min-h-full w-max flex-col text-2xl text-white md:sticky md:h-min md:bg-[#ffffff00] md:text-center md:backdrop-blur-xl"
       }>
       <input type="checkbox" id="menu-toggle" className="hidden" />
       <label
@@ -23,9 +23,6 @@ export default function Navbar() {
           <span className="md hidden pl-3 hover:underline md:block">
             Listan
           </span>
-        </Link>
-        <Link href="/download" className="hover:underline md:w-max">
-          Download
         </Link>
         <Link href="/docs" className="hover:underline md:w-max">
           Docs

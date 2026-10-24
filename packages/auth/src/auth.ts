@@ -1,8 +1,9 @@
-import { betterAuth } from "better-auth";
-import { customSession } from "better-auth/plugins";
-import { prismaAdapter } from "better-auth/adapters/prisma";
-import { prisma } from "@hndl/database";
+import { betterAuth } from "better-auth"
+import { customSession } from "better-auth/plugins"
+import { prismaAdapter } from "better-auth/adapters/prisma"
+import { prisma } from "@hndl/database"
 
+import type {} from "zod/v4"
 // TODO: make sure that thease URL:s are not hard coded.
 export const auth = betterAuth({
   user: {
@@ -26,14 +27,14 @@ export const auth = betterAuth({
         where: {
           id: user.id,
         },
-      });
+      })
       return {
         session,
         user: {
           ...user,
           role: userDb?.role,
         },
-      };
+      }
     }),
   ],
   database: prismaAdapter(prisma, {
@@ -47,7 +48,7 @@ export const auth = betterAuth({
     "http://localhost:3001",
     process.env.BETTER_AUTH_URL ?? "",
   ],
-});
+})
 
-export type User = typeof auth.$Infer.Session.user;
-export type Session = typeof auth.$Infer.Session.session;
+export type User = typeof auth.$Infer.Session.user
+export type Session = typeof auth.$Infer.Session.session

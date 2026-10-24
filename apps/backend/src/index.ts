@@ -31,7 +31,6 @@ if (!PROD) {
     ws: true,
   })
   server.on("upgrade", (req, socket, head) => {
-    console.log("test")
     proxy.ws(req, socket, head, {
       target: "ws://localhost:3000",
     })

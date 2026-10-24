@@ -3,10 +3,10 @@ import { prisma as db } from "@hndl/database"
 import { Prisma } from "@hndl/database/client"
 import { tryCatch } from "@hndl/utils"
 
-import { authedPrecidure } from "../../trpc.js"
+import { authedProcidure } from "../../trpc.js"
 import { TRPCError } from "@trpc/server"
 
-export default authedPrecidure.input(recipeSchema).mutation(async (opts) => {
+export default authedProcidure.input(recipeSchema).mutation(async (opts) => {
   const { input, ctx } = opts
   const user = ctx.session.user
 
@@ -46,17 +46,18 @@ export default authedPrecidure.input(recipeSchema).mutation(async (opts) => {
   }
 
   // if we have the id, update the current recipe
-  if (input.id) {
+  if (input.id !== undefined) {
+    const id = input.id
     const results = await tryCatch(
       db.$transaction(async (tx) => {
         await tx.recipeIngredient.deleteMany({
           where: {
-            recipeId: input.id,
+            recipeId: input.id!,
           },
         })
         const createdByUser = await tx.recipe.update({
           where: {
-            id: input.id,
+            id,
           },
           select: {
             createdById: true,
@@ -99,7 +100,6 @@ export default authedPrecidure.input(recipeSchema).mutation(async (opts) => {
       },
     }),
   )
-  // console.log(results.error?.name)
   if (results.error) {
     throw new TRPCError({
       message: results.error.message,

@@ -1,0 +1,89 @@
+import { authedProcidure } from "../../trpc.js"
+import { TRPCError } from "@trpc/server"
+import { prisma } from "@hndl/database"
+import { updateListValidator } from "@hndl/types/validators"
+import { z } from "zod/v4"
+import { ee } from "./eeWrapper.js"
+
+export const updateItem = authedProcidure
+  .input(
+    z.object({
+      listId: z.number(),
+      item: updateListValidator,
+      itemId: z.number(),
+    }),
+  )
+  .mutation(async (opts) => {
+    const { input, ctx } = opts
+    console.log(input)
+    const user = ctx.session.user
+    // Start the queries for recipe and ingredient
+    const listPromise = prisma.list.findUnique({
+      where: {
+        id: input.listId,
+        OR: [
+          {
+            editablyBy: {
+              some: {
+                id: user.id,
+              },
+            },
+          },
+          {
+            creatorId: user.id,
+          },
+        ],
+        items: {
+          some: {
+            id: input.itemId,
+          },
+        },
+      },
+    })
+    const isIngredientPromise = input.item.name
+      ? prisma.ingredient.findFirst({
+          where: {
+            OR: [
+              {
+                name: input.item.name,
+              },
+              {
+                aliases: {
+                  has: input.item.name,
+                },
+              },
+            ],
+          },
+        })
+      : null
+    // Must have an recipe
+    if (!(await listPromise)) {
+      throw new TRPCError({
+        message: "no list matched inputs",
+        code: "BAD_REQUEST",
+      })
+    }
+    // If there is an ingredient, connect to that one in DB
+    const isIngredient = await isIngredientPromise
+    const { name, amount, checked } = input.item
+    const updatedList = await prisma.listIngredients.update({
+      where: {
+        id: input.itemId,
+      },
+      data: {
+        checked,
+        amount,
+        recipeCustom: isIngredient ? name : undefined,
+        recipeItemID: isIngredient?.id,
+      },
+    })
+    ee.eimtForId(input.listId, ctx.session.session.id, {
+      type: "update",
+      listIngredientId: input.itemId,
+      list: {
+        ...input.item,
+        id: updatedList.id,
+      },
+    })
+    return updatedList.id
+  })

@@ -1,6 +1,6 @@
 # Handlingslistan
 
-A turborepo implementation of handlingslistan. Currently in early state, and does have some issues. On top of moving to a separe backend the auth is also moved to BetterAuth. None of the endpoints have been moved to TRPC.
+A turborepo implementation of handlingslistan. Currently in early state, and does have some issues. On top of moving to a separe backend the auth is also moved to BetterAuth. All enpoints, but no server rendering has been moved to TRPC
 
 ## TODO
 
@@ -45,15 +45,15 @@ A turborepo implementation of handlingslistan. Currently in early state, and doe
   - [ ] Improve looks of "card" component
   - [ ] Better search options?
   - [ ] Make the webapp not look like ass on phones
-  - [ ] Create a list and save it to database
-  - [ ] Recipe to list interaction
+  - [x] Create a list and save it to database
+  - [x] Recipe to list interaction
   - [ ] Go shoping, things left in list gets put inte new list, data saved ...
-  - [ ] Have shoping lists sync with multiple users
+  - [x] Have shoping lists sync with multiple users
   - [x] Migrate to betterAuth to do credentials without issues
   - [ ] Implement Cache strategy with NextJS 16 / Merge the cache branch
 
 - [ ] Docs
-- [ ] Hosting options withopen-source API
+- [x] Hosting options withopen-source API
 
 **Long-long term:**
 
