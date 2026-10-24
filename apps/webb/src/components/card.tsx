@@ -8,7 +8,7 @@ export default function Card(props: {
 }) {
   return (
     <Link
-      className="bg-primary-black-75 realtive overflow-hidden rounded-lg p-4 shadow-lg transition-shadow duration-600 hover:shadow-xl"
+      className="bg-primary-black-75 realtive max-w-max min-w-min overflow-hidden rounded-lg p-4 shadow-lg transition-shadow duration-600 hover:shadow-xl"
       //@ts-expect-error Might 404
       href={props.url}>
       <div className="relative p-4">

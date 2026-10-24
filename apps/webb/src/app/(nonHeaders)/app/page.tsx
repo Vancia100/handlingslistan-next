@@ -20,13 +20,6 @@ export default async function WebbApp() {
 
   const recomendedRecepiesAsync = db.recipe.findMany({
     take: 10,
-    include: {
-      viewableBy: {
-        select: {
-          id: true,
-        },
-      },
-    },
     orderBy: {
       updatedAt: "desc",
     },
@@ -85,18 +78,26 @@ export default async function WebbApp() {
   ])
   return (
     <div className="flex w-full flex-col text-center align-middle">
-      <h1 className="m-5 w-full text-6xl">WebbApp</h1>
+      <h1 className="my-5 w-full text-2xl sm:text-5xl">Listan</h1>
       {user?.role === "ADMIN" && (
         <div className="m-5 flex flex-col items-start">
-          <h2 className="mb-1 text-start text-4xl">Admin panel:</h2>
+          <h2 className="mb-1 text-center text-4xl md:text-start">
+            Admin panel:
+          </h2>
           <Link className="text-start text-2xl underline" href="/app/manage">
             Manage
           </Link>
         </div>
       )}
+      <Link href={"/app/recipe"}>Search for post</Link>
+      {/* @ts-expect-error Next type does not generate for dynamic routes */}
+      <Link href={"/app/create"}>Create post</Link>
+      <Link href={"/app/list"}>Create list</Link>
       {myRecepies && myRecepies.length > 0 && (
         <div className="m-5">
-          <h2 className="mb-1 text-start text-4xl">Your recipes:</h2>
+          <h2 className="mb-1 text-center text-4xl md:text-start">
+            Your recipes:
+          </h2>
           <Slider>
             {myRecepies.map((recipe, index) => (
               <Card
@@ -112,7 +113,9 @@ export default async function WebbApp() {
 
       {recomendedRecepies && recomendedRecepies.length > 0 && (
         <div className="m-5">
-          <h2 className="mb-1 text-start text-4xl">Recmended recipes:</h2>
+          <h2 className="mb-1 text-center text-4xl md:text-start">
+            Recomended recipes:
+          </h2>
           <Slider>
             {recomendedRecepies.map((recipe, index) => (
               <Card
@@ -127,7 +130,9 @@ export default async function WebbApp() {
       )}
       {myLists && myLists.length > 0 && (
         <div className="m-5">
-          <h2 className="mb-1 text-start text-4xl">Your lists:</h2>
+          <h2 className="mb-1 text-center text-4xl md:text-start">
+            Your lists:
+          </h2>
           <Slider>
             {myLists.map((list, index) => (
               <Card
@@ -139,9 +144,6 @@ export default async function WebbApp() {
           </Slider>
         </div>
       )}
-      <Link href={"/app/recipe"}>Search for post</Link>
-      {/* @ts-expect-error Next type does not generate for dynamic routes */}
-      <Link href={"/app/create"}>Create post</Link>
     </div>
   )
 }
